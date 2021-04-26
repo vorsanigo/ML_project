@@ -23,7 +23,7 @@ def modifyImage(data_path):
 
     # Iterate over subfolders
     for image_path in glob.glob(os.path.join(data_path, '*')):
-
+        print("ciao")
         # Getting list of all images in a subfolder
         filelist = glob.glob(os.path.join(image_path, '*.jpg'))
 
