@@ -76,7 +76,8 @@ def modifyImage(data_path):
             # Direcoty in which to save new img
             os.chdir(image_path)
 
-            # Saving new images'''
+            # Saving new images
+            '''
             cropl.save("cropl_%s.jpg" % (j))
             cropup.save("cropup_%s.jpg" % (j))
             cropr.save("cropr_%s.jpg" % (j))
