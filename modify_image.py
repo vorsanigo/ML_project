@@ -23,7 +23,7 @@ def modifyImage(data_path):
 
     # Iterate over subfolders
     for image_path in glob.glob(os.path.join(data_path, '*')):
-        print("ciao")
+
         # Getting list of all images in a subfolder
         filelist = glob.glob(os.path.join(image_path, '*.jpg'))
 
@@ -76,12 +76,12 @@ def modifyImage(data_path):
             # Direcoty in which to save new img
             os.chdir(image_path)
 
-            # Saving new images
+            # Saving new images'''
             cropl.save("cropl_%s.jpg" % (j))
             cropup.save("cropup_%s.jpg" % (j))
             cropr.save("cropr_%s.jpg" % (j))
             cropdown.save("cropdown_%s.jpg" % (j))
-            cropall.save("cropall_%s.jpg" % (j))
+            cropall.save("cropall_%s.jpg" % (j))'''
             blur.save("blur_%s.jpg" % (j))
             cv2.imwrite("hue_%s.jpg" % (j), hueImage)
             greyImage.save("grey_%s.jpg" % (j))
