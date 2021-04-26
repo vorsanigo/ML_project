@@ -96,5 +96,6 @@ def modifyImage(data_path):
 
 
 folder_path = "C:/Users/utente.000/Desktop/APPLIED MACHINE LEARNING/Project/prova"
-modifyImage(folder_path)
+#modifyImage(folder_path)
 
+print("ciao")
