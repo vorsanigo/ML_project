@@ -82,7 +82,7 @@ def modifyImage(data_path):
             cropr.save("cropr_%s.jpg" % (j))
             cropdown.save("cropdown_%s.jpg" % (j))
             cropall.save("cropall_%s.jpg" % (j))
-            '''blur.save("blur_%s.jpg" % (j))
+            blur.save("blur_%s.jpg" % (j))
             cv2.imwrite("hue_%s.jpg" % (j), hueImage)
             greyImage.save("grey_%s.jpg" % (j))
             blackAndWhiteImage.save("black_%s.jpg" % (j))
@@ -92,7 +92,10 @@ def modifyImage(data_path):
             rotatedl.save("rotatel_%s.jpg" % (j))
             bright.save("bright_%s.jpg" % (j))
             contr.save("contr_%s.jpg" %(j))
-            sat.save("sat_%s.jpg" %(j))'''
+            sat.save("sat_%s.jpg" %(j))
+
+            # TODO modify code for this error -> SystemError: tile cannot extend outside image
+            # TODO https://github.com/python-pillow/Pillow/issues/3044
 
 
 folder_path = "/content/drive/My Drive/Machine Learning Project/ML_challenge/images"
