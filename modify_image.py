@@ -24,7 +24,7 @@ def modifyImage(data_path):
     # Iterate over subfolders
     for image_path in glob.glob(os.path.join(data_path, '*')):
         print("ciao")
-        # Getting list of all images in a subfolder
+        '''# Getting list of all images in a subfolder
         filelist = glob.glob(os.path.join(image_path, '*.jpg'))
 
         # Iterate over images
@@ -92,7 +92,7 @@ def modifyImage(data_path):
             rotatedl.save("rotatel_%s.jpg" % (j))
             bright.save("bright_%s.jpg" % (j))
             contr.save("contr_%s.jpg" %(j))
-            sat.save("sat_%s.jpg" %(j))
+            sat.save("sat_%s.jpg" %(j))'''
 
 
 folder_path = "/content/drive/My Drive/Machine Learning Project/ML_challenge/images"
