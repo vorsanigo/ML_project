@@ -95,7 +95,5 @@ def modifyImage(data_path):
             sat.save("sat_%s.jpg" %(j))
 
 
-folder_path = "C:/Users/utente.000/Desktop/APPLIED MACHINE LEARNING/Project/prova"
-#modifyImage(folder_path)
-
-print("ciao")
+folder_path = "/content/drive/My Drive/Machine Learning Project/ML_challenge/images"
+modifyImage(folder_path)
