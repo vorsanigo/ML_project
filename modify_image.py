@@ -83,6 +83,7 @@ def modifyImage(data_path):
             cropr.save("cropr_%s.jpg" % (j))
             cropdown.save("cropdown_%s.jpg" % (j))
             cropall.save("cropall_%s.jpg" % (j))'''
+            #prova di mara
             blur.save("blur_%s.jpg" % (j))
             cv2.imwrite("hue_%s.jpg" % (j), hueImage)
             greyImage.save("grey_%s.jpg" % (j))
