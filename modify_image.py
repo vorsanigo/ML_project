@@ -105,3 +105,6 @@ folder_path = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ima
 modifyImage(folder_path)
 
 # Commento 
+
+
+# ciao ciao
