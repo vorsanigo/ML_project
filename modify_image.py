@@ -103,3 +103,5 @@ def modifyImage(data_path):
 
 folder_path = "/content/drive/My Drive/Machine Learning Project/ML_challenge/images"
 modifyImage(folder_path)
+
+# Commento 
