@@ -56,9 +56,9 @@ loader = loader.Loader(224, 224, 3)
 model_manager = model.ResNetPlus()
 feature_extractor = feature_extractor.FeatureExtractor()
 
-training_path = 'Dataset_1/training'
+'''training_path = 'Dataset_1/training'
 gallery_path = 'Dataset_1/validation/gallery'
-query_path = 'Dataset_1/validation/query'
+query_path = 'Dataset_1/validation/query''''
 
 
 
