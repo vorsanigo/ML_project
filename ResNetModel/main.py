@@ -4,16 +4,66 @@ import feature_extractor
 import pickle
 from scipy import spatial
 import numpy as np
+import os
+import argparse
+
+
+
+parser = argparse.ArgumentParser(description='Challenge presentation example')
+parser.add_argument('--data_path',
+                    '-d',
+                    type=str,
+                    default='challenge_data_small',
+                    help='Dataset path')
+parser.add_argument('--descriptor',
+                    '-desc',
+                    type=str,
+                    default='sift',
+                    help='Descriptor to be used')
+parser.add_argument('--output_dim',
+                    '-o',
+                    type=int,
+                    default=10,
+                    help='Descriptor length')
+parser.add_argument('--save_dir',
+                    '-s',
+                    type=str,
+                    default=None,
+                    help='Save or not gallery/query feats')
+parser.add_argument('--gray',
+                    '-g',
+                    action='store_true',
+                    help='Grayscale/RGB SIFT')
+parser.add_argument('--random',
+                    '-r',
+                    action='store_true',
+                    help='Random run')
+args = parser.parse_args()
+
+
+# we define training dataset
+training_path = os.path.join(args.data_path, 'training')
+
+# we define validation dataset
+validation_path = os.path.join(args.data_path, 'validation')
+gallery_path = os.path.join(validation_path, 'gallery')
+query_path = os.path.join(validation_path, 'query')
+
+
 
 
 loader = loader.Loader(224, 224, 3)
 model_manager = model.ResNetPlus()
 feature_extractor = feature_extractor.FeatureExtractor()
 
+training_path = 'Dataset_1/training'
+gallery_path = 'Dataset_1/validation/gallery'
+query_path = 'Dataset_1/validation/query'
+
 
 
 # TODO loading training data
-x = loader.get_files('Dataset_1/training')
+x = loader.get_files(training_path)
 data_paths_train = loader.get_data_paths(x)
 list_images_train = data_paths_train[1]
 images_paths_train = data_paths_train[0]
@@ -30,7 +80,7 @@ y = model_manager.compile_train(model_res_net)
 #x = model_res_net.predict(list_images_train[0])
 
 # TODO loading gallery data
-x = loader.get_files('Dataset_1/validation/gallery')
+x = loader.get_files(gallery_path)
 data_paths_gellery = loader.get_data_paths(x)
 list_images_gellery = data_paths_gellery[1]
 images_paths_gellery = data_paths_gellery[0]
@@ -47,7 +97,7 @@ pickle.dump(tot_features, open('features_gallery.pickle', 'wb'))
 pickle.dump(gallery_classes, open('gallery_classes.pickle', 'wb'))
 
 # TODO predict features query
-x = loader.get_files('Dataset_1/validation/query')
+x = loader.get_files(query_path)
 print("RRRRRRRRRRRRR")
 data_paths_query = loader.get_data_paths(x)
 list_images_query = data_paths_query[1]
