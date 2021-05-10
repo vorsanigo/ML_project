@@ -123,6 +123,9 @@ class Loader():
         :return:
         '''
         return len(data_classes)
+
+
+
 '''
 # TODO loading data
 loader = Loader(224, 224, 3)
