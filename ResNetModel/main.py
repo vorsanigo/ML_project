@@ -58,7 +58,8 @@ feature_extractor = feature_extractor.FeatureExtractor()
 
 '''training_path = 'Dataset_1/training'
 gallery_path = 'Dataset_1/validation/gallery'
-query_path = 'Dataset_1/validation/query''''
+query_path = 'Dataset_1/validation/query'
+'''
 
 
 
