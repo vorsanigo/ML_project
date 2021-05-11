@@ -21,9 +21,9 @@ VAL_PATH = os.path.sep.join([BASE_PATH_DATASETS, "validation"])
 TEST_PATH = os.path.sep.join([BASE_PATH_DATASETS, "testing"])'''
 
 #BASE_PATH_DATASETS = "Dataset_1"
-TRAIN_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/training"
-VAL_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/validation/gallery"
-TEST_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/validation/query"
+TRAIN_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/dataset/training"
+VAL_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/dataset/validation/gallery"
+TEST_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/dataset/validation/query"
 
 # determine the total number of image paths in training, validation,
 # and testing directories
