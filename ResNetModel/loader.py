@@ -83,7 +83,7 @@ class Loader():
                 print(img)
                 print(img.shape) # (224, 224, 3)
 
-                img1 = np.array(224, 224, 1)
+                img1 = np.random.rand(224, 224, 1)
                 # reshape dimension of channels to 3
                 if img1.shape[2] == 1:
                     print("HEYYYYYYYYHEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYHEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
