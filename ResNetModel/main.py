@@ -73,12 +73,12 @@ print("paths images train", images_paths_train)
 #pickle.dump(images_paths, open('images_paths_gallery.pickle', 'wb'))
 
 #pickle.dump(list_images, open('list_images_provae.pickle','wb'), protocol = 0)
-#serialized = pickle.dumps(list_images, protocol=0) # protocol 0 is printable ASCII
+
 
 # TODO create model ResNetPlus, train, predict features
 model_res_net = model_manager.create_model()
 y = model_manager.compile_train(model_res_net)
-#x = model_res_net.predict(list_images_train[0])
+
 
 # TODO loading gallery data
 x = loader.get_files(gallery_path)
@@ -94,8 +94,8 @@ tot_features = feature_extractor.extract_tot_features(list_images_gellery, model
 print(list_images_gellery)
 print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
 print("features gallery", tot_features)
-pickle.dump(tot_features, open('features_gallery.pickle', 'wb'))
-pickle.dump(gallery_classes, open('gallery_classes.pickle', 'wb'))
+pickle.dump(tot_features, open('features_gallery_tot.pickle', 'wb'))
+pickle.dump(gallery_classes, open('gallery_classes_tot.pickle', 'wb'))
 
 # TODO predict features query
 x = loader.get_files(query_path)
@@ -110,14 +110,14 @@ print(list_images_query)
 # TODO predict features of query
 features_query = feature_extractor.extract_tot_features(list_images_query, model_res_net)
 print("features query", features_query)
-pickle.dump(features_query, open('features_query.pickle', 'wb'))
-pickle.dump(query_classes, open('query_classes.pickle', 'wb'))
+pickle.dump(features_query, open('features_query_tot.pickle', 'wb'))
+pickle.dump(query_classes, open('query_classes_tot.pickle', 'wb'))
 
 
-gallery_features = pickle.load(open('features_gallery.pickle', 'rb'))
-query_features = pickle.load(open('features_query.pickle', 'rb'))
-gallery_classes = pickle.load(open('gallery_classes.pickle', 'rb'))
-query_classes = pickle.load(open('query_classes.pickle', 'rb'))
+gallery_features = pickle.load(open('features_gallery_tot.pickle', 'rb'))
+query_features = pickle.load(open('features_query_tot.pickle', 'rb'))
+gallery_classes = pickle.load(open('gallery_classes_tot.pickle', 'rb'))
+query_classes = pickle.load(open('query_classes_tot.pickle', 'rb'))
 
 print(gallery_features)
 print(len(gallery_features))
