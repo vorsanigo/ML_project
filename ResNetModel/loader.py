@@ -84,7 +84,9 @@ class Loader():
 
                 # reshape dimension of channels to 3
                 if img.shape[2] == 1:
+                    print("HEYYYYYYYYHEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYHEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
                     np.repeat(img, 3, axis=2)
+                    print(img.shape)
                 if img.shape[2] == 4:
                     img = img[:, :, :2]
 
