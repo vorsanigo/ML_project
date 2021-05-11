@@ -7,7 +7,7 @@ import numpy as np
 import os
 import argparse
 
-
+# link seguito come spunto https://www.pyimagesearch.com/2020/04/27/fine-tuning-resnet-with-keras-tensorflow-and-deep-learning/
 
 parser = argparse.ArgumentParser(description='Challenge presentation example')
 parser.add_argument('--data_path',
