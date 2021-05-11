@@ -27,7 +27,7 @@ TEST_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_pr
 
 # determine the total number of image paths in training, validation,
 # and testing directories
-totalTrain = 200 #len(list(paths.list_images(TRAIN_PATH)))
+totalTrain = 697 #len(list(paths.list_images(TRAIN_PATH)))
 #totalVal = 15 #len(list(paths.list_images(VAL_PATH)))
 #totalTest = len(list(paths.list_images(TEST_PATH)))
 
