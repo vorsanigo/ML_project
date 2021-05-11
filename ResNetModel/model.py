@@ -15,29 +15,30 @@ from tensorflow.keras.preprocessing.image import load_img
 
 # TODO change paths
 # initialize the path to the *original* input directory of images
-BASE_PATH_DATASETS = "Dataset_1"
-# initialize the base path to the *new* directory that will contain
-'''# our images after computing the training and testing split
-BASE_PATH = "camo_not_camo"'''
-# derive the training, validation, and testing directories
-TRAIN_PATH = os.path.sep.join([BASE_PATH_DATASETS, "training"])
+#BASE_PATH_DATASETS = "Dataset_1"
+'''TRAIN_PATH = os.path.sep.join([BASE_PATH_DATASETS, "training"])
 VAL_PATH = os.path.sep.join([BASE_PATH_DATASETS, "validation"])
-TEST_PATH = os.path.sep.join([BASE_PATH_DATASETS, "testing"])
+TEST_PATH = os.path.sep.join([BASE_PATH_DATASETS, "testing"])'''
+
+#BASE_PATH_DATASETS = "Dataset_1"
+TRAIN_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/training"
+VAL_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/validation/gallery"
+TEST_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/validation/query"
 
 # determine the total number of image paths in training, validation,
 # and testing directories
-totalTrain = 15 #len(list(paths.list_images(TRAIN_PATH)))
+totalTrain = 200 #len(list(paths.list_images(TRAIN_PATH)))
 #totalVal = 15 #len(list(paths.list_images(VAL_PATH)))
 #totalTest = len(list(paths.list_images(TEST_PATH)))
 
 # TODO TAKE IT FROM loader.py
 # define the names of the classes
-CLASSES = ["1", "9", "distractor"]
+#CLASSES = ["1", "9", "distractor"]
 
 # initialize the initial learning rate, batch size, and number of
 # epochs to train for
 INIT_LR = 1e-4
-BS = 5
+BS = 32
 NUM_EPOCHS = 3
 
 # define the path to the serialized output model after training
@@ -112,7 +113,8 @@ class ResNetPlus():
         headModel = tf.keras.layers.Flatten(name="flatten")(headModel)
         headModel = tf.keras.layers.Dense(256, activation="relu")(headModel)
         headModel = tf.keras.layers.Dropout(0.5)(headModel)
-        headModel = tf.keras.layers.Dense(len(CLASSES), activation="softmax")(headModel)
+        #headModel = tf.keras.layers.Dense(len(CLASSES), activation="softmax")(headModel)
+        headModel = tf.keras.layers.Dense(22, activation="softmax")(headModel)
 
         # we append the HeadModel constructed to the body of ResNet
         model = Model(inputs=baseModel.input, outputs=headModel)
