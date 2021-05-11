@@ -78,14 +78,20 @@ class Loader():
                 img = np.resize(img, (img_size, img_size))
                 images_arrays.append(img)'''
 
-                img = load_img(img_path, target_size=(224, 224))
+                img = load_img(img_path, target_size=(img_length, img_height)) # img_length = img_height = 224
                 img = img_to_array(img)
-                print(img.shape)
+                print(img.shape) # (224, 224, 3)
+
+                # reshape dimension of channels to 3
+                if img.shape[2] == 1:
+                    np.repeat(img, 3, axis = 2)
+                if img.shape[2] == 4:
+                    img = img[:, :, :2]
+
                 # preprocess the image by (1) expanding the dimensions and
                 # (2) subtracting the mean RGB pixel intensity from the
                 # ImageNet dataset
-
-                img = np.expand_dims(img, axis=0)
+                img = np.expand_dims(img, axis=0) # it adds first component -> (1, 224, 224, 3)
                 print("SSS", img.shape)
                 img = preprocess_input(img)
                 images_arrays.append(img)
