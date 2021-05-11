@@ -90,7 +90,7 @@ class Loader():
                     img1 = np.repeat(img1, 3, axis=2)
                 if img1.shape[2] == 4:
                     print("HEYYYYYYYYHEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYHEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
-                    img = img[:, :, :2]
+                    img1 = img11:, :, :3]
                     print(img1.shape)
 
 
