@@ -80,13 +80,15 @@ class Loader():
 
                 img = load_img(img_path, target_size=(img_length, img_height)) # img_length = img_height = 224
                 img = img_to_array(img)
+                print(img)
                 print(img.shape) # (224, 224, 3)
 
+                img1 = np.array(224, 224, 1)
                 # reshape dimension of channels to 3
-                if img.shape[2] == 1:
+                if img1.shape[2] == 1:
                     print("HEYYYYYYYYHEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYHEYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY")
-                    np.repeat(img, 3, axis=2)
-                    print(img.shape)
+                    np.repeat(img1, 3, axis=2)
+                    print(img1.shape)
                 if img.shape[2] == 4:
                     img = img[:, :, :2]
 
