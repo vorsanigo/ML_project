@@ -91,7 +91,7 @@ class ResNetPlus():
             class_mode="categorical",
             target_size=(224, 224),
             color_mode="rgb",
-            shuffle=True,
+            shuffle=False,
             batch_size=self.batch_size)
         # initialize the validation generator
         '''valGen = valAug.flow_from_directory(
