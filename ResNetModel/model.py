@@ -153,8 +153,14 @@ class ResNetPlus():
         :param model:
         :return:
         '''
+        # set scheduler for learning rate
+        lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+            self.init_lr,
+            decay_steps=250,
+            decay_rate=0.96,
+            staircase=True)
         # compile the model
-        opt = Adam(lr=self.init_lr, decay=self.init_lr / self.num_epochs)
+        opt = Adam(lr=lr_schedule) #, decay=self.init_lr / self.num_epochs)
         #model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
         model.compile(loss="categorical_crossentropy", optimizer=opt)
         #model.compile(loss="mean_squared_error", optimizer=opt)
