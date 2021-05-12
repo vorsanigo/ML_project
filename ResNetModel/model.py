@@ -176,10 +176,10 @@ class ResNetPlus():
         print("[INFO] training model...")
         H = model.fit(
             trainGen,
-            #steps_per_epoch=totalTrain // 32,
+            steps_per_epoch=totalTrain // 32,
             # validation_data=valGen,
             # validation_steps=1,#totalVal // BS,
-            batch_size=self.batch_size,
+            #batch_size=self.batch_size,
             epochs=self.num_epochs)
         '''steps_per_epoch=totalTrain // self.batch_size,
         #batch_size=self.batch_size,
