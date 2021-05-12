@@ -73,9 +73,10 @@ print("paths images train", images_paths_train)
 #pickle.dump(list_images, open('list_images_provae.pickle','wb'), protocol = 0)
 
 
-# TODO create model ResNetPlus, train, predict features
+# TODO create model ResNetPlus, train it
 model_res_net = model_manager.create_model()
 y = model_manager.compile_train(model_res_net)
+# TODO save the model
 
 
 # TODO loading gallery data
@@ -85,20 +86,19 @@ print("paths images paths gallery", images_paths_gallery)
 # TODO predict features in gallery
 #single_features = feature_extractor.extract_features_single_img(list_images_gallery, model_res_net)
 tot_features_gallery = feature_extractor.extract_tot_features(list_images_gallery, model_res_net)
-print(list_images_gallery)
+'''print(list_images_gallery)
 print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-print("features gallery", tot_features_gallery)
+print("features gallery", tot_features_gallery)'''
 pickle.dump(tot_features_gallery, open('features_gallery_tot.pickle', 'wb'))
 pickle.dump(images_classes_gallery, open('gallery_classes_tot.pickle', 'wb'))
 
-# TODO predict features query
+# TODO loading query data
 x = loader.get_files(query_path)
-print("RRRRRRRRRRRRR")
+#print("RRRRRRRRRRRRR")
 images_paths_query, list_images_query, images_classes_query = loader.get_data_paths(x)
-
 # images_paths_query, list_images_query, images_classes = loader.get_data_paths(x)
-print(images_paths_query)
-print(list_images_query)
+'''print(images_paths_query)
+print(list_images_query)'''
 # TODO predict features of query
 features_query = feature_extractor.extract_tot_features(list_images_query, model_res_net)
 print("features query", features_query)
@@ -118,7 +118,7 @@ print(len(query_features))
 print(gallery_classes)
 print(query_classes)
 
-
+# define the distance between query - gallery features vectors
 pairwise_dist = spatial.distance.cdist(query_features, gallery_features, 'minkowski', p=2.)
 print(pairwise_dist)
 print(len(pairwise_dist))
