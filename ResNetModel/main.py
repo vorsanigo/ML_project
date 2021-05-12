@@ -66,7 +66,7 @@ query_path = 'Dataset_1/validation/query'
 # TODO loading training data
 x = loader.get_files(training_path)
 images_paths_train, list_images_train, images_classes_train = loader.get_data_paths(x)
-print("paths images train", images_paths_train)
+#print("paths images train", images_paths_train)
 
 #pickle.dump(images_paths, open('images_paths_gallery.pickle', 'wb'))
 
@@ -82,15 +82,15 @@ y = model_manager.compile_train(model_res_net)
 # TODO loading gallery data
 x = loader.get_files(gallery_path)
 images_paths_gallery, list_images_gallery, images_classes_gallery = loader.get_data_paths(x)
-print("paths images paths gallery", images_paths_gallery)
+#print("paths images paths gallery", images_paths_gallery)
 # TODO predict features in gallery
 #single_features = feature_extractor.extract_features_single_img(list_images_gallery, model_res_net)
-tot_features_gallery = feature_extractor.extract_tot_features(list_images_gallery, model_res_net)
+features_gallery = feature_extractor.extract_tot_features(list_images_gallery, model_res_net)
 '''print(list_images_gallery)
 print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
 print("features gallery", tot_features_gallery)'''
-pickle.dump(tot_features_gallery, open('features_gallery_tot.pickle', 'wb'))
-pickle.dump(images_classes_gallery, open('gallery_classes_tot.pickle', 'wb'))
+'''pickle.dump(tot_features_gallery, open('features_gallery_tot.pickle', 'wb'))
+pickle.dump(images_classes_gallery, open('gallery_classes_tot.pickle', 'wb'))'''
 
 # TODO loading query data
 x = loader.get_files(query_path)
@@ -101,25 +101,25 @@ images_paths_query, list_images_query, images_classes_query = loader.get_data_pa
 print(list_images_query)'''
 # TODO predict features of query
 features_query = feature_extractor.extract_tot_features(list_images_query, model_res_net)
-print("features query", features_query)
-pickle.dump(features_query, open('features_query_tot.pickle', 'wb'))
-pickle.dump(images_classes_query, open('query_classes_tot.pickle', 'wb'))
+#print("features query", features_query)
+'''pickle.dump(features_query, open('features_query_tot.pickle', 'wb'))
+pickle.dump(images_classes_query, open('query_classes_tot.pickle', 'wb'))'''
 
 
-gallery_features = pickle.load(open('features_gallery_tot.pickle', 'rb'))
+'''gallery_features = pickle.load(open('features_gallery_tot.pickle', 'rb'))
 query_features = pickle.load(open('features_query_tot.pickle', 'rb'))
 gallery_classes = pickle.load(open('gallery_classes_tot.pickle', 'rb'))
-query_classes = pickle.load(open('query_classes_tot.pickle', 'rb'))
+query_classes = pickle.load(open('query_classes_tot.pickle', 'rb'))'''
 
-print(gallery_features)
-print(len(gallery_features))
-print(query_features)
-print(len(query_features))
-print(gallery_classes)
-print(query_classes)
+print(features_gallery)
+print(len(features_gallery))
+print(features_query)
+print(len(features_query))
+print(images_classes_gallery)
+print(images_classes_query)
 
 # define the distance between query - gallery features vectors
-pairwise_dist = spatial.distance.cdist(query_features, gallery_features, 'minkowski', p=2.)
+pairwise_dist = spatial.distance.cdist(features_query, features_gallery, 'minkowski', p=2.)
 print(pairwise_dist)
 print(len(pairwise_dist))
 
@@ -131,8 +131,9 @@ print(indices)
 
 
 print('eeeeeeeeeeeeeeeeeee')
-gallery_matches = gallery_classes[indices]
-print(gallery_matches)
+print("classes", images_classes_gallery)
+gallery_matches = images_classes_gallery[indices]
+print("matches", gallery_matches)
 
 
 def topk_accuracy(gt_label, matched_label, k=1):
@@ -149,7 +150,7 @@ def topk_accuracy(gt_label, matched_label, k=1):
 print('########## RESULTS ##########')
 
 for k in [1, 3, 10]:
-    topk_acc = topk_accuracy(query_classes, gallery_matches, k)
+    topk_acc = topk_accuracy(images_classes_query, gallery_matches, k)
     print('--> Top-{:d} Accuracy: {:.3f}'.format(k, topk_acc))
 
 #pickle.dump(tot_features, open('list_tot_features_gallery.pickle', 'wb'))
