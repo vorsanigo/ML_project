@@ -155,21 +155,23 @@ class ResNetPlus():
         trainGen = self.data_augmentation()
         #valGen = generators[1]
 
-        print('s', type(trainGen))
+        '''print('s', type(trainGen))
         #print(valGen) # tuple
         print('q', trainGen[0]) # size -> num_of_images * 224 * 224 * 3
         print('e', trainGen[0][0][0].shape) # single image -> 224 * 224 * 3
         print(totalTrain)
         print(self.batch_size)
-        print(self.num_epochs)
+        print(self.num_epochs)'''
+
         # train the model
         print("[INFO] training model...")
         H = model.fit(
             trainGen,
-            steps_per_epoch=totalTrain // 32,
+            #steps_per_epoch=totalTrain // 32,
             # validation_data=valGen,
             # validation_steps=1,#totalVal // BS,
-            epochs=3)
+            batch_size=self.batch_size,
+            epochs=self.num_epochs)
         '''steps_per_epoch=totalTrain // self.batch_size,
         #batch_size=self.batch_size,
         epochs=3#self.num_epochs
