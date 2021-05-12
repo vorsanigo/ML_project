@@ -30,9 +30,9 @@ class Loader():
         :param data_path:
         :return:
         '''
-        assert os.path.exists(data_path), 'Insert a valid path!'
+        assert os.path.exists(data_path), 'Insert a valid path!' # path = .../dataset/training OR .../dataset/validation/query OR .../dataset/validation/gallery
 
-        data_classes = os.listdir(data_path)
+        data_classes = os.listdir(data_path) # subfolders -> classes (1, 2, distractor ...)
 
         data_mapping = {}
 
@@ -61,9 +61,9 @@ class Loader():
         :param data_mapping:
         :return:
         '''
-        images_paths = []
-        images_arrays = []
-        classes = []
+        images_paths = [] # images paths
+        images_arrays = [] # images as arrays
+        classes = [] # classes of images
 
         img_length = self.img_length
         img_height = self.img_height
@@ -78,10 +78,12 @@ class Loader():
                 img = np.resize(img, (img_size, img_size))
                 images_arrays.append(img)'''
 
+                # load image with chosen size
                 img = load_img(img_path, target_size=(img_length, img_height)) # img_length = img_height = 224
+                # transform image into array
                 img = img_to_array(img)
-                print(img)
-                print(img.shape) # (224, 224, 3)
+                #print(img)
+                #print(img.shape) # (224, 224, ?) -> ? = usually 3, but could be 1 pr 4
 
                 #img1 = np.random.rand(224, 224, 4)
 
@@ -91,16 +93,12 @@ class Loader():
                 if img.shape[2] == 4:
                     img = img[1:, :, :3]
 
-
-
-                # preprocess the image by (1) expanding the dimensions and
-                # (2) subtracting the mean RGB pixel intensity from the
-                # ImageNet dataset
+                # add first dimension to the image array
                 img = np.expand_dims(img, axis=0) # it adds first component -> (1, 224, 224, 3)
-                print("SSS", img.shape)
-                img = preprocess_input(img)
+                #print("SSS", img.shape)
+                img = preprocess_input(img) # ???
                 images_arrays.append(img)
-                print(img.shape)
+                #print(img.shape)
                 '''mod = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
                 features = mod.predict(img)
                 flattened_features = features.flatten()
@@ -108,12 +106,13 @@ class Loader():
 
                 classes.append(data_mapping[img_path])
 
+        # normalize images
         images_arrays = np.array(images_arrays) / 255.0 # put -0.5 ???
-        print(type(images_arrays))
+        #print(type(images_arrays))
         #images_arrays.reshape(-1, img_length, img_height, 1)
         #images_arrays.reshape(img_length, img_height, 1)
-        print(type(images_arrays))
-        print(images_arrays[0].shape)
+        #print(type(images_arrays))
+        #print(images_arrays[0].shape)
 
         '''input_shape = (224, 224, 3)
         img = image.load_img(img_path, target_size=(
