@@ -120,6 +120,7 @@ print(images_classes_query)
 
 # define the distance between query - gallery features vectors
 pairwise_dist = spatial.distance.cdist(features_query, features_gallery, 'minkowski', p=2.)
+# rows -> queries | columns -> gallery --> cell = distance between query-gallery image
 print(pairwise_dist)
 print(len(pairwise_dist))
 
