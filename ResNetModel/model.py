@@ -20,10 +20,15 @@ from tensorflow.keras.preprocessing.image import load_img
 VAL_PATH = os.path.sep.join([BASE_PATH_DATASETS, "validation"])
 TEST_PATH = os.path.sep.join([BASE_PATH_DATASETS, "testing"])'''
 
+
+
+
 #BASE_PATH_DATASETS = "Dataset_1"
-TRAIN_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/dataset/training"
+'''TRAIN_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/dataset/training"
 VAL_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/dataset/validation/gallery"
 TEST_PATH = "/content/drive/My Drive/Machine Learning Project/ML_challenge/ML_project/ResNetModel/dataset/validation/query"
+'''
+
 
 # determine the total number of image paths in training, validation,
 # and testing directories
@@ -37,15 +42,23 @@ totalTrain = 697 #len(list(paths.list_images(TRAIN_PATH)))
 
 # initialize the initial learning rate, batch size, and number of
 # epochs to train for
-INIT_LR = 1e-4
+'''INIT_LR = 1e-4
 BS = 32
-NUM_EPOCHS = 3
+NUM_EPOCHS = 3'''
 
 # define the path to the serialized output model after training
 #MODEL_PATH = "camo_detector.model"
 
 
 class ResNetPlus():
+
+    def __init__(self, train_path, init_lr, batch_size, num_epochs):
+        self.train_path = train_path
+        #self.val_path = val_path
+        #self.test_path = test_path
+        self.init_lr = init_lr
+        self.batch_size = batch_size
+        self.num_epochs = num_epochs
 
     def data_augmentation(self):
 
@@ -71,20 +84,20 @@ class ResNetPlus():
         # TODO probably shuffle is already done here, so we do not have to do random shuffling at the beginning
         # initialize the training generator
         trainGen = trainAug.flow_from_directory(
-            TRAIN_PATH,
+            self.train_path,
             class_mode="categorical",
             target_size=(224, 224),
             color_mode="rgb",
             shuffle=True,
-            batch_size=BS)
+            batch_size=self.batch_size)
         # initialize the validation generator
-        valGen = valAug.flow_from_directory(
+        '''valGen = valAug.flow_from_directory(
             VAL_PATH,
             class_mode="categorical",
             target_size=(224, 224),
             color_mode="rgb",
             shuffle=False,
-            batch_size=BS)
+            batch_size=BS)'''
         # initialize the testing generator
         '''testGen = valAug.flow_from_directory(
             TEST_PATH,
@@ -94,7 +107,7 @@ class ResNetPlus():
             shuffle=False,
             batch_size=BS)'''
 
-        return trainGen, valGen#, testGen
+        return trainGen#, valGen, testGen
 
 
     # Let’s load our ResNet50 classification model and prepare it for fine-tuning:
@@ -102,6 +115,7 @@ class ResNetPlus():
     # we load ResNet50 pre-trained on the ImageNet dataset, leaving off the fully-connected (FC) head
     def create_model(self):
 
+        # initial weights set using imagenet
         baseModel = ResNet50(weights="imagenet", include_top=False, input_shape=(224, 224, 3))
         #baseModel.summary()
         # Here, we can observe that the final layer in the ResNet architecture (again, without the fully-connected layer head)
@@ -131,7 +145,7 @@ class ResNetPlus():
     def compile_train(self, model):
 
         # compile the model
-        opt = Adam(lr=INIT_LR, decay=INIT_LR / NUM_EPOCHS)
+        opt = Adam(lr=self.init_lr, decay=self.init_lr / self.num_epochs)
         #model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
         #model.compile(loss="categorical_crossentropy", optimizer=opt)
         model.compile(loss="mean_squared_error", optimizer=opt)
@@ -139,24 +153,25 @@ class ResNetPlus():
         # create random generators for data augmentation
         generators = self.data_augmentation()
         trainGen = generators[0]
-        valGen = generators[1]
+        #valGen = generators[1]
 
-        print(type(trainGen))
+        '''print(type(trainGen))
         print(valGen) # tuple
         print(trainGen[0]) # size -> num_of_images * 224 * 224 * 3
         print(trainGen[0][0][0].shape) # single image -> 224 * 224 * 3
         print(totalTrain)
         print(BS)
-        print(NUM_EPOCHS)
+        print(NUM_EPOCHS)'''
         # train the model
         print("[INFO] training model...")
         H = model.fit(
             trainGen,
-            steps_per_epoch=totalTrain // BS,
-            #validation_data=valGen,
-            #validation_steps=1,#totalVal // BS,
-            epochs=NUM_EPOCHS)
-        print(type(H))
+            #steps_per_epoch=totalTrain // self.batch_size,
+            batch_size=self.batch_size,
+            epochs=self.num_epochs
+            # validation_data=valGen,
+            # validation_steps=1,#totalVal // BS,
+        )
         return H
 
 
