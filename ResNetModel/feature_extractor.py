@@ -26,12 +26,24 @@ import model
 class FeatureExtractor:
 
     def extract_features_single_img(self, img, model):
+        '''
+        Extract features form single image
+        :param img:
+        :param model:
+        :return:
+        '''
         features = model.predict(img)
         flattened_features = features.flatten()
         normalized_features = flattened_features / norm(flattened_features)
         return normalized_features
 
     def extract_tot_features(self, list_images, model): # 224, 3
+        '''
+        Extract features from list f imageso
+        :param list_images:
+        :param model:
+        :return:
+        '''
         '''input_shape = (img_size, img_size, num_channels)
         img = image.load_img(img_path, target_size=(input_shape[0], input_shape[1]))
         img_array = image.img_to_array(img)
@@ -81,7 +93,7 @@ make sure you are using the right one.'''
 which recursively looks for all the image files (defined by their extensions) under a directory:'''
 
 
-extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG']
+'''extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG']
 def get_file_list(root_dir):
     file_list = []
     counter = 1
@@ -91,7 +103,7 @@ def get_file_list(root_dir):
             if any(ext in filename for ext in extensions):
                 file_list.append(os.path.join(root, filename))
                 counter += 1
-    return file_list
+    return file_list'''
 
 # path to the datasets
 '''root_dir = 'Dataset/training'
