@@ -155,13 +155,13 @@ class ResNetPlus():
         trainGen = generators[0]
         #valGen = generators[1]
 
-        '''print(type(trainGen))
-        print(valGen) # tuple
+        print(type(trainGen))
+        #print(valGen) # tuple
         print(trainGen[0]) # size -> num_of_images * 224 * 224 * 3
         print(trainGen[0][0][0].shape) # single image -> 224 * 224 * 3
         print(totalTrain)
-        print(BS)
-        print(NUM_EPOCHS)'''
+        print(self.batch_size)
+        print(self.num_epochs)
         # train the model
         print("[INFO] training model...")
         H = model.fit(
