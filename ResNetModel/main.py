@@ -15,7 +15,7 @@ parser.add_argument('--data_path',
                     type=str,
                     default='challenge_data_small',
                     help='Dataset path')
-parser.add_argument('--descriptor',
+'''parser.add_argument('--descriptor',
                     '-desc',
                     type=str,
                     default='sift',
@@ -37,7 +37,7 @@ parser.add_argument('--gray',
 parser.add_argument('--random',
                     '-r',
                     action='store_true',
-                    help='Random run')
+                    help='Random run')'''
 args = parser.parse_args()
 
 
@@ -52,8 +52,8 @@ query_path = os.path.join(validation_path, 'query')
 
 
 
-loader = loader.Loader(224, 224, 3)
-model_manager = model.ResNetPlus()
+loader = loader.Loader(224, 224, 3) # img_length, img_height, num_of_channels
+model_manager = model.ResNetPlus(training_path, 1e-4, 32, 3) # train_path, lr_rate, batch_size, num_epochs
 feature_extractor = feature_extractor.FeatureExtractor()
 
 '''training_path = 'Dataset_1/training'
@@ -65,9 +65,7 @@ query_path = 'Dataset_1/validation/query'
 
 # TODO loading training data
 x = loader.get_files(training_path)
-data_paths_train = loader.get_data_paths(x)
-list_images_train = data_paths_train[1]
-images_paths_train = data_paths_train[0]
+images_paths_train, list_images_train, images_classes_train = loader.get_data_paths(x)
 print("paths images train", images_paths_train)
 
 #pickle.dump(images_paths, open('images_paths_gallery.pickle', 'wb'))
@@ -82,28 +80,22 @@ y = model_manager.compile_train(model_res_net)
 
 # TODO loading gallery data
 x = loader.get_files(gallery_path)
-data_paths_gellery = loader.get_data_paths(x)
-list_images_gellery = data_paths_gellery[1]
-images_paths_gellery = data_paths_gellery[0]
-print("paths images paths gallery", images_paths_gellery)
-gallery_classes = data_paths_gellery[2]
-print("gallery classes", gallery_classes)
+images_paths_gallery, list_images_gallery, images_classes_gallery = loader.get_data_paths(x)
+print("paths images paths gallery", images_paths_gallery)
 # TODO predict features in gallery
-single_features = feature_extractor.extract_features_single_img(list_images_gellery[0], model_res_net)
-tot_features = feature_extractor.extract_tot_features(list_images_gellery, model_res_net)
-print(list_images_gellery)
+#single_features = feature_extractor.extract_features_single_img(list_images_gallery, model_res_net)
+tot_features_gallery = feature_extractor.extract_tot_features(list_images_gallery, model_res_net)
+print(list_images_gallery)
 print('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-print("features gallery", tot_features)
-pickle.dump(tot_features, open('features_gallery_tot.pickle', 'wb'))
-pickle.dump(gallery_classes, open('gallery_classes_tot.pickle', 'wb'))
+print("features gallery", tot_features_gallery)
+pickle.dump(tot_features_gallery, open('features_gallery_tot.pickle', 'wb'))
+pickle.dump(images_classes_gallery, open('gallery_classes_tot.pickle', 'wb'))
 
 # TODO predict features query
 x = loader.get_files(query_path)
 print("RRRRRRRRRRRRR")
-data_paths_query = loader.get_data_paths(x)
-list_images_query = data_paths_query[1]
-images_paths_query = data_paths_query[0]
-query_classes = data_paths_query[2]
+images_paths_query, list_images_query, images_classes_query = loader.get_data_paths(x)
+
 # images_paths_query, list_images_query, images_classes = loader.get_data_paths(x)
 print(images_paths_query)
 print(list_images_query)
@@ -111,7 +103,7 @@ print(list_images_query)
 features_query = feature_extractor.extract_tot_features(list_images_query, model_res_net)
 print("features query", features_query)
 pickle.dump(features_query, open('features_query_tot.pickle', 'wb'))
-pickle.dump(query_classes, open('query_classes_tot.pickle', 'wb'))
+pickle.dump(images_classes_query, open('query_classes_tot.pickle', 'wb'))
 
 
 gallery_features = pickle.load(open('features_gallery_tot.pickle', 'rb'))
