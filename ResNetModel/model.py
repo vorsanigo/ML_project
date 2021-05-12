@@ -91,7 +91,7 @@ class ResNetPlus():
             class_mode="categorical",
             target_size=(224, 224),
             color_mode="rgb",
-            shuffle=False, # TODO true or false ?
+            shuffle=True, # TODO true or false ? true è default a per noi è ok, anche se ci scambia l'ordine non ci interessa se non usiamo le classe, se usiamo le classi boh
             batch_size=self.batch_size)
         # initialize the validation generator
         '''valGen = valAug.flow_from_directory(
@@ -186,6 +186,9 @@ class ResNetPlus():
         epochs=3#self.num_epochs
         # validation_data=valGen,
         # validation_steps=1,#totalVal // BS,'''
+
+        model.save('resnet_model.h5')
+
         return H
 
 
