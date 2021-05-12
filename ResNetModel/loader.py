@@ -183,9 +183,9 @@ x = mod.predict(list_images[0])
 print(mod.predict(list_images[0]))
 print(x.shape)'''
 
-img_size = 224
+'''img_size = 224
 
-extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG']
+extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG']'''
 
 
 '''def get_data(data_dir):
@@ -202,14 +202,14 @@ extensions = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG']
                 print(e)
     return np.array(data)'''
 
-
+'''
 def get_file_list(root_dir):
-    '''
+    
     Given the path of a single dataset (eg: train, gallery, query, test) it returns a list containing all the files
     in the directory
     :param root_dir:
     :return: list of files in a single dataset
-    '''
+    
     file_list = []
     counter = 1
     for root, directories, filenames in os.walk(root_dir):
@@ -219,7 +219,7 @@ def get_file_list(root_dir):
             if any(ext in filename for ext in extensions):
                 file_list.append(os.path.join(root, filename))
                 counter += 1
-    return file_list
+    return file_list'''
 
 
 '''
