@@ -129,12 +129,12 @@ class ResNetPlus():
 
         # model construction
         headModel = baseModel.output
-        headModel = tf.keras.layers.AveragePooling2D(pool_size=(7, 7))(headModel)
+        '''headModel = tf.keras.layers.AveragePooling2D(pool_size=(7, 7))(headModel)
         headModel = tf.keras.layers.Flatten(name="flatten")(headModel)
         headModel = tf.keras.layers.Dense(256, activation="relu")(headModel)
         headModel = tf.keras.layers.Dropout(0.5)(headModel)
         #headModel = tf.keras.layers.Dense(len(CLASSES), activation="softmax")(headModel)
-        headModel = tf.keras.layers.Dense(22, activation="softmax")(headModel)
+        headModel = tf.keras.layers.Dense(22, activation="softmax")(headModel)'''
 
         # we append the HeadModel constructed to the body of ResNet
         model = Model(inputs=baseModel.input, outputs=headModel)
