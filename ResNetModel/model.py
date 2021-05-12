@@ -151,8 +151,8 @@ class ResNetPlus():
         model.compile(loss="mean_squared_error", optimizer=opt)
 
         # create random generators for data augmentation
-        generators = self.data_augmentation()
-        trainGen = generators[0]
+        #generators = self.data_augmentation()
+        trainGen = self.data_augmentation()
         #valGen = generators[1]
 
         print('s', type(trainGen))
