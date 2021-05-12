@@ -80,8 +80,8 @@ class ResNetPlus():
         # the mean subtraction value for each of the data augmentation
         # objects
         # TODO ???????? why mean?
-        mean = np.array([123.68, 116.779, 103.939], dtype="float32")
-        trainAug.mean = mean
+        #mean = np.array([123.68, 116.779, 103.939], dtype="float32")
+        #trainAug.mean = mean
         #valAug.mean = mean
 
         # TODO probably shuffle is already done here, so we do not have to do random shuffling at the beginning
