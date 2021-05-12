@@ -61,7 +61,10 @@ class ResNetPlus():
         self.num_epochs = num_epochs
 
     def data_augmentation(self):
-
+        '''
+        Data augmentation on images of the dataset
+        :return:
+        '''
         # initialize the training training data augmentation object
         trainAug = ImageDataGenerator(
             rotation_range=25,
@@ -114,7 +117,10 @@ class ResNetPlus():
     # The process of fine-tuning allows us to reuse the filters learned during a previous training exercise. In our case,
     # we load ResNet50 pre-trained on the ImageNet dataset, leaving off the fully-connected (FC) head
     def create_model(self):
-
+        '''
+        Create the model starting from ResNet50 and appending more new layers
+        :return:
+        '''
         # initial weights set using imagenet
         baseModel = ResNet50(weights="imagenet", include_top=False, input_shape=(224, 224, 3))
         #baseModel.summary()
@@ -143,7 +149,11 @@ class ResNetPlus():
 
 
     def compile_train(self, model):
-
+        '''
+        Compile the model using data generator for augmentation
+        :param model:
+        :return:
+        '''
         # compile the model
         opt = Adam(lr=self.init_lr, decay=self.init_lr / self.num_epochs)
         #model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
@@ -208,7 +218,7 @@ print(pred)'''
 
 
 
-class ResNet(Model):
+'''class ResNet(Model):
 
     def __init__(self): # input shape -> [244, 244, 3]
 
@@ -221,4 +231,4 @@ class ResNet(Model):
         x = self.backbone(inputs)
         x = self.final_conv(x)
         x = self.final_flatten(x)
-        return x, tf.keras.activations.softmax(x)
+        return x, tf.keras.activations.softmax(x)'''
