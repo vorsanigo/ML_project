@@ -74,15 +74,15 @@ class ResNetPlus():
             shear_range=0.2,
             horizontal_flip=True,
             fill_mode="nearest")
-        # initialize the validation/testing data augmentation object (which
-        # we'll be adding mean subtraction to)
-        valAug = ImageDataGenerator()
+        # TODO DATA AUGMETATION SOLO SU TRAINING ??
+        #valAug = ImageDataGenerator()
         # define the ImageNet mean subtraction (in RGB order) and set the
         # the mean subtraction value for each of the data augmentation
         # objects
+        # TODO ???????? why mean?
         mean = np.array([123.68, 116.779, 103.939], dtype="float32")
         trainAug.mean = mean
-        valAug.mean = mean
+        #valAug.mean = mean
 
         # TODO probably shuffle is already done here, so we do not have to do random shuffling at the beginning
         # initialize the training generator
@@ -140,8 +140,7 @@ class ResNetPlus():
         model = Model(inputs=baseModel.input, outputs=headModel)
         model.summary()
 
-        # loop over all layers in the base model and freeze them so they will
-        # *not* be updated during the training process
+        # loop over all layers in the base model and freeze them so they will *not* be updated during the training process
         for layer in baseModel.layers:
             layer.trainable = False
 
