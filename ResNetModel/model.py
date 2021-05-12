@@ -160,7 +160,7 @@ class ResNetPlus():
             decay_rate=0.96,
             staircase=True)
         # set optimizer
-        opt = Adam(lr=lr_schedule, decay=self.init_lr / self.num_epochs) #, decay=self.init_lr / self.num_epochs)
+        opt = Adam(learning_rate=lr_schedule, decay=self.init_lr / self.num_epochs) #, decay=self.init_lr / self.num_epochs)
         #model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
         # compile the model
         model.compile(loss="categorical_crossentropy", optimizer=opt)
