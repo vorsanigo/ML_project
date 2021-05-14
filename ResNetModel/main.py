@@ -129,8 +129,8 @@ images_paths_train, list_images_train, images_classes_train = loader.get_data_pa
 
 # TODO create model ResNetPlus, train it
 model_res_net = model_manager.create_model()
-#y = model_manager.compile_train(model_res_net)
-y = model_manager.compile_train_wandb(model_res_net)
+y = model_manager.compile_train(model_res_net)
+#y = model_manager.compile_train_wandb(model_res_net)
 # TODO save the model
 
 
