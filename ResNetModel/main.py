@@ -25,7 +25,7 @@ parser.add_argument('-mode',
                     help='training or test')
 parser.add_argument('-n',
                     type=str,
-                    default='test')
+                    default='training')
 parser.add_argument('-lr',
                     type=float,
                     default=1e-4)
@@ -70,24 +70,27 @@ parser.add_argument('--random',
                     help='Random run')'''
 args = parser.parse_args()
 
-'''wandb.login()
+wandb.login()
 
 # trigger or untrigger WandB
 if args.wandb == 'False' or args.mode == 'deploy':
     os.environ['WANDB_MODE'] = 'dryrun'
 
 # 1. Start a W&B run
-wandb.init(project='aml-challenge', entity='innominati', group=args.mode, name=args.n)
+'''wandb.init(project='aml-challenge', 
+           )
 wandb.config.epochs = args.e
-wandb.config.batch_size = args.bs
+wandb.config.batch_size = args.bs'''
 
-wandb.init(project='aml-challenge',
+wandb.init(project='aml-challenge',entity='innominati',
+           group=args.mode,
+           name=args.n,
            config={  # and include hyperparameters and metadata
-               "learning_rate": args.lr,
+               #"learning_rate": args.lr,
                "epochs": args.e,
                "batch_size": args.bs,
          })
-config = wandb.config'''
+config = wandb.config
 
 
 # we define training dataset
