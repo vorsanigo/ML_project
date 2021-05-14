@@ -91,12 +91,12 @@ class Loader():
                 if img.shape[2] == 1:
                     img = np.repeat(img, 3, axis=2)
                 if img.shape[2] == 4:
-                    img = img[1:, :, :3]
+                    img = img[1:, :, :3] # todo togliere l'1 ???
 
                 # add first dimension to the image array
-                img = np.expand_dims(img, axis=0) # it adds first component -> (1, 224, 224, 3)
+                img = np.expand_dims(img, axis=0) # it adds first component -> (1, 224, 224, 3) # todo va bene per autoencoder??
                 #print("SSS", img.shape)
-                img = preprocess_input(img) # ???
+                img = preprocess_input(img) # todo ???
                 images_arrays.append(img)
                 #print(img.shape)
                 '''mod = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
