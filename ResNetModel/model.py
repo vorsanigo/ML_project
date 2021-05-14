@@ -186,7 +186,7 @@ class ResNetPlus():
         print("[INFO] training model...")
         H = model.fit(
             trainGen,
-            steps_per_epoch=totalTrain // 32,
+            steps_per_epoch=totalTrain // self.batch_size,
             # validation_data=valGen,
             # validation_steps=1,#totalVal // BS,
             #batch_size=self.batch_size,
@@ -201,7 +201,7 @@ class ResNetPlus():
         print("parameters")
         print(H.history.keys())
 
-        # summarize history for accuracy
+        '''# summarize history for accuracy
         plt.plot(H.history['accuracy'])
         plt.plot(H.history['val_accuracy'])
         plt.title('model accuracy')
@@ -216,7 +216,7 @@ class ResNetPlus():
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['train', 'test'], loc='upper left')
-        plt.show()
+        plt.show()'''
 
 
         model.save('resnet_model.h5')
