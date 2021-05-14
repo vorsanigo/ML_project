@@ -166,8 +166,8 @@ class ResNetPlus():
         opt = Adam(learning_rate=lr_schedule, decay=self.init_lr / self.num_epochs) #, decay=self.init_lr / self.num_epochs)
         #model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
         # compile the model
-        model.compile(loss="categorical_crossentropy", optimizer=opt)
-        #model.compile(loss="mean_squared_error", optimizer=opt)
+        #model.compile(loss="categorical_crossentropy", optimizer=opt)
+        model.compile(loss="mean_squared_error", optimizer=opt, metrics=["accuracy"])
 
         # create random generators for data augmentation
         #generators = self.data_augmentation()
@@ -186,10 +186,10 @@ class ResNetPlus():
         print("[INFO] training model...")
         H = model.fit(
             trainGen,
-            steps_per_epoch=totalTrain // self.batch_size,
+            #steps_per_epoch=totalTrain // self.batch_size,
             # validation_data=valGen,
             # validation_steps=1,#totalVal // BS,
-            #batch_size=self.batch_size,
+            batch_size=self.batch_size,
             epochs=self.num_epochs,
         )
         '''steps_per_epoch=totalTrain // self.batch_size,
@@ -267,7 +267,7 @@ class ResNetPlus():
             # validation_steps=1,#totalVal // BS,
             #batch_size=self.batch_size,
             epochs=self.num_epochs,
-            #callback=[WandbCallback()]
+            callbacks=[WandbCallback()]
         )
         '''steps_per_epoch=totalTrain // self.batch_size,
         #batch_size=self.batch_size,
