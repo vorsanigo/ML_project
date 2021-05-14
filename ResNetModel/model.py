@@ -166,8 +166,8 @@ class ResNetPlus():
         opt = Adam(learning_rate=lr_schedule, decay=self.init_lr / self.num_epochs) #, decay=self.init_lr / self.num_epochs)
         #model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
         # compile the model
-        model.compile(loss="mean_squared_error", optimizer=opt)
-        #model.compile(loss="mean_squared_error", optimizer=opt, metrics=["accuracy"])
+        #model.compile(loss="mean_squared_error", optimizer=opt)
+        model.compile(loss="mean_squared_error", optimizer=opt, metrics=["accuracy"])
 
         print("DONEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 
@@ -227,7 +227,7 @@ class ResNetPlus():
 
         return H
 
-
+    # TODO BISOGNA AGGIUNGERE INIZIALIZZAZIONE DI WANDB QUI ???
     def compile_train_wandb(self, model):
         '''
         Compile the model using data generator for augmentation
