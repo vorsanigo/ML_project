@@ -23,7 +23,7 @@ from tensorflow.keras.preprocessing.image import load_img
 VAL_PATH = os.path.sep.join([BASE_PATH_DATASETS, "validation"])
 TEST_PATH = os.path.sep.join([BASE_PATH_DATASETS, "testing"])'''
 
-
+# TODO PROBLEM WITH THE MODEL IF WE CHANGE THE LAYERS -> SIZES OF WHAT IS RETURNED
 
 
 #BASE_PATH_DATASETS = "Dataset_1"
@@ -243,7 +243,7 @@ class ResNetPlus():
         #model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
         # compile the model
         #model.compile(loss="categorical_crossentropy", optimizer=opt)
-        model.compile(loss="mean_squared_error", optimizer=opt)
+        model.compile(loss="mean_squared_error", optimizer=opt, metrics=["accuracy"])
 
         # create random generators for data augmentation
         #generators = self.data_augmentation()
@@ -281,7 +281,7 @@ class ResNetPlus():
         print(H.history.keys())
 
         # summarize history for accuracy
-        plt.plot(H.history['accuracy'])
+        '''plt.plot(H.history['accuracy'])
         plt.plot(H.history['val_accuracy'])
         plt.title('model accuracy')
         plt.ylabel('accuracy')
@@ -295,7 +295,7 @@ class ResNetPlus():
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.legend(['train', 'test'], loc='upper left')
-        plt.show()
+        plt.show()'''
 
         model.save('resnet_model.h5')
 
