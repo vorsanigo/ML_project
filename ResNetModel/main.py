@@ -6,6 +6,9 @@ from scipy import spatial
 import numpy as np
 import os
 import argparse
+import wandb
+from wandb.keras import WandbCallback
+
 
 # link seguito come spunto https://www.pyimagesearch.com/2020/04/27/fine-tuning-resnet-with-keras-tensorflow-and-deep-learning/
 
@@ -15,6 +18,32 @@ parser.add_argument('--data_path',
                     type=str,
                     default='challenge_data_small',
                     help='Dataset path')
+parser.add_argument('-mode',
+                    type=str,
+                    default='training',
+                    help='training or test')
+parser.add_argument('-n',
+                    type=str,
+                    default='test')
+parser.add_argument('-lr',
+                    type=float,
+                    default=1e-4)
+parser.add_argument('-e',
+                    type=int,
+                    default=30)
+parser.add_argument('-bs',
+                    type=int,
+                    default=32)
+parser.add_argument('-wandb',
+                    type=str,
+                    default='True',
+                    help='Log on WandB (default = True)')
+parser.add_argument('-img_size',
+                    type=int,
+                    default=224)
+parser.add_argument('-channels',
+                    type=int,
+                    default=3)
 '''parser.add_argument('--descriptor',
                     '-desc',
                     type=str,
@@ -40,6 +69,23 @@ parser.add_argument('--random',
                     help='Random run')'''
 args = parser.parse_args()
 
+# trigger or untrigger WandB
+if args.wandb == 'False' or args.mode == 'deploy':
+    os.environ['WANDB_MODE'] = 'dryrun'
+
+# 1. Start a W&B run
+wandb.init(project='aml-challenge', entity='innominati', group=args.mode, name=args.n)
+wandb.config.epochs = args.e
+wandb.config.batch_size = args.bs
+
+wandb.init(project='aml-challenge',
+           config={  # and include hyperparameters and metadata
+               "learning_rate": args.lr,
+               "epochs": args.e,
+               "batch_size": args.bs,
+         })
+config = wandb.config
+
 
 # we define training dataset
 training_path = os.path.join(args.data_path, 'training')
@@ -52,8 +98,8 @@ query_path = os.path.join(validation_path, 'query')
 
 
 
-loader = loader.Loader(224, 224, 3) # img_length, img_height, num_of_channels
-model_manager = model.ResNetPlus(training_path, 1e-4, 32, 3) # train_path, lr_rate, batch_size, num_epochs
+loader = loader.Loader(args.img_size, args.img_size, args.channels) # img_length, img_height, num_of_channels
+model_manager = model.ResNetPlus(training_path, args.lr, args.bs, args.e) # train_path, lr_rate, batch_size, num_epochs
 feature_extractor = feature_extractor.FeatureExtractor()
 
 '''training_path = 'Dataset_1/training'
@@ -75,7 +121,8 @@ images_paths_train, list_images_train, images_classes_train = loader.get_data_pa
 
 # TODO create model ResNetPlus, train it
 model_res_net = model_manager.create_model()
-y = model_manager.compile_train(model_res_net)
+#y = model_manager.compile_train(model_res_net)
+y = model_manager.compile_train_wandb(model_res_net)
 # TODO save the model
 
 
