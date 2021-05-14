@@ -244,7 +244,7 @@ class ResNetPlus():
             # validation_steps=1,#totalVal // BS,
             #batch_size=self.batch_size,
             epochs=self.num_epochs,
-            callback=[WandbCallback()]
+            #callback=[WandbCallback()]
         )
         '''steps_per_epoch=totalTrain // self.batch_size,
         #batch_size=self.batch_size,
