@@ -242,8 +242,8 @@ class ResNetPlus():
         opt = Adam(learning_rate=lr_schedule, decay=self.init_lr / self.num_epochs) #, decay=self.init_lr / self.num_epochs)
         #model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
         # compile the model
-        model.compile(loss="categorical_crossentropy", optimizer=opt)
-        #model.compile(loss="mean_squared_error", optimizer=opt)
+        #model.compile(loss="categorical_crossentropy", optimizer=opt)
+        model.compile(loss="mean_squared_error", optimizer=opt)
 
         # create random generators for data augmentation
         #generators = self.data_augmentation()
