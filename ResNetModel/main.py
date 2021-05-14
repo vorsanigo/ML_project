@@ -8,6 +8,7 @@ import os
 import argparse
 import wandb
 from wandb.keras import WandbCallback
+import keras
 
 
 # link seguito come spunto https://www.pyimagesearch.com/2020/04/27/fine-tuning-resnet-with-keras-tensorflow-and-deep-learning/
@@ -104,6 +105,7 @@ loader = loader.Loader(args.img_size, args.img_size, args.channels) # img_length
 model_manager = model.ResNetPlus(training_path, args.lr, args.bs, args.e) # train_path, lr_rate, batch_size, num_epochs
 feature_extractor = feature_extractor.FeatureExtractor()
 
+loaded_model_resnet = keras.models.load_model("resnet_model")
 '''training_path = 'Dataset_1/training'
 gallery_path = 'Dataset_1/validation/gallery'
 query_path = 'Dataset_1/validation/query'
