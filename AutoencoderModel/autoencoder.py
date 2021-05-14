@@ -76,7 +76,7 @@ class AutoEncoder():
                              batch_size=batch_size,
                              shuffle=True,
                              callbacks=[callback],
-                             verbose=0)
+                             verbose=1)
 
     # Save model architecture and weights to file
     def save_models(self):

@@ -4,7 +4,7 @@ import random
 from PIL import Image, ImageEnhance, ImageFilter
 
 
-def apply_transformer(imgs):
+def normalize_img(imgs):
     transformed_images = [img/255 for img in imgs]
     return transformed_images
 

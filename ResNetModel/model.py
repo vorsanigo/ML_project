@@ -73,6 +73,7 @@ class ResNetPlus():
             height_shift_range=0.1,
             shear_range=0.2,
             horizontal_flip=True,
+            vertical_flip=True,
             fill_mode="nearest")
         # TODO DATA AUGMETATION SOLO SU TRAINING ??
         #valAug = ImageDataGenerator()

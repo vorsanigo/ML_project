@@ -2,33 +2,40 @@ import os
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
 
-from image_loading import read_imgs_dir
+from image_loading import Loader
 from autoencoder import AutoEncoder
-from transform import apply_transformer, modifyImage
+from transform import normalize_img, modifyImage
 from visualization import *
+from scipy import spatial
 
 
 training = True
 
 # Make paths
-TrainDir = os.path.join(os.getcwd(), "data", "train")
-TestDir = os.path.join(os.getcwd(), "data", "test")
+TrainDir = os.path.join(os.getcwd(), "dataset", "training")
+QueryDir = os.path.join(os.getcwd(), "dataset", "validation", "query")
+GalleryDir = os.path.join(os.getcwd(), "dataset", "validation", "gallery")
 OutputDir = os.path.join(os.getcwd(), "output", "convAE")
 if not os.path.exists(OutputDir):
     os.makedirs(OutputDir)
 
 # Augment the datasets
-print("\nAugmentig dataset")
-modifyImage(TrainDir)
+#print("\nAugmentig dataset")
+#modifyImage(TrainDir)
+
 
 # Read images
-extensions = [".jpg", ".jpeg", ".png"]
-print("\nLoading training images")
-imgs_train = read_imgs_dir(TrainDir, extensions)
-print("Loading test images")
-imgs_test = read_imgs_dir(TestDir, extensions)
-shape_img = imgs_train[0].shape
-print("\nImage shape = " + str(shape_img))
+loader = Loader(100, 100, 3)
+train_map = loader.get_files(TrainDir)
+train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
+query_map = loader.get_files(QueryDir)
+query_paths, imgs_query, query_classes = loader.get_data_paths(query_map)
+gallery_map = loader.get_files(GalleryDir)
+gallery_paths, imgs_gallery, gallery_classes = loader.get_data_paths(gallery_map)
+
+shape_img = imgs_train[0].shape  # bc we need it as argument for the Autoencoder()
+print(shape_img)
+
 
 # Build models
 autoencoderFile = os.path.join(OutputDir, "ConvAE_autoecoder.h5")
@@ -39,20 +46,25 @@ model.set_arch()
 
 input_shape_model = tuple([int(x) for x in model.encoder.input.shape[1:]])
 output_shape_model = tuple([int(x) for x in model.encoder.output.shape[1:]])
-n_epochs = 500
+n_epochs = 5
 
 # Normalize all images
 print("\nNormalizing training images")
-imgs_train = apply_transformer(imgs_train)
-print("Normalizing test images")
-imgs_test = apply_transformer(imgs_test)
+imgs_train = normalize_img(imgs_train)
+print("Normalizing query images")
+imgs_query = normalize_img(imgs_query)
+print("Normalizing gallery images")
+imgs_gallery = normalize_img(imgs_gallery)
+
 
 # Convert images to numpy array of right dimensions
 print("\nConverting to numpy array of right dimensions")
 X_train = np.array(imgs_train).reshape((-1,) + input_shape_model)
-X_test = np.array(imgs_test).reshape((-1,) + input_shape_model)
+X_query = np.array(imgs_query).reshape((-1,) + input_shape_model)
+X_gallery = np.array(imgs_gallery).reshape((-1,) + input_shape_model)
 print(">>> X_train.shape = " + str(X_train.shape))
-print(">>> X_test.shape = " + str(X_test.shape))
+print(">>> X_query.shape = " + str(X_query.shape))
+print(">>> X_gallery.shape = " + str(X_gallery.shape))
 
 # Train (if necessary)
 if training:
@@ -70,29 +82,85 @@ else:
 print("\nCreating embeddings")
 E_train = model.predict(X_train)
 E_train_flatten = E_train.reshape((-1, np.prod(output_shape_model)))
-E_test = model.predict(X_test)
-E_test_flatten = E_test.reshape((-1, np.prod(output_shape_model)))
+E_query = model.predict(X_query)
+E_query_flatten = E_query.reshape((-1, np.prod(output_shape_model)))
+E_gallery = model.predict(X_gallery)
+E_gallery_flatten = E_gallery.reshape((-1, np.prod(output_shape_model)))
 print(">>> E_train.shape = " + str(E_train.shape))
-print(">>> E_test.shape = " + str(E_test.shape))
+print(">>> E_query.shape = " + str(E_query.shape))
+print(">>> E_gallery.shape = " + str(E_gallery.shape))
 print(">>> E_train_flatten.shape = " + str(E_train_flatten.shape))
-print(">>> E_test_flatten.shape = " + str(E_test_flatten.shape))
+print(">>> E_query_flatten.shape = " + str(E_query_flatten.shape))
+print(">>> E_gallery_flatten.shape = " + str(E_gallery_flatten.shape))
+
+# define the distance between query - gallery features vectors
+pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, 'minkowski', p=2.)
+# rows -> queries | columns -> gallery --> cell = distance between query-gallery image
+print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
+
+print("\nCalculating indices...")
+indices = np.argsort(pairwise_dist, axis=-1)
+print("Indices: {}".format(indices))
+
+'''
+Distances:
+[1.06049268 0.98174144 0.84297278 1.18097723 1.33711798 0.7725198
+  1.21793345 0.6474991  1.55152428 1.477141   1.25295738 1.28248735
+  1.7081946  1.93887704 1.20129754 1.51035105 1.62115751 1.45156932
+  1.29350864 2.17163186 2.34592395 2.0875376  1.50529649 1.98142459
+  2.05400083 2.32826204 1.72161598 1.62639113]
+
+Indices:
+[ 7  5  2  1  0  3 14  6 10 11 18  4 17  9 22 15  8 16 27 12 26 13 23 24
+  21 19 25 20]
+  
+Interpretation:
+"From "Indices" --> the element in position 7 in the "Distances" array is the smallest"
+bc 7 is in first position.
+So indices are sorted so that the relative distances are sorted from smallest (index 7) to largest (index 20)
+'''
+
+print("\nGallery classes", gallery_classes)
+gallery_matches = gallery_classes[indices]
+print("\nMatches")
+print(gallery_matches)
+
+
+def topk_accuracy(gt_label, matched_label, k=1):
+    matched_label = matched_label[:, :k]
+    total = matched_label.shape[0]
+    correct = 0
+    for q_idx, q_lbl in enumerate(gt_label):
+        correct+= np.any(q_lbl == matched_label[q_idx, :]).item()
+    acc_tmp = correct/total
+
+    return acc_tmp
+
+
+print('\n########## RESULTS ##########')
+
+for k in [1, 3, 10]:
+    topk_acc = topk_accuracy(query_classes, gallery_matches, k)
+    print('>>> Top-{:d} Accuracy: {:.3f}'.format(k, topk_acc))
+
+
 
 
 # Fit kNN model on training images
 print("\nFitting KNN model on training data...")
 knn = NearestNeighbors(n_neighbors=5, metric="cosine")
-knn.fit(E_train_flatten)
+knn.fit(E_gallery_flatten)
 print("Done fitting")
 
 # Querying on test images
 print("\nQuerying...")
 
-for i, emb_flatten in enumerate(E_test_flatten):
-    distances, indx = knn.kneighbors([emb_flatten]) # find k nearest train neighbours
+for i, emb_flatten in enumerate(E_query_flatten):
+    distances, indx = knn.kneighbors([emb_flatten])  # find k nearest gallery neighbours
     print("\nFor query image_" + str(i))
     print(">> Indices:" + str(indx))
     print(">> Distances:" + str(distances))
-    img_query = imgs_test[i]  # query image
-    imgs_retrieval = [imgs_train[idx] for idx in indx.flatten()]  # retrieval images
+    img_query = imgs_query[i]  # query image
+    imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]  # retrieval images
     outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
-    plot_query_retrieval(img_query, imgs_retrieval, None)
+    #plot_query_retrieval(img_query, imgs_retrieval, None)
