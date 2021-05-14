@@ -1,5 +1,8 @@
 import os
+import glob
 import numpy as np
+import skimage.io
+from skimage.transform import resize
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.preprocessing.image import load_img
 
@@ -64,3 +67,27 @@ class Loader():
                 classes.append(data_mapping[img_path])
 
         return images_paths, images_arrays, np.array(classes)
+
+
+# Read images with common extensions from a directory with no subfolders
+def read_imgs_no_subfolders(dirPath, extensions=None):
+    if extensions is None:
+        extensions = ['.jpg', '.png', '.jpeg']
+
+    all_img = []
+    img_list = glob.glob(os.path.join(dirPath, '*'))
+    # Iterate over images
+    for ext in extensions:
+        for img_path in img_list:
+            if img_path.endswith(ext):
+                new_img = skimage.io.imread(img_path, as_gray=False)
+                new_img = resize(new_img, (100, 100), anti_aliasing=True, preserve_range=True)
+
+                if new_img.shape[2] == 1:
+                    new_img = np.repeat(new_img, 3, axis=2)
+                if new_img.shape[2] == 4:
+                    new_img = new_img[1:, :, :3]
+
+                all_img.append(new_img)
+
+    return all_img

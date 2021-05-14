@@ -4,7 +4,7 @@ from sklearn.neighbors import NearestNeighbors
 
 from image_loading import Loader
 from autoencoder import AutoEncoder
-from transform import normalize_img, modifyImage
+from transform import normalize_img, data_augmentation
 from visualization import *
 from scipy import spatial
 
@@ -12,9 +12,9 @@ from scipy import spatial
 training = True
 
 # Make paths
-TrainDir = os.path.join(os.getcwd(), "dataset", "training")
-QueryDir = os.path.join(os.getcwd(), "dataset", "validation", "query")
-GalleryDir = os.path.join(os.getcwd(), "dataset", "validation", "gallery")
+TrainDir = os.path.join(os.getcwd(), "dataset2", "training")
+QueryDir = os.path.join(os.getcwd(), "dataset2", "validation", "query")
+GalleryDir = os.path.join(os.getcwd(), "dataset2", "validation", "gallery")
 OutputDir = os.path.join(os.getcwd(), "output", "convAE")
 if not os.path.exists(OutputDir):
     os.makedirs(OutputDir)
@@ -22,6 +22,7 @@ if not os.path.exists(OutputDir):
 # Augment the datasets
 #print("\nAugmentig dataset")
 #modifyImage(TrainDir)
+
 
 
 # Read images

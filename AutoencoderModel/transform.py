@@ -2,13 +2,46 @@ import os
 import glob
 import random
 from PIL import Image, ImageEnhance, ImageFilter
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
 def normalize_img(imgs):
     transformed_images = [img/255 for img in imgs]
     return transformed_images
 
+def data_augmentation(dir):
+    '''
+    Data augmentation on images of the dataset
+    :return:
+    '''
+    # initialize the training training data augmentation object
+    trainAug = ImageDataGenerator(
+        rotation_range=25,
+        zoom_range=0.1,
+        width_shift_range=0.1,
+        height_shift_range=0.1,
+        shear_range=0.2,
+        horizontal_flip=True,
+        vertical_flip=True,
+        fill_mode="nearest")
 
+
+    # TODO probably shuffle is already done here, so we do not have to do random shuffling at the beginning
+    # initialize the training generator
+    trainGen = trainAug.flow_from_directory(
+        dir,
+        class_mode="categorical",
+        target_size=(100, 100),
+        color_mode="rgb",
+        shuffle=True,# TODO true or false ? true è default a per noi è ok, anche se ci scambia l'ordine non ci interessa se non usiamo le classe, se usiamo le classi boh
+        batch_size=256)
+
+    return trainGen
+
+
+
+
+'''
 def modifyImage(data_path):
 
     # Iterate over subfolders
@@ -95,5 +128,5 @@ def light(img, image_path, j):
     bright.save("bright_%s.jpg" % (j))
     contr.save("contr_%s.jpg" % (j))
     sat.save("sat_%s.jpg" % (j))
-
+'''
 
