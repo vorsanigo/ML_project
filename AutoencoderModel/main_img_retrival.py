@@ -46,7 +46,7 @@ model.set_arch()
 
 input_shape_model = tuple([int(x) for x in model.encoder.input.shape[1:]])
 output_shape_model = tuple([int(x) for x in model.encoder.output.shape[1:]])
-n_epochs = 5
+n_epochs = 500
 
 # Normalize all images
 print("\nNormalizing training images")
