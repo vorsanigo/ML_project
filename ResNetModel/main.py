@@ -21,7 +21,7 @@ parser.add_argument('--data_path',
                     help='Dataset path')
 parser.add_argument('-mode',
                     type=str,
-                    default='training',
+                    default='training model',
                     help='training or test')
 parser.add_argument('-n',
                     type=str,
@@ -82,7 +82,8 @@ if args.wandb == 'False' or args.mode == 'deploy':
 wandb.config.epochs = args.e
 wandb.config.batch_size = args.bs'''
 
-wandb.init(project='aml-challenge',entity='innominati',
+wandb.init(project='aml-challenge',
+           entity='innominati',
            group=args.mode,
            name=args.n,
            config={  # and include hyperparameters and metadata
