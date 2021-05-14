@@ -4,7 +4,7 @@ from tensorflow.keras import Model
 from tensorflow.keras.applications import ResNet50
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.optimizers import Adam
-import matplotlib as plt
+##import matplotlib as plt
 from wandb.keras import WandbCallback
 
 import os
