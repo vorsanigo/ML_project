@@ -69,6 +69,8 @@ parser.add_argument('--random',
                     help='Random run')'''
 args = parser.parse_args()
 
+wandb.login()
+
 # trigger or untrigger WandB
 if args.wandb == 'False' or args.mode == 'deploy':
     os.environ['WANDB_MODE'] = 'dryrun'
