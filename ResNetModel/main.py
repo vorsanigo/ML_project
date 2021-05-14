@@ -105,7 +105,9 @@ loader = loader.Loader(args.img_size, args.img_size, args.channels) # img_length
 model_manager = model.ResNetPlus(training_path, args.lr, args.bs, args.e) # train_path, lr_rate, batch_size, num_epochs
 feature_extractor = feature_extractor.FeatureExtractor()
 
-loaded_model_resnet = keras.models.load_model("resnet_model")
+#loaded_model_resnet = keras.models.load_model("resnet_model")
+
+
 '''training_path = 'Dataset_1/training'
 gallery_path = 'Dataset_1/validation/gallery'
 query_path = 'Dataset_1/validation/query'
