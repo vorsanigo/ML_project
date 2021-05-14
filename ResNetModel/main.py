@@ -93,6 +93,7 @@ wandb.init(project='aml-challenge',entity='innominati',
 config = wandb.config
 
 
+
 # we define training dataset
 training_path = os.path.join(args.data_path, 'training')
 
@@ -101,8 +102,6 @@ validation_path = os.path.join(args.data_path, 'validation')
 gallery_path = os.path.join(validation_path, 'gallery')
 query_path = os.path.join(validation_path, 'query')
 
-
-print("EP", args.e)
 
 loader = loader.Loader(args.img_size, args.img_size, args.channels) # img_length, img_height, num_of_channels
 model_manager = model.ResNetPlus(training_path, args.lr, args.bs, args.e) # train_path, lr_rate, batch_size, num_epochs
