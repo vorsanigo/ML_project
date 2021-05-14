@@ -198,7 +198,30 @@ class ResNetPlus():
         # validation_data=valGen,
         # validation_steps=1,#totalVal // BS,'''
 
+        print("parameters")
+        print(H.history.keys())
+
+        # summarize history for accuracy
+        plt.plot(H.history['accuracy'])
+        plt.plot(H.history['val_accuracy'])
+        plt.title('model accuracy')
+        plt.ylabel('accuracy')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.show()
+        # summarize history for loss
+        plt.plot(H.history['loss'])
+        plt.plot(H.history['val_loss'])
+        plt.title('model loss')
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.show()
+
+
         model.save('resnet_model.h5')
+
+
 
         return H
 
