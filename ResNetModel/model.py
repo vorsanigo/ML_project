@@ -4,6 +4,9 @@ from tensorflow.keras import Model
 from tensorflow.keras.applications import ResNet50
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.optimizers import Adam
+import matplotlib as plt
+from wandb.keras import WandbCallback
+
 import os
 #from pyimagesearch import config
 import numpy as np
@@ -129,12 +132,12 @@ class ResNetPlus():
 
         # model construction
         headModel = baseModel.output
-        '''headModel = tf.keras.layers.AveragePooling2D(pool_size=(7, 7))(headModel)
+        headModel = tf.keras.layers.AveragePooling2D(pool_size=(7, 7))(headModel)
         headModel = tf.keras.layers.Flatten(name="flatten")(headModel)
         headModel = tf.keras.layers.Dense(256, activation="relu")(headModel)
         headModel = tf.keras.layers.Dropout(0.5)(headModel)
         #headModel = tf.keras.layers.Dense(len(CLASSES), activation="softmax")(headModel)
-        headModel = tf.keras.layers.Dense(22, activation="softmax")(headModel)'''
+        headModel = tf.keras.layers.Dense(22, activation="softmax")(headModel)
 
         # we append the HeadModel constructed to the body of ResNet
         model = Model(inputs=baseModel.input, outputs=headModel)
@@ -187,12 +190,89 @@ class ResNetPlus():
             # validation_data=valGen,
             # validation_steps=1,#totalVal // BS,
             #batch_size=self.batch_size,
-            epochs=self.num_epochs)
+            epochs=self.num_epochs,
+        )
         '''steps_per_epoch=totalTrain // self.batch_size,
         #batch_size=self.batch_size,
         epochs=3#self.num_epochs
         # validation_data=valGen,
         # validation_steps=1,#totalVal // BS,'''
+
+        model.save('resnet_model.h5')
+
+        return H
+
+
+    def compile_train_wandb(self, model):
+        '''
+        Compile the model using data generator for augmentation
+        :param model:
+        :return:
+        '''
+        # set scheduler for learning rate
+        lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+            self.init_lr,
+            decay_steps=250,
+            decay_rate=0.96,
+            staircase=True)
+        # set optimizer
+        opt = Adam(learning_rate=lr_schedule, decay=self.init_lr / self.num_epochs) #, decay=self.init_lr / self.num_epochs)
+        #model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
+        # compile the model
+        model.compile(loss="categorical_crossentropy", optimizer=opt)
+        #model.compile(loss="mean_squared_error", optimizer=opt)
+
+        # create random generators for data augmentation
+        #generators = self.data_augmentation()
+        trainGen = self.data_augmentation()
+        #valGen = generators[1]
+
+        '''print('s', type(trainGen))
+        #print(valGen) # tuple
+        print('q', trainGen[0]) # size -> num_of_images * 224 * 224 * 3
+        print('e', trainGen[0][0][0].shape) # single image -> 224 * 224 * 3
+        print(totalTrain)
+        print(self.batch_size)
+        print(self.num_epochs)'''
+
+        # train the model
+        print("[INFO] training model...")
+        H = model.fit(
+            trainGen,
+            steps_per_epoch=totalTrain // 32,
+            # validation_data=valGen,
+            # validation_steps=1,#totalVal // BS,
+            #batch_size=self.batch_size,
+            epochs=self.num_epochs,
+            callback=[WandbCallback()]
+        )
+        '''steps_per_epoch=totalTrain // self.batch_size,
+        #batch_size=self.batch_size,
+        epochs=3#self.num_epochs
+        # validation_data=valGen,
+        # validation_steps=1,#totalVal // BS,'''
+
+        #wandb.log
+
+        print("parameters")
+        print(H.history.keys())
+
+        # summarize history for accuracy
+        plt.plot(H.history['accuracy'])
+        plt.plot(H.history['val_accuracy'])
+        plt.title('model accuracy')
+        plt.ylabel('accuracy')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.show()
+        # summarize history for loss
+        plt.plot(H.history['loss'])
+        plt.plot(H.history['val_loss'])
+        plt.title('model loss')
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.show()
 
         model.save('resnet_model.h5')
 
