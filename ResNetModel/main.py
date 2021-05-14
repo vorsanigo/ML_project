@@ -69,7 +69,7 @@ parser.add_argument('--random',
                     help='Random run')'''
 args = parser.parse_args()
 
-wandb.login()
+'''wandb.login()
 
 # trigger or untrigger WandB
 if args.wandb == 'False' or args.mode == 'deploy':
@@ -86,7 +86,7 @@ wandb.init(project='aml-challenge',
                "epochs": args.e,
                "batch_size": args.bs,
          })
-config = wandb.config
+config = wandb.config'''
 
 
 # we define training dataset
@@ -98,7 +98,7 @@ gallery_path = os.path.join(validation_path, 'gallery')
 query_path = os.path.join(validation_path, 'query')
 
 
-
+print("EP", args.e)
 
 loader = loader.Loader(args.img_size, args.img_size, args.channels) # img_length, img_height, num_of_channels
 model_manager = model.ResNetPlus(training_path, args.lr, args.bs, args.e) # train_path, lr_rate, batch_size, num_epochs
