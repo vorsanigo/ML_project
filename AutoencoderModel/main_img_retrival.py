@@ -85,7 +85,7 @@ config = wandb.config
 '''
 
 
-training = True
+#training = True
 
 # Make paths
 TrainDir = os.path.join(os.getcwd(), args.data_path, "training")
@@ -159,7 +159,7 @@ trainGen = data_augmentation(X_train, args.bs)
 #trainGen = X_train
 
 # Train (if necessary)
-if training:
+if args.mode == "training model":
     print("\nStart training...")
     model.compile(loss=args.loss, optimizer="adam")
     model.fit2(trainGen, n_epochs=args.e, batch_size=args.bs)
