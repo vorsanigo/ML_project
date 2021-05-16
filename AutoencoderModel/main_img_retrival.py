@@ -7,17 +7,100 @@ from autoencoder import AutoEncoder
 from transform import normalize_img, data_augmentation
 from visualization import *
 from scipy import spatial
+import argparse
+
+
+
+parser = argparse.ArgumentParser(description='Challenge presentation example')
+parser.add_argument('--data_path',
+                    '-d',
+                    type=str,
+                    default='dataset',
+                    help='Dataset path')
+parser.add_argument('-mode',
+                    type=str,
+                    default='training model',
+                    help='training or test')
+parser.add_argument('-n',
+                    type=str,
+                    default='training')
+parser.add_argument('-lr',
+                    type=float,
+                    default=1e-4,
+                    help='learning rate')
+parser.add_argument('-e',
+                    type=int,
+                    default=50,
+                    help='number of epochs')
+parser.add_argument('-bs',
+                    type=int,
+                    default=32,
+                    help='batch size')
+parser.add_argument('-loss',
+                    type=str,
+                    default="mse",
+                    help='loss function')
+parser.add_argument('-wandb',
+                    type=str,
+                    default='True',
+                    help='Log on WandB (default = True)')
+parser.add_argument('-img_size',
+                    type=int,
+                    default=100,
+                    help='image size for the model')
+parser.add_argument('-channels',
+                    type=int,
+                    default=3,
+                    help='number of channels')
+parser.add_argument('-metric',
+                    type=str,
+                    default='minkowski',
+                    help='metric to compute distance query-gallery')
+args = parser.parse_args()
+
+
+
+'''wandb.login()
+
+# trigger or untrigger WandB
+if args.wandb == 'False' or args.mode == 'deploy':
+    os.environ['WANDB_MODE'] = 'dryrun'
+'''
+# 1. Start a W&B run
+'''wandb.init(project='aml-challenge', 
+           )
+wandb.config.epochs = args.e
+wandb.config.batch_size = args.bs'''
+
+'''wandb.init(project='aml-challenge',
+           entity='innominati',
+           group=args.mode,
+           name=args.n,
+           config={  # and include hyperparameters and metadata
+               #"learning_rate": args.lr,
+               "epochs": args.e,
+               "batch_size": args.bs,
+         })
+config = wandb.config
+'''
 
 
 training = True
 
 # Make paths
-TrainDir = os.path.join(os.getcwd(), "dataset2", "training")
+TrainDir = os.path.join(os.getcwd(), args.data_path, "training")
+QueryDir = os.path.join(os.getcwd(), args.data_path, "validation", "query")
+GalleryDir = os.path.join(os.getcwd(), args.data_path, "validation", "gallery")
+OutputDir = os.path.join(os.getcwd(), "output", "convAE")
+if not os.path.exists(OutputDir):
+    os.makedirs(OutputDir)
+# TODO MODIFIED USING PARSER
+'''TrainDir = os.path.join(os.getcwd(), "dataset2", "training")
 QueryDir = os.path.join(os.getcwd(), "dataset2", "validation", "query")
 GalleryDir = os.path.join(os.getcwd(), "dataset2", "validation", "gallery")
 OutputDir = os.path.join(os.getcwd(), "output", "convAE")
 if not os.path.exists(OutputDir):
-    os.makedirs(OutputDir)
+    os.makedirs(OutputDir)'''
 
 # Augment the datasets
 #print("\nAugmentig dataset")
@@ -26,7 +109,9 @@ if not os.path.exists(OutputDir):
 
 
 # Read images
-loader = Loader(100, 100, 3)
+loader = Loader(args.img_size, args.img_size, args.channels)
+# TODO MODIFIED USING PARSER
+#loader = Loader(100, 100, 3)
 train_map = loader.get_files(TrainDir)
 train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
 query_map = loader.get_files(QueryDir)
@@ -47,7 +132,9 @@ model.set_arch()
 
 input_shape_model = tuple([int(x) for x in model.encoder.input.shape[1:]])
 output_shape_model = tuple([int(x) for x in model.encoder.output.shape[1:]])
-n_epochs = 500
+#n_epochs = args.e # non serve perché lo passiamo direttamente nel modello
+# TODO MODIFIED USING PARSER
+#n_epochs = 500
 
 # Normalize all images
 print("\nNormalizing training images")
@@ -67,8 +154,22 @@ print(">>> X_train.shape = " + str(X_train.shape))
 print(">>> X_query.shape = " + str(X_query.shape))
 print(">>> X_gallery.shape = " + str(X_gallery.shape))
 
+# Creare object for train augmentation
+trainGen = data_augmentation(X_train, args.bs)
+#trainGen = X_train
+
 # Train (if necessary)
 if training:
+    print("\nStart training...")
+    model.compile(loss=args.loss, optimizer="adam")
+    model.fit2(trainGen, n_epochs=args.e, batch_size=args.bs)
+    model.save_models()
+    print("Done training")
+else:
+    print("\nLoading model...")
+    model.load_models(loss=args.loss, optimizer="adam")
+# TODO MODIFIED WITH PARSER AND DATA AUGMENTATION
+'''if training:
     print("\nStart training...")
     model.compile(loss="mse", optimizer="adam")
     model.fit2(X_train, n_epochs=n_epochs, batch_size=256)
@@ -76,7 +177,7 @@ if training:
     print("Done training")
 else:
     print("\nLoading model...")
-    model.load_models(loss="mse", optimizer="adam")
+    model.load_models(loss="mse", optimizer="adam")'''
 
 
 # Create embeddings using model
@@ -95,7 +196,9 @@ print(">>> E_query_flatten.shape = " + str(E_query_flatten.shape))
 print(">>> E_gallery_flatten.shape = " + str(E_gallery_flatten.shape))
 
 # define the distance between query - gallery features vectors
-pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, 'minkowski', p=2.)
+pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, args.metric, p=2.)
+# TODO MODIFIED WITH PARSER
+#pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, 'minkowski', p=2.)
 # rows -> queries | columns -> gallery --> cell = distance between query-gallery image
 print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
 
