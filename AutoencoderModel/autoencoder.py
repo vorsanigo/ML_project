@@ -72,11 +72,34 @@ class AutoEncoder():
 
         callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
 
-        self.autoencoder.fit(X_train, X_train, epochs=n_epochs,
+        self.autoencoder.fit(X_train,
+                             #X_train,
+                             epochs=n_epochs,
                              batch_size=batch_size,
                              shuffle=True,
                              callbacks=[callback],
                              verbose=1)
+
+    # TODO BEING MODIFIED TO USE DATA AUGMENTATION
+    '''def fit2(self, X, n_epochs=50, batch_size=256):
+        X_train = X
+
+        # Learning rate scheduler
+        def scheduler(n_epochs=50, lr=0.0001):
+            # This function keeps the initial learning rate for the first ten epochs
+            # and decreases it exponentially after that.
+            if n_epochs < 10:
+                return lr
+            else:
+                return lr * tf.math.exp(-0.1)
+
+        callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
+
+        self.autoencoder.fit(X_train, X_train, epochs=n_epochs,
+                             batch_size=batch_size,
+                             shuffle=True,
+                             callbacks=[callback],
+                             verbose=1)'''
 
     # Save model architecture and weights to file
     def save_models(self):
