@@ -9,7 +9,7 @@ def normalize_img(imgs):
     transformed_images = [img/255 for img in imgs]
     return transformed_images
 
-def data_augmentation(dir):
+def data_augmentation(train_set, batch_size):
     '''
     Data augmentation on images of the dataset
     :return:
@@ -28,13 +28,25 @@ def data_augmentation(dir):
 
     # TODO probably shuffle is already done here, so we do not have to do random shuffling at the beginning
     # initialize the training generator
-    trainGen = trainAug.flow_from_directory(
-        dir,
+    '''trainGen = trainAug.flow_from_directory(
+        dir_path,
         class_mode="categorical",
-        target_size=(100, 100),
+        target_size=target_size,
         color_mode="rgb",
         shuffle=True,# TODO true or false ? true è default a per noi è ok, anche se ci scambia l'ordine non ci interessa se non usiamo le classe, se usiamo le classi boh
-        batch_size=256)
+        batch_size=batch_size)'''
+
+    trainAug.fit(train_set)
+
+    trainGen = trainAug.flow(
+        train_set,
+        train_set,
+        #class_mode="categorical",
+        #target_size=target_size,
+        #color_mode="rgb",
+        shuffle=True,
+        # TODO true or false ? true è default a per noi è ok, anche se ci scambia l'ordine non ci interessa se non usiamo le classe, se usiamo le classi boh
+        batch_size=batch_size)
 
     return trainGen
 
