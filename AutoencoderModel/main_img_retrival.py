@@ -62,19 +62,19 @@ args = parser.parse_args()
 
 
 
-'''wandb.login()
+wandb.login(key='f97918185ed02886a90fa4464e7469c13c017460')
 
 # trigger or untrigger WandB
 if args.wandb == 'False' or args.mode == 'deploy':
     os.environ['WANDB_MODE'] = 'dryrun'
 
 # 1. Start a W&B run
-wandb.init(project='aml-challenge', 
+wandb.init(project='aml-challenge',
            )
 wandb.config.epochs = args.e
 wandb.config.batch_size = args.bs
 
-wandb.init(project='aml-challenge',
+'''wandb.init(project='aml-challenge',
            entity='innominati',
            group=args.mode,
            name=args.n,
@@ -83,8 +83,8 @@ wandb.init(project='aml-challenge',
                "epochs": args.e,
                "batch_size": args.bs,
          })
-config = wandb.config
-'''
+config = wandb.config'''
+
 
 
 #training = True
@@ -243,7 +243,7 @@ print("\nQuerying...")
 
 
 
-for i, emb_flatten in enumerate(E_query_flatten):
+'''for i, emb_flatten in enumerate(E_query_flatten):
     distances, indx = knn.kneighbors([emb_flatten])  # find k nearest gallery neighbours
     print("\nFor query image_" + str(i))
     print(">> Indices:" + str(indx))
@@ -253,4 +253,4 @@ for i, emb_flatten in enumerate(E_query_flatten):
     outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
     #plot_query_retrieval(img_query, imgs_retrieval, None)
     display_df(imgs_query, distances, imgs_retrieval)
-    break
+    break'''
