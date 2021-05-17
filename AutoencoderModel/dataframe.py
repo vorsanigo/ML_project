@@ -1,59 +1,53 @@
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
+import base64
+from PIL import Image
+from io import BytesIO
+import IPython
+from matplotlib.backends.backend_pdf import PdfPages
+import pdfkit
+from tensorflow.keras.preprocessing.image import array_to_img
 
-#final_df = pd.DataFrame(columns=['query', 'distances', 'gallery'])#, 'prova'])
-query_list = ['a','a','a','a','a']
-distances_list = ['q','l','m','n','l']
-gallery_list = ['1','2','4','4','8']
+def display_df(query_image, distances_list, gallery_list, k):
+    query_list = [query_image for i in range(k)]
+    distances_list = distances_list.flatten()
+    df = pd.DataFrame(list(zip(query_list, distances_list, gallery_list)),
+                      columns=['query', 'distances', 'gallery'])
+    df.index += 1
+    df = df.set_index('query', append=True).swaplevel(0,1)
+    print(df)
+    return df
 
-def display_df(query_list, distances_list, gallery_list):
-  df = pd.DataFrame(list(zip(query_list, distances_list, gallery_list)),
-               columns =['query', 'distances', 'gallery'], )
-  df = df.set_index('query', append=True).swaplevel(0,1)
-  print(df)
-  #return df
+def df_to_pdf(dataframe):
+    f = open('results.html', 'w')
+    a = dataframe.to_html()
+    f.write(a)
+    f.close()
 
+    # TODO: CONVERT TO PDF
+    # pdfkit.from_file('results.html', 'results.pdf')
 
+def prova(dataframe):
+    print(dataframe.query)
+    #dataframe.query = [get_thumbnail(f) for f in dataframe.query]
+    dataframe.gallery = [get_thumbnail(f) for f in dataframe.gallery]
 
-
-
-
-
-
-
-
-'''import plotly.graph_objects as go
-
-query_list = ['a','b','v']
-distances_list = ['q','l','m','n','l']
-gallery_list = ['1','2','4','4','8']
-
-values = [query_list,distances_list, gallery_list]
-'''
+    IPython.html(dataframe.to_html(formatters={['gallery']: image_formatter}, escape=False))
 
 
+def get_thumbnail(path):
+    i = Image.open(path)
+    i.thumbnail((150, 150), Image.LANCZOS)
+    return i
 
-'''
-fig = go.Figure(data=[go.Table(
-  columnorder = [1,2,3],
-  columnwidth = [80,400],
-  header = dict(
-    values = [['<b>QUERY'],
-              ['<b>DISTANCES'],
-              ['<b>GALLERY']],
-    line_color='darkslategray',
-    fill_color='white',
-    align=['left','center'],
-    font=dict(color='black', size=12),
-    height=40
-  ),
-  cells=dict(
-    values=values,
-    line_color='darkslategray',
-    fill=dict(color=['white', 'white', 'white']),
-    align=['left', 'center'],
-    font_size=12,
-    height=30)
-    )
-])
-fig.show()
-'''
+def image_base64(im):
+    if isinstance(im, str):
+        im = get_thumbnail(im)
+    with BytesIO() as buffer:
+        im.save(buffer, 'jpeg')
+    return base64.b64encode(buffer.getvalue()).decode()
+
+def image_formatter(im):
+    return f'<img src="data:image/jpg;base64,{image_base64(im)}">'

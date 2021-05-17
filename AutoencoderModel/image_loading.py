@@ -17,7 +17,7 @@ class Loader():
 
     def get_files(self, data_path):
         assert os.path.exists(data_path), 'Insert a valid path!'
-        data_classes = os.listdir(data_path) # subfolders -> classes (1, 2, distractor ...)
+        data_classes = os.listdir(data_path)  # subfolders -> classes (1, 2, distractor ...)
 
         data_mapping = {}
 
@@ -42,6 +42,7 @@ class Loader():
         images_paths = []  # images paths
         images_arrays = []  # images as arrays
         classes = []  # classes of images
+        images_names = []  # names of images
 
         img_length = self.img_length
         img_height = self.img_height
@@ -50,6 +51,8 @@ class Loader():
 
             if img_path.endswith('.jpg'):
                 images_paths.append(img_path)
+                temp = "r"+img_path
+                images_names.append(os.path.split(temp)[1])
 
                 # load image with chosen size
                 img = load_img(img_path, target_size=(img_length, img_height))
@@ -66,7 +69,7 @@ class Loader():
                 images_arrays.append(img)
                 classes.append(data_mapping[img_path])
 
-        return images_paths, images_arrays, np.array(classes)
+        return images_names, images_paths, images_arrays, np.array(classes)
 
 
 # Read images with common extensions from a directory with no subfolders
@@ -90,4 +93,4 @@ def read_imgs_no_subfolders(dirPath, extensions=None):
 
                 all_img.append(new_img)
 
-    return all_img
+    return all_img, img_list
