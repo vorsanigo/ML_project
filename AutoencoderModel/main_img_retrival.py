@@ -1,12 +1,13 @@
 import os
 import numpy as np
+import pandas as pd
 from sklearn.neighbors import NearestNeighbors
-from dataframe import display_df
 
 from image_loading import Loader
 from autoencoder import AutoEncoder
 from transform import normalize_img, data_augmentation
 from visualization import *
+from dataframe import *
 from scipy import spatial
 import argparse
 import wandb
@@ -87,8 +88,6 @@ config = wandb.config'''
 
 
 
-#training = True
-
 # Make paths
 TrainDir = os.path.join(os.getcwd(), args.data_path, "training")
 QueryDir = os.path.join(os.getcwd(), args.data_path, "validation", "query")
@@ -96,6 +95,7 @@ GalleryDir = os.path.join(os.getcwd(), args.data_path, "validation", "gallery")
 OutputDir = os.path.join(os.getcwd(), "output", "convAE")
 if not os.path.exists(OutputDir):
     os.makedirs(OutputDir)
+<<<<<<< Updated upstream
 
 
 # Augment the datasets
@@ -103,15 +103,17 @@ if not os.path.exists(OutputDir):
 #modifyImage(TrainDir)
 
 
+=======
+>>>>>>> Stashed changes
 
 # Read images
 loader = Loader(args.img_size, args.img_size, args.channels)
 train_map = loader.get_files(TrainDir)
-train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
+train_names, train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
 query_map = loader.get_files(QueryDir)
-query_paths, imgs_query, query_classes = loader.get_data_paths(query_map)
+query_names, query_paths, imgs_query, query_classes = loader.get_data_paths(query_map)
 gallery_map = loader.get_files(GalleryDir)
-gallery_paths, imgs_gallery, gallery_classes = loader.get_data_paths(gallery_map)
+gallery_names, gallery_paths, imgs_gallery, gallery_classes = loader.get_data_paths(gallery_map)
 
 shape_img = imgs_train[0].shape  # bc we need it as argument for the Autoencoder()
 print(shape_img)
@@ -161,7 +163,10 @@ if args.mode == "training model":
 else:
     print("\nLoading model...")
     model.load_models(loss=args.loss, optimizer="adam")
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
 # Create embeddings using model
 print("\nCreating embeddings")
@@ -233,24 +238,41 @@ for k in [1, 3, 10]:
 
 # Fit kNN model on training images
 print("\nFitting KNN model on training data...")
-knn = NearestNeighbors(n_neighbors=5, metric="cosine")
+k = 5
+knn = NearestNeighbors(n_neighbors=k, metric="cosine")
 knn.fit(E_gallery_flatten)
 print("Done fitting")
 
+update_df = []
 # Querying on test images
 print("\nQuerying...")
+<<<<<<< Updated upstream
 
 
 
 
 '''for i, emb_flatten in enumerate(E_query_flatten):
+=======
+for i, emb_flatten in enumerate(E_query_flatten):
+>>>>>>> Stashed changes
     distances, indx = knn.kneighbors([emb_flatten])  # find k nearest gallery neighbours
     print("\nFor query image_" + str(i))
     print(">> Indices:" + str(indx))
     print(">> Distances:" + str(distances))
     img_query = imgs_query[i]  # query image
+    query_name = query_names[i]
     imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]  # retrieval images
+    names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
     outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
     #plot_query_retrieval(img_query, imgs_retrieval, None)
+<<<<<<< Updated upstream
     display_df(imgs_query, distances, imgs_retrieval)
     break'''
+=======
+    update_df.append(display_df(query_name, distances, names_retrieval, k))
+
+results = pd.concat(update_df)
+prova(results)
+#df_to_pdf(results)
+#print(results)
+>>>>>>> Stashed changes
