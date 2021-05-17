@@ -1,4 +1,5 @@
 import tensorflow as tf
+from wandb.keras import WandbCallback
 
 
 class AutoEncoder():
@@ -77,7 +78,7 @@ class AutoEncoder():
                              epochs=n_epochs,
                              batch_size=batch_size,
                              shuffle=True,
-                             callbacks=[callback],
+                             callbacks=[callback, WandbCallback()],
                              verbose=1)
 
     # TODO BEING MODIFIED TO USE DATA AUGMENTATION
