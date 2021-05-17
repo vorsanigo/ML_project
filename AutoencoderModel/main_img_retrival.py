@@ -8,6 +8,7 @@ from transform import normalize_img, data_augmentation
 from visualization import *
 from scipy import spatial
 import argparse
+import wandb
 
 
 
@@ -65,14 +66,14 @@ args = parser.parse_args()
 # trigger or untrigger WandB
 if args.wandb == 'False' or args.mode == 'deploy':
     os.environ['WANDB_MODE'] = 'dryrun'
-'''
+
 # 1. Start a W&B run
-'''wandb.init(project='aml-challenge', 
+wandb.init(project='aml-challenge', 
            )
 wandb.config.epochs = args.e
-wandb.config.batch_size = args.bs'''
+wandb.config.batch_size = args.bs
 
-'''wandb.init(project='aml-challenge',
+wandb.init(project='aml-challenge',
            entity='innominati',
            group=args.mode,
            name=args.n,
@@ -94,13 +95,7 @@ GalleryDir = os.path.join(os.getcwd(), args.data_path, "validation", "gallery")
 OutputDir = os.path.join(os.getcwd(), "output", "convAE")
 if not os.path.exists(OutputDir):
     os.makedirs(OutputDir)
-# TODO MODIFIED USING PARSER
-'''TrainDir = os.path.join(os.getcwd(), "dataset2", "training")
-QueryDir = os.path.join(os.getcwd(), "dataset2", "validation", "query")
-GalleryDir = os.path.join(os.getcwd(), "dataset2", "validation", "gallery")
-OutputDir = os.path.join(os.getcwd(), "output", "convAE")
-if not os.path.exists(OutputDir):
-    os.makedirs(OutputDir)'''
+
 
 # Augment the datasets
 #print("\nAugmentig dataset")
@@ -110,8 +105,6 @@ if not os.path.exists(OutputDir):
 
 # Read images
 loader = Loader(args.img_size, args.img_size, args.channels)
-# TODO MODIFIED USING PARSER
-#loader = Loader(100, 100, 3)
 train_map = loader.get_files(TrainDir)
 train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
 query_map = loader.get_files(QueryDir)
@@ -133,8 +126,6 @@ model.set_arch()
 input_shape_model = tuple([int(x) for x in model.encoder.input.shape[1:]])
 output_shape_model = tuple([int(x) for x in model.encoder.output.shape[1:]])
 #n_epochs = args.e # non serve perché lo passiamo direttamente nel modello
-# TODO MODIFIED USING PARSER
-#n_epochs = 500
 
 # Normalize all images
 print("\nNormalizing training images")
@@ -154,6 +145,7 @@ print(">>> X_train.shape = " + str(X_train.shape))
 print(">>> X_query.shape = " + str(X_query.shape))
 print(">>> X_gallery.shape = " + str(X_gallery.shape))
 
+
 # Creare object for train augmentation
 trainGen = data_augmentation(X_train, args.bs)
 #trainGen = X_train
@@ -168,16 +160,6 @@ if args.mode == "training model":
 else:
     print("\nLoading model...")
     model.load_models(loss=args.loss, optimizer="adam")
-# TODO MODIFIED WITH PARSER AND DATA AUGMENTATION
-'''if training:
-    print("\nStart training...")
-    model.compile(loss="mse", optimizer="adam")
-    model.fit2(X_train, n_epochs=n_epochs, batch_size=256)
-    model.save_models()
-    print("Done training")
-else:
-    print("\nLoading model...")
-    model.load_models(loss="mse", optimizer="adam")'''
 
 
 # Create embeddings using model
@@ -197,8 +179,6 @@ print(">>> E_gallery_flatten.shape = " + str(E_gallery_flatten.shape))
 
 # define the distance between query - gallery features vectors
 pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, args.metric, p=2.)
-# TODO MODIFIED WITH PARSER
-#pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, 'minkowski', p=2.)
 # rows -> queries | columns -> gallery --> cell = distance between query-gallery image
 print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
 
