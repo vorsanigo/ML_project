@@ -53,8 +53,9 @@ class AutoEncoder():
 
     # Compile
     def compile(self, loss="mse", optimizer="adam"):
-        self.autoencoder.compile(optimizer=optimizer, loss=loss, metrics=[tf.keras.metrics.Accuracy()])
-    # Fit
+        self.autoencoder.compile(optimizer=optimizer, loss=loss, metrics=['mse'])
+        #self.autoencoder.compile(optimizer=optimizer, loss=loss, metrics=[tf.keras.metrics.Accuracy()])
+    # Fit  -> not used
     def fit(self, X, n_epochs=50, batch_size=256):
         X_train=X
         self.autoencoder.fit(X_train, X_train, epochs=n_epochs, batch_size=batch_size, shuffle=True)
