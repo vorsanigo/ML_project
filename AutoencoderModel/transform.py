@@ -1,19 +1,26 @@
 import os
 import glob
 import random
+
+import out as out
 from PIL import Image, ImageEnhance, ImageFilter
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
+import tensorflow as tf
+from tensorflow import keras
+import matplotlib.pyplot as plt
 
 def normalize_img(imgs):
     transformed_images = [img/255 for img in imgs]
     return transformed_images
 
+# TODO cropping maybe to add
 def data_augmentation(train_set, batch_size):
     '''
     Data augmentation on images of the dataset
     :return:
     '''
+
     # initialize the training training data augmentation object
     trainAug = ImageDataGenerator(
         rotation_range=25,
@@ -26,8 +33,7 @@ def data_augmentation(train_set, batch_size):
         fill_mode="nearest")
 
 
-    # TODO probably shuffle is already done here, so we do not have to do random shuffling at the beginning
-    # initialize the training generator
+    # initialize the training generator -> from directory -> not used now
     '''trainGen = trainAug.flow_from_directory(
         dir_path,
         class_mode="categorical",
@@ -36,7 +42,7 @@ def data_augmentation(train_set, batch_size):
         shuffle=True,# TODO true or false ? true è default a per noi è ok, anche se ci scambia l'ordine non ci interessa se non usiamo le classe, se usiamo le classi boh
         batch_size=batch_size)'''
 
-    trainAug.fit(train_set)
+    trainAug.fit(train_set) # TODO serve ?
 
     trainGen = trainAug.flow(
         train_set,
@@ -45,12 +51,52 @@ def data_augmentation(train_set, batch_size):
         #target_size=target_size,
         #color_mode="rgb",
         shuffle=True,
-        # TODO true or false ? true è default a per noi è ok, anche se ci scambia l'ordine non ci interessa se non usiamo le classe, se usiamo le classi boh
-        batch_size=batch_size)
+        batch_size=batch_size
+
+        # to save modified images
+        #save_to_dir = "output/",
+        #save_prefix = "",
+        #save_format = 'png',
+    )
+
+    # code to see the modified images
+    '''
+    for _ in range(10):
+        img, label = trainGen.next()
+        print(img.shape)  # (1,256,256,3)
+        plt.imshow(img[0])
+        plt.show()'''
 
     return trainGen
 
 
+
+
+'''datagen = keras.preprocessing.image.ImageDataGenerator(
+    rescale = 1. / 255,
+    rotation_range=25,
+    zoom_range=0.1,
+    width_shift_range=0.1,
+    height_shift_range=0.1,
+    shear_range=0.2,
+    horizontal_flip=True,
+    vertical_flip=True,
+    fill_mode="nearest"
+)
+
+dir_It = datagen.flow_from_directory(
+    "dataset/training",
+    batch_size=1,
+    save_to_dir="output/",
+    save_prefix="",
+    save_format='png',
+)
+
+for _ in range(10):
+    img, label = dir_It.next()
+    print(img.shape)  # (1,256,256,3)
+    plt.imshow(img[0])
+    plt.show()'''
 
 
 '''
