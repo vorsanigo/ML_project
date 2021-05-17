@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
+from dataframe import display_df
 
 from image_loading import Loader
 from autoencoder import AutoEncoder
@@ -259,6 +260,9 @@ print("Done fitting")
 # Querying on test images
 print("\nQuerying...")
 
+
+
+
 for i, emb_flatten in enumerate(E_query_flatten):
     distances, indx = knn.kneighbors([emb_flatten])  # find k nearest gallery neighbours
     print("\nFor query image_" + str(i))
@@ -268,3 +272,5 @@ for i, emb_flatten in enumerate(E_query_flatten):
     imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]  # retrieval images
     outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
     #plot_query_retrieval(img_query, imgs_retrieval, None)
+    display_df(imgs_query, distances, imgs_retrieval)
+    break
