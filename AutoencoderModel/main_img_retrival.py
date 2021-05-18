@@ -89,6 +89,7 @@ config = wandb.config'''
 
 
 
+
 # Make paths
 TrainDir = os.path.join(os.getcwd(), args.data_path, "training")
 QueryDir = os.path.join(os.getcwd(), args.data_path, "validation", "query")
@@ -97,18 +98,12 @@ OutputDir = os.path.join(os.getcwd(), "output", "convAE")
 if not os.path.exists(OutputDir):
     os.makedirs(OutputDir)
 
-
-# Read images
+# create loader
 loader = Loader(args.img_size, args.img_size, args.channels)
-train_map = loader.get_files(TrainDir)
-train_names, train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
-query_map = loader.get_files(QueryDir)
-query_names, query_paths, imgs_query, query_classes = loader.get_data_paths(query_map)
-gallery_map = loader.get_files(GalleryDir)
-gallery_names, gallery_paths, imgs_gallery, gallery_classes = loader.get_data_paths(gallery_map)
 
-shape_img = imgs_train[0].shape  # bc we need it as argument for the Autoencoder()
-print(shape_img)
+# extract img final for the model
+shape_img = (args.img_size, args.img_size, args.channels)  # bc we need it as argument for the Autoencoder()
+print("Image size", shape_img)
 
 
 # Build models
@@ -118,13 +113,51 @@ encoderFile = os.path.join(OutputDir, "ConvAE_encoder.h5")
 model = AutoEncoder(shape_img, autoencoderFile, encoderFile)
 model.set_arch()
 
+# Convert images to numpy array of right dimensions
 input_shape_model = tuple([int(x) for x in model.encoder.input.shape[1:]])
 output_shape_model = tuple([int(x) for x in model.encoder.output.shape[1:]])
-#n_epochs = args.e # non serve perché lo passiamo direttamente nel modello
+
+
+if args.mode == "training model":
+    # TRAIN
+    # Read images
+    train_map = loader.get_files(TrainDir)
+    train_names, train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
+
+    # Normalize all images
+    print("\nNormalizing training images")
+    imgs_train = normalize_img(imgs_train)
+
+    # Convert images to numpy array of right dimensions
+    print("\nConverting to numpy array of right dimensions")
+    X_train = np.array(imgs_train).reshape((-1,) + input_shape_model)
+    print(">>> X_train.shape = " + str(X_train.shape))
+
+    # Create object for train augmentation
+    trainGen = data_augmentation(X_train, args.bs)
+    # trainGen = X_train
+    print("\nStart training...")
+    model.compile(loss=args.loss, optimizer="adam")
+    # grid_search(model, X_train)
+    model.fit2(trainGen, n_epochs=args.e, batch_size=args.bs)
+    model.save_models()
+    print("Done training")
+
+    print("\nCreating embeddings")
+    E_train = model.predict(X_train)
+    E_train_flatten = E_train.reshape((-1, np.prod(output_shape_model)))
+    print(">>> E_train.shape = " + str(E_train.shape))
+    print(">>> E_train_flatten.shape = " + str(E_train_flatten.shape))
+
+
+# Read images
+query_map = loader.get_files(QueryDir)
+query_names, query_paths, imgs_query, query_classes = loader.get_data_paths(query_map)
+gallery_map = loader.get_files(GalleryDir)
+gallery_names, gallery_paths, imgs_gallery, gallery_classes = loader.get_data_paths(gallery_map)
+
 
 # Normalize all images
-print("\nNormalizing training images")
-imgs_train = normalize_img(imgs_train)
 print("Normalizing query images")
 imgs_query = normalize_img(imgs_query)
 print("Normalizing gallery images")
@@ -133,42 +166,25 @@ imgs_gallery = normalize_img(imgs_gallery)
 
 # Convert images to numpy array of right dimensions
 print("\nConverting to numpy array of right dimensions")
-X_train = np.array(imgs_train).reshape((-1,) + input_shape_model)
 X_query = np.array(imgs_query).reshape((-1,) + input_shape_model)
 X_gallery = np.array(imgs_gallery).reshape((-1,) + input_shape_model)
-print(">>> X_train.shape = " + str(X_train.shape))
 print(">>> X_query.shape = " + str(X_query.shape))
 print(">>> X_gallery.shape = " + str(X_gallery.shape))
 
 
-# Create object for train augmentation
-trainGen = data_augmentation(X_train, args.bs)
-#trainGen = X_train
-
 # Train (if necessary)
-if args.mode == "training model":
-    print("\nStart training...")
-    model.compile(loss=args.loss, optimizer="adam")
-    grid_search(model, X_train)
-    model.fit2(trainGen, n_epochs=args.e, batch_size=args.bs)
-    model.save_models()
-    print("Done training")
-else:
+if args.mode != "training model":
     print("\nLoading model...")
     model.load_models(loss=args.loss, optimizer="adam")
 
 # Create embeddings using model
 print("\nCreating embeddings")
-E_train = model.predict(X_train)
-E_train_flatten = E_train.reshape((-1, np.prod(output_shape_model)))
 E_query = model.predict(X_query)
 E_query_flatten = E_query.reshape((-1, np.prod(output_shape_model)))
 E_gallery = model.predict(X_gallery)
 E_gallery_flatten = E_gallery.reshape((-1, np.prod(output_shape_model)))
-print(">>> E_train.shape = " + str(E_train.shape))
 print(">>> E_query.shape = " + str(E_query.shape))
 print(">>> E_gallery.shape = " + str(E_gallery.shape))
-print(">>> E_train_flatten.shape = " + str(E_train_flatten.shape))
 print(">>> E_query_flatten.shape = " + str(E_query_flatten.shape))
 print(">>> E_gallery_flatten.shape = " + str(E_gallery_flatten.shape))
 
