@@ -11,6 +11,7 @@ from dataframe import *
 from scipy import spatial
 import argparse
 import wandb
+from grid_search import grid_search
 
 
 
@@ -95,16 +96,7 @@ GalleryDir = os.path.join(os.getcwd(), args.data_path, "validation", "gallery")
 OutputDir = os.path.join(os.getcwd(), "output", "convAE")
 if not os.path.exists(OutputDir):
     os.makedirs(OutputDir)
-<<<<<<< Updated upstream
 
-
-# Augment the datasets
-#print("\nAugmentig dataset")
-#modifyImage(TrainDir)
-
-
-=======
->>>>>>> Stashed changes
 
 # Read images
 loader = Loader(args.img_size, args.img_size, args.channels)
@@ -149,7 +141,7 @@ print(">>> X_query.shape = " + str(X_query.shape))
 print(">>> X_gallery.shape = " + str(X_gallery.shape))
 
 
-# Creare object for train augmentation
+# Create object for train augmentation
 trainGen = data_augmentation(X_train, args.bs)
 #trainGen = X_train
 
@@ -157,16 +149,13 @@ trainGen = data_augmentation(X_train, args.bs)
 if args.mode == "training model":
     print("\nStart training...")
     model.compile(loss=args.loss, optimizer="adam")
+    grid_search(model, X_train)
     model.fit2(trainGen, n_epochs=args.e, batch_size=args.bs)
     model.save_models()
     print("Done training")
 else:
     print("\nLoading model...")
     model.load_models(loss=args.loss, optimizer="adam")
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 
 # Create embeddings using model
 print("\nCreating embeddings")
@@ -246,15 +235,7 @@ print("Done fitting")
 update_df = []
 # Querying on test images
 print("\nQuerying...")
-<<<<<<< Updated upstream
-
-
-
-
-'''for i, emb_flatten in enumerate(E_query_flatten):
-=======
 for i, emb_flatten in enumerate(E_query_flatten):
->>>>>>> Stashed changes
     distances, indx = knn.kneighbors([emb_flatten])  # find k nearest gallery neighbours
     print("\nFor query image_" + str(i))
     print(">> Indices:" + str(indx))
@@ -265,14 +246,8 @@ for i, emb_flatten in enumerate(E_query_flatten):
     names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
     outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
     #plot_query_retrieval(img_query, imgs_retrieval, None)
-<<<<<<< Updated upstream
-    display_df(imgs_query, distances, imgs_retrieval)
-    break'''
-=======
     update_df.append(display_df(query_name, distances, names_retrieval, k))
 
 results = pd.concat(update_df)
-prova(results)
-#df_to_pdf(results)
-#print(results)
->>>>>>> Stashed changes
+df_to_html(results)
+#prova(results)

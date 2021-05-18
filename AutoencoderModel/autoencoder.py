@@ -1,5 +1,6 @@
 import tensorflow as tf
 from wandb.keras import WandbCallback
+from grid_search import grid_search
 
 
 class AutoEncoder():
@@ -54,7 +55,7 @@ class AutoEncoder():
     # Compile
     def compile(self, loss="mse", optimizer="adam"):
         self.autoencoder.compile(optimizer=optimizer, loss=loss, metrics=['mse'])
-        #self.autoencoder.compile(optimizer=optimizer, loss=loss, metrics=[tf.keras.metrics.Accuracy()])
+
     # Fit  -> not used
     def fit(self, X, n_epochs=50, batch_size=256):
         X_train=X

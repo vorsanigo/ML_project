@@ -20,7 +20,7 @@ def display_df(query_image, distances_list, gallery_list, k):
     print(df)
     return df
 
-def df_to_pdf(dataframe):
+def df_to_html(dataframe):
     f = open('results.html', 'w')
     a = dataframe.to_html()
     f.write(a)
