@@ -6,6 +6,9 @@ from skimage.transform import resize
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.preprocessing.image import load_img
 
+import skimage.io
+from skimage.transform import resize
+
 
 # Read images with common extensions from a directory
 class Loader():
@@ -38,6 +41,7 @@ class Loader():
 
         return data_mapping
 
+    # TODO WHY BLURREDDDDDDDDDD pixellate  ??????????????????????????????????
     def get_data_paths(self, data_mapping):
         images_paths = []  # images paths
         images_arrays = []  # images as arrays
@@ -60,11 +64,16 @@ class Loader():
                 # transform image into array
                 img = img_to_array(img)
 
+                # alternative code for loading images
+                '''img = skimage.io.imread(img_path, as_gray=False)
+                img = resize(img, (100, 100, 3), anti_aliasing=True, preserve_range=True)'''
+
                 # reshape dimension of channels to 3
                 if img.shape[2] == 1:
                     img = np.repeat(img, 3, axis=2)
                 if img.shape[2] == 4:
-                    img = img[1:, :, :3]
+                    img = img[:, :, :3]
+
 
                 images_arrays.append(img)
                 classes.append(data_mapping[img_path])
