@@ -1,6 +1,7 @@
 import tensorflow as tf
 from wandb.keras import WandbCallback
-from grid_search import grid_search
+from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn import metrics
 
 
 class AutoEncoder():
@@ -50,19 +51,38 @@ class AutoEncoder():
         print("\nencoder.summary():")
         print(encoder.summary())
 
-
-
     # Compile
     def compile(self, loss="mse", optimizer="adam"):
-        #self.autoencoder.compile(optimizer=optimizer, loss=loss, metrics=['mse']) # we can remove metrics mse since it is the same as the loss
-        self.autoencoder.compile(optimizer=optimizer, loss=loss)
+        self.autoencoder.compile(optimizer=optimizer, loss=loss, metrics=['accuracy'] )
 
-        # Fit  -> not used
+    # Grid search
+    def grid_search(self, X_train):
+
+        x_tr, x_ts = train_test_split(X_train, train_size=0.7)
+        # Scikit-learn to grid search
+        activation = ['relu', 'tanh', 'sigmoid', 'hard_sigmoid', 'softmax', 'softplus', 'softsign']
+        learn_rate = [0.001, 0.01, 0.1, 0.2, 0.3]
+        optimizer = ['SGD', 'RMSprop', 'Adagrad', 'Adadelta', 'Adam', 'Adamax', 'Nadam']
+
+        # grid search epochs, batch size
+        epochs = [1, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500]
+        batch_size = [5, 10, 20, 40, 60, 80, 100, 120, 150, 200, 250, 500, 750, 1000, 5000]
+        param_grid = dict(epochs=epochs, batch_size=batch_size, activation=activation, optimizer=optimizer)
+
+        kmodel = tf.keras.wrappers.scikit_learn.KerasRegressor(build_fn=self.autoencoder, verbose=1)
+        grid = GridSearchCV(estimator=kmodel, param_grid=param_grid, scoring="accuracy", n_jobs=-1, cv=2)
+        grid_result = grid.fit(x_tr, x_ts)
+
+        # summarize results
+        print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+        means = grid_result.cv_results_['mean_test_score']
+        stds = grid_result.cv_results_['std_test_score']
+        params = grid_result.cv_results_['params']
+        for mean, stdev, param in zip(means, stds, params):
+            print("%f (%f) with: %r" % (mean, stdev, param))
+
+    # Fitting
     def fit(self, X, n_epochs=50, batch_size=256):
-        X_train=X
-        self.autoencoder.fit(X_train, X_train, epochs=n_epochs, batch_size=batch_size, shuffle=True)
-
-    def fit2(self, X, n_epochs=50, batch_size=256):
         X_train = X
 
         # Learning rate scheduler

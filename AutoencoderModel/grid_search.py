@@ -9,7 +9,7 @@ def grid_search(model, X):
     # grid search epochs, batch size
     epochs = [1, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500]
     batch_size = [5, 10, 20, 40, 60, 80, 100, 120, 150, 200, 250, 500, 750, 1000, 5000]
-    param_grid = dict(epochs=epochs, batch_size=batch_size)
+    param_grid = dict(epochs=epochs, batch_size=batch_size, activation=activation, optimizer=optimizer)
 
     grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1)
     grid_result = grid.fit(X)

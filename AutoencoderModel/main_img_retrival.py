@@ -138,8 +138,9 @@ if args.mode == "training model":
     # trainGen = X_train
     print("\nStart training...")
     model.compile(loss=args.loss, optimizer="adam")
-    # grid_search(model, X_train)
-    model.fit2(trainGen, n_epochs=args.e, batch_size=args.bs)
+    model.grid_search(trainGen)
+
+    model.fit(trainGen, n_epochs=args.e, batch_size=args.bs)
     model.save_models()
     print("Done training")
 
@@ -253,17 +254,18 @@ update_df = []
 print("\nQuerying...")
 for i, emb_flatten in enumerate(E_query_flatten):
     distances, indx = knn.kneighbors([emb_flatten])  # find k nearest gallery neighbours
-    print("\nFor query image_" + str(i))
-    print(">> Indices:" + str(indx))
-    print(">> Distances:" + str(distances))
+    #print("\nFor query image_" + str(i))
+    #print(">> Indices:" + str(indx))
+    #print(">> Distances:" + str(distances))
     img_query = imgs_query[i]  # query image
+    imgq_path = query_paths[i]
     query_name = query_names[i]
     imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]  # retrieval images
+    imgsg_path = [gallery_paths[idx] for idx in indx.flatten()]
     names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
     outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
     #plot_query_retrieval(img_query, imgs_retrieval, None)
     update_df.append(display_df(query_name, distances, names_retrieval, k))
 
 results = pd.concat(update_df)
-df_to_html(results)
-#prova(results)
+#df_to_html(results)
