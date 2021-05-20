@@ -88,7 +88,7 @@ class AutoEncoder():
         X_train = X
 
         # Learning rate scheduler
-        def scheduler(n_epochs=50, lr=0.0001):
+        def scheduler(n_epochs, lr=0.0001):
             if n_epochs < 10:
                 return lr
             else:
