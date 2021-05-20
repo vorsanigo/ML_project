@@ -6,6 +6,7 @@ from image_loading import Loader
 from autoencoder import AutoEncoder
 from transform import normalize_img, data_augmentation
 from final_display import *
+from visualization import *
 from request import submit
 from scipy import spatial
 import argparse
@@ -48,7 +49,7 @@ parser.add_argument('-wandb',
                     help='Log on WandB (default = True)')
 parser.add_argument('-img_size',
                     type=int,
-                    default=100,
+                    default=324,
                     help='image size for the model')
 parser.add_argument('-channels',
                     type=int,
@@ -261,7 +262,7 @@ for i, emb_flatten in enumerate(E_query_flatten):
     imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]
     names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
     #outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
-    #plot_query_retrieval(img_query, imgs_retrieval, None)
+    plot_query_retrieval(img_query, imgs_retrieval, None)
     create_results_dict(final_res, query_name,names_retrieval)
 
 final_results = create_final_dict(final_res)

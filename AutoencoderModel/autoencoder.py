@@ -22,7 +22,9 @@ class AutoEncoder():
 
         # Set encoder and decoder graphs
         input = tf.keras.layers.Input(shape=self.shape_img)
-        x = tf.keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same')(input)
+        x = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same')(input)
+        x = tf.keras.layers.MaxPooling2D((2, 2), padding='same')(x)
+        x = tf.keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same')(x)
         x = tf.keras.layers.MaxPooling2D((2, 2), padding='same')(x)
         x = tf.keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
         x = tf.keras.layers.MaxPooling2D((2, 2), padding='same')(x)
@@ -35,8 +37,9 @@ class AutoEncoder():
         x = tf.keras.layers.UpSampling2D((2, 2))(x)
         x = tf.keras.layers.Conv2D(16, (3, 3), activation='relu')(x)
         x = tf.keras.layers.UpSampling2D((2, 2))(x)
+        x = tf.keras.layers.Conv2D(32, (3, 3), activation='relu')(x)
+        x = tf.keras.layers.UpSampling2D((2, 2))(x)
         decoded = tf.keras.layers.Conv2D(self.shape_img[2], (3, 3), activation='softmax', padding='same')(x)
-
 
         # Create and save models
         autoencoder = tf.keras.Model(input, decoded)
