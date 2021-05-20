@@ -1,17 +1,15 @@
 import os
 import numpy as np
-import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 
 from image_loading import Loader
 from autoencoder import AutoEncoder
 from transform import normalize_img, data_augmentation
-from visualization import *
-from dataframe import *
+from final_display import *
+from request import submit
 from scipy import spatial
 import argparse
 import wandb
-from grid_search import grid_search
 
 
 
@@ -138,7 +136,7 @@ if args.mode == "training model":
     # trainGen = X_train
     print("\nStart training...")
     model.compile(loss=args.loss, optimizer="adam")
-    model.grid_search(trainGen)
+    #model.grid_search(trainGen)
 
     model.fit(trainGen, n_epochs=args.e, batch_size=args.bs)
     model.save_models()
@@ -244,28 +242,30 @@ for k in [1, 3, 10]:
 
 # Fit kNN model on training images
 print("\nFitting KNN model on training data...")
-k = 5
+k = 10
 knn = NearestNeighbors(n_neighbors=k, metric="cosine")
 knn.fit(E_gallery_flatten)
 print("Done fitting")
 
-update_df = []
+
 # Querying on test images
+final_res = dict()
 print("\nQuerying...")
 for i, emb_flatten in enumerate(E_query_flatten):
-    distances, indx = knn.kneighbors([emb_flatten])  # find k nearest gallery neighbours
+    distances, indx = knn.kneighbors([emb_flatten])
     #print("\nFor query image_" + str(i))
     #print(">> Indices:" + str(indx))
     #print(">> Distances:" + str(distances))
     img_query = imgs_query[i]  # query image
-    imgq_path = query_paths[i]
     query_name = query_names[i]
-    imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]  # retrieval images
-    imgsg_path = [gallery_paths[idx] for idx in indx.flatten()]
+    imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]
     names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
-    outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
+    #outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
     #plot_query_retrieval(img_query, imgs_retrieval, None)
-    update_df.append(display_df(query_name, distances, names_retrieval, k))
+    create_results_dict(final_res, query_name,names_retrieval)
 
-results = pd.concat(update_df)
-#df_to_html(results)
+final_results = create_final_dict(final_res)
+url = "http://kamino.disi.unitn.it:3001/results/"
+#submit(final_results, url)
+
+

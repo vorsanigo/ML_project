@@ -65,9 +65,8 @@ class AutoEncoder():
         optimizer = ['SGD', 'RMSprop', 'Adagrad', 'Adadelta', 'Adam', 'Adamax', 'Nadam']
 
         # grid search epochs, batch size
-        epochs = [1, 10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500]
         batch_size = [5, 10, 20, 40, 60, 80, 100, 120, 150, 200, 250, 500, 750, 1000, 5000]
-        param_grid = dict(epochs=epochs, batch_size=batch_size, activation=activation, optimizer=optimizer)
+        param_grid = dict(batch_size=batch_size, activation=activation, optimizer=optimizer)
 
         kmodel = tf.keras.wrappers.scikit_learn.KerasRegressor(build_fn=self.autoencoder, verbose=1)
         grid = GridSearchCV(estimator=kmodel, param_grid=param_grid, scoring="accuracy", n_jobs=-1, cv=2)

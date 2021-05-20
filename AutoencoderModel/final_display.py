@@ -17,3 +17,19 @@ def df_to_html(dataframe):
 
     # TODO: CONVERT TO PDF
     # pdfkit.from_file('results.html', 'results.pdf')
+
+
+def create_final_dict(res_dict):
+    final_res = dict()
+    final_res["groupname"] = "Innominati"
+    final_res["images"] = res_dict
+    return final_res
+
+
+def create_results_dict(results_dict, query_img, gallery_list):
+    results_dict[query_img] = []
+    for gallery_img in gallery_list:
+        results_dict[query_img].append(gallery_img)
+
+
+
