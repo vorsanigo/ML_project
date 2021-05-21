@@ -4,11 +4,8 @@ import tensorflow as tf
 from sklearn.neighbors import NearestNeighbors
 
 from image_loading import Loader
-from autoencoder import AutoEncoder
-from transform import normalize_img, data_augmentation
+from transform import normalize_img
 from final_display import *
-from visualization import *
-from request import submit
 from scipy import spatial
 import argparse
 import wandb
