@@ -1,7 +1,7 @@
 import tensorflow as tf
 from wandb.keras import WandbCallback
 from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn import metrics
+
 
 class AutoEncoder():
 
