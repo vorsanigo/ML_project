@@ -1,25 +1,15 @@
 
-from tensorflow.keras import backend as K
-import random
-import numpy as np
-from keras.layers import *
-from keras.models import Model
-import os
-from image_loading import *
-import argparse
-from transform import *
 from triplets import *
 from autoencoder import TripletsEncoder
 from scipy import spatial
 from sklearn.neighbors import NearestNeighbors
 from image_loading import Loader
 from autoencoder import AutoEncoder
-from transform import normalize_img, data_augmentation
+from transform import normalize_img
 from final_display import *
 from visualization import *
-from request import submit
 import argparse
-import wandb
+
 
 
 output_shape_model = (100)
