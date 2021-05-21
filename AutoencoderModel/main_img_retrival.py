@@ -63,17 +63,18 @@ args = parser.parse_args()
 
 
 
-wandb.login(key='f97918185ed02886a90fa4464e7469c13c017460')
 
-# trigger or untrigger WandB
-if args.wandb == 'False' or args.mode == 'deploy':
+
+if args.wandb == 'True':
+    # Login to wandb
+    wandb.login(key='f97918185ed02886a90fa4464e7469c13c017460')
+    # Save results online
     os.environ['WANDB_MODE'] = 'dryrun'
+    # Start a W&B run
+    wandb.init(project='aml-challenge',)
+    wandb.config.epochs = args.e
+    wandb.config.batch_size = args.bs
 
-# 1. Start a W&B run
-wandb.init(project='aml-challenge',
-           )
-wandb.config.epochs = args.e
-wandb.config.batch_size = args.bs
 
 '''wandb.init(project='aml-challenge',
            entity='innominati',
@@ -132,14 +133,16 @@ if args.mode == "training model":
     X_train = np.array(imgs_train).reshape((-1,) + input_shape_model)
     print(">>> X_train.shape = " + str(X_train.shape))
 
+
     # Create object for train augmentation
-    trainGen = data_augmentation(X_train, args.bs)
+    completeTrainGen = data_augmentation(X_train, args.bs)
     # trainGen = X_train
     print("\nStart training...")
     model.compile(loss=args.loss, optimizer="adam")
     #model.grid_search(trainGen)
 
-    model.fit(trainGen, n_epochs=args.e, batch_size=args.bs)
+    model.fit(completeTrainGen, n_epochs=args.e, batch_size=args.bs, wandb = args.wandb)
+
     model.save_models()
     print("Done training")
 
