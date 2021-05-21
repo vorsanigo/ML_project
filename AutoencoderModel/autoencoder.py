@@ -3,7 +3,6 @@ from wandb.keras import WandbCallback
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn import metrics
 
-
 class AutoEncoder():
 
     def __init__(self, shape_img, autoencoderFile, encoderFile):
@@ -84,7 +83,7 @@ class AutoEncoder():
             print("%f (%f) with: %r" % (mean, stdev, param))
 
     # Fitting
-    def fit(self, X, n_epochs=50, batch_size=256):
+    def fit(self, X, n_epochs=50, batch_size=256, wandb='True'):
         X_train = X
 
         # Learning rate scheduler
@@ -96,12 +95,20 @@ class AutoEncoder():
 
         callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
 
-        self.autoencoder.fit(X_train,
-                             epochs=n_epochs,
-                             batch_size=batch_size,
-                             shuffle=True,
-                             callbacks=[callback, WandbCallback()],
-                             verbose=1)
+        if wandb == 'True':
+            self.autoencoder.fit(X_train,
+                                 epochs=n_epochs,
+                                 batch_size=batch_size,
+                                 shuffle=True,
+                                 callbacks=[callback, WandbCallback()],
+                                 verbose=1)
+        else:
+            self.autoencoder.fit(X_train,
+                                 epochs=n_epochs,
+                                 batch_size=batch_size,
+                                 shuffle=True,
+                                 callbacks=[callback],
+                                 verbose=1)
 
     # Save model architecture and weights to file
     def save_models(self):
