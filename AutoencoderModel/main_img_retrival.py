@@ -7,7 +7,6 @@ from autoencoder import AutoEncoder
 from transform import normalize_img, data_augmentation
 from final_display import *
 from visualization import *
-from request import submit
 from scipy import spatial
 import argparse
 import wandb
