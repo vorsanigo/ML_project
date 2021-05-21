@@ -127,3 +127,57 @@ class AutoEncoder():
 
 
 
+class TripletsEncoder():
+    def __init__(self, shape_img, tripletsFile):
+        self.shape_img = shape_img
+        self.tripletsFile = tripletsFile
+        self.triplets_encoder= None
+
+    def set_arch(self):
+        input = tf.keras.layers.Input(shape=self.shape_img)
+        x = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same')(input)
+        x = tf.keras.layers.MaxPooling2D((2, 2), padding='same')(x)
+        x = tf.keras.layers.Conv2D(16, (3, 3), activation='relu', padding='same')(x)
+        x = tf.keras.layers.MaxPooling2D((2, 2), padding='same')(x)
+        x = tf.keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
+        x = tf.keras.layers.MaxPooling2D((2, 2), padding='same')(x)
+        x = tf.keras.layers.Conv2D(8, (3, 3), activation='relu', padding='same')(x)
+        x = tf.keras.layers.Flatten()(x)
+        x = tf.keras.layers.Dense(100, activation='relu')(x)
+
+        # modellll
+        model = tf.keras.models.Model(input, x)
+        triplet_model_a = tf.keras.layers.Input(self.shape_img)
+        triplet_model_p = tf.keras.layers.Input(self.shape_img)
+        triplet_model_n = tf.keras.layers.Input(self.shape_img)
+        triplet_model_out = tf.keras.layers.Concatenate()([model(triplet_model_a), model(triplet_model_p), model(triplet_model_n)])
+        triplet_model = tf.keras.models.Model([triplet_model_a, triplet_model_p, triplet_model_n], triplet_model_out)
+
+        self.triplets_encoder = triplet_model
+        triplet_model.summary()
+
+    def load_triplets(self, triplet_loss, optimizer="adam"):
+            print("Loading model...")
+            self.triplets_encoder = tf.keras.models.load_model(self.tripletsFile, custum_objects={'loss': triplet_loss(loss)})
+            self.triplets_encoder.compile(optimizer=optimizer, loss=triplet_loss)
+
+
+    def save_triplets(self):
+        print("Saving models...")
+        self.triplets_encoder.save(self.tripletsFile)
+
+    def compile_triplets(self, triplet_loss, optimizer="adam"):
+        self.triplets_encoder.compile(optimizer=optimizer, loss=triplet_loss, metrics=['accuracy'] )
+
+
+    def fit_triplets(self,data_generator, steps_per_epoch=1, epochs=3):
+        self.triplets_encoder.fit(data_generator, steps_per_epoch=steps_per_epoch, epochs=epochs)
+
+    def predict_triplets(self, x):
+        return self.triplets_encoder.layers[3].predict(x, verbose=1)
+
+
+
+
+
+
