@@ -155,8 +155,7 @@ elif  args.model == 'Pretrained':
     url = "http://kamino.disi.unitn.it:3001/results/"
 
 else:
-
-
+    pass
     # Convert images to numpy array of right dimensions
     print("\nConverting to numpy array of right dimensions")
     X_query = np.array(QueryImgs).reshape((-1,) + input_shape_model)

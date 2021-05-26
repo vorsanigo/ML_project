@@ -104,6 +104,7 @@ if args.mode == "training model":
     print('start_training')
     # TRAIN
     # Read images
+    print(TrainDir)
     train_map = loader.get_files(TrainDir)
     train_names, train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
 
