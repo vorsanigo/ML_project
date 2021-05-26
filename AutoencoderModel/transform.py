@@ -59,3 +59,76 @@ def data_augmentation(train_set, batch_size):
         plt.show()"""
 
     return trainGen
+
+
+
+
+def data_augmentation_triplet(set_anchor, set_positive, set_negative, batch_size):
+'''
+Data augmentation on images of the dataset
+:return:
+'''
+
+# initialize the training training data augmentation object
+trainAug = ImageDataGenerator(
+    rotation_range=25,
+    zoom_range=0.1,
+    width_shift_range=0.1,
+    height_shift_range=0.1,
+    shear_range=0.2,
+    horizontal_flip=True,
+    vertical_flip=True,
+    #fill_mode="nearest",
+    preprocessing_function=random_crop
+)
+
+#trainAug.fit(train_set) # TODO serve ?
+
+local_seed = 10
+
+trainGenAnchor = trainAug.flow(
+    set_anchor,
+    set_anchor,
+    seed=local_seed,
+    #steps_per_epoch=13//batch_size,
+    shuffle=False,
+    batch_size=batch_size
+)
+
+trainGenPositive = trainAug.flow(
+    set_positive,
+    set_positive,
+    seed=local_seed,
+    #steps_per_epoch=13//batch_size,
+    shuffle=False,
+    batch_size=batch_size
+)
+
+trainGenNegative = trainAug.flow(
+    set_negative,
+    set_negative,
+    seed=local_seed,
+    #steps_per_epoch=13//batch_size,
+    shuffle=False,
+    batch_size=batch_size
+)
+
+# code to see the modified images
+'''for _ in range(10):
+
+    img, label = trainGenAnchor.next()
+    print(img.shape)  # (1,256,256,3)
+    plt.imshow(img[0])
+    plt.show()
+
+    img, label = trainGenPositive.next()
+    print(img.shape)  # (1,256,256,3)
+    plt.imshow(img[0])
+    plt.show()
+
+    img, label = trainGenNegative.next()
+    print(img.shape)  # (1,256,256,3)
+    plt.imshow(img[0])
+    plt.show()'''
+
+return trainGenAnchor, trainGenPositive, trainGenNegative   
