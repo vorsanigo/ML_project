@@ -18,8 +18,6 @@ from transform import *
 
 def data_generator(train_classes, X_train, batch_size):
     classes_list = list(set(train_classes))
-    #print('ciao', X_train)
-    #print('lista',list(X_train))
 
     while True:
         a = []
