@@ -7,6 +7,7 @@ from transform import *
 
 def data_generator(train_classes, X_train, batch_size):
     classes_list = list(set(train_classes))
+    X_train = list(X_train)
     while True:
         a=[]
         p=[]
@@ -22,7 +23,8 @@ def data_generator(train_classes, X_train, batch_size):
 
 def triplet_loss(loss):
     def loss(y_true, y_pred):
-        anchor_out = y_pred[:, 3528:7056]
+        anchor_out = y_pred[:, 0:3528] #The numbers are the dimension
+        # of images, we are deviding the images in the array
         positive_out = y_pred[:, 3528: 7056]
         negative_out = y_pred[:, 7056:10584]
         pos_dist = K.sum(K.abs(anchor_out - positive_out), axis=1)
