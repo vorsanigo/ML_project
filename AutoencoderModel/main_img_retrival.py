@@ -1,7 +1,6 @@
 import os
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
-
 from image_loading import Loader
 from autoencoder import AutoEncoder
 from transform import normalize_img, data_augmentation
@@ -10,7 +9,6 @@ from visualization import *
 from scipy import spatial
 import argparse
 import wandb
-
 
 
 parser = argparse.ArgumentParser(description='Challenge presentation example')
@@ -55,10 +53,11 @@ parser.add_argument('-metric',
                     type=str,
                     default='minkowski',
                     help='metric to compute distance query-gallery')
+parser.add_argument('-plot',
+                    type=str,
+                    default='True',
+                    help='Helper to visualize the results (default = True)')
 args = parser.parse_args()
-
-
-
 
 
 if args.wandb == 'True':
@@ -70,21 +69,6 @@ if args.wandb == 'True':
     wandb.init(project='aml-challenge',)
     wandb.config.epochs = args.e
     wandb.config.batch_size = args.bs
-
-
-'''wandb.init(project='aml-challenge',
-           entity='innominati',
-           group=args.mode,
-           name=args.n,
-           config={  # and include hyperparameters and metadata
-               #"learning_rate": args.lr,
-               "epochs": args.e,
-               "batch_size": args.bs,
-         })
-config = wandb.config'''
-
-
-
 
 # Make paths
 TrainDir = os.path.join(os.getcwd(), args.data_path, "training")
@@ -100,7 +84,6 @@ loader = Loader(args.img_size, args.img_size, args.channels)
 # extract img final for the model
 shape_img = (args.img_size, args.img_size, args.channels)  # bc we need it as argument for the Autoencoder()
 print("Image size", shape_img)
-
 
 # Build models
 autoencoderFile = os.path.join(OutputDir, "ConvAE_autoecoder.h5")
@@ -181,10 +164,6 @@ E_query = model.predict(X_query)
 E_query_flatten = E_query.reshape((-1, np.prod(output_shape_model)))
 E_gallery = model.predict(X_gallery)
 E_gallery_flatten = E_gallery.reshape((-1, np.prod(output_shape_model)))
-print(">>> E_query.shape = " + str(E_query.shape))
-print(">>> E_gallery.shape = " + str(E_gallery.shape))
-print(">>> E_query_flatten.shape = " + str(E_query_flatten.shape))
-print(">>> E_gallery_flatten.shape = " + str(E_gallery_flatten.shape))
 
 # define the distance between query - gallery features vectors
 pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, args.metric, p=2.)
@@ -193,31 +172,7 @@ print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
 
 print("\nCalculating indices...")
 indices = np.argsort(pairwise_dist, axis=-1)
-print("Indices: {}".format(indices))
-
-'''
-Distances:
-[1.06049268 0.98174144 0.84297278 1.18097723 1.33711798 0.7725198
-  1.21793345 0.6474991  1.55152428 1.477141   1.25295738 1.28248735
-  1.7081946  1.93887704 1.20129754 1.51035105 1.62115751 1.45156932
-  1.29350864 2.17163186 2.34592395 2.0875376  1.50529649 1.98142459
-  2.05400083 2.32826204 1.72161598 1.62639113]
-
-Indices:
-[ 7  5  2  1  0  3 14  6 10 11 18  4 17  9 22 15  8 16 27 12 26 13 23 24
-  21 19 25 20]
-  
-Interpretation:
-"From "Indices" --> the element in position 7 in the "Distances" array is the smallest"
-bc 7 is in first position.
-So indices are sorted so that the relative distances are sorted from smallest (index 7) to largest (index 20)
-'''
-
-print("\nGallery classes", gallery_classes)
 gallery_matches = gallery_classes[indices]
-print("\nMatches")
-print(gallery_matches)
-
 
 def topk_accuracy(gt_label, matched_label, k=1):
     matched_label = matched_label[:, :k]
@@ -252,15 +207,13 @@ final_res = dict()
 print("\nQuerying...")
 for i, emb_flatten in enumerate(E_query_flatten):
     distances, indx = knn.kneighbors([emb_flatten])
-    #print("\nFor query image_" + str(i))
-    #print(">> Indices:" + str(indx))
-    #print(">> Distances:" + str(distances))
-    img_query = imgs_query[i]  # query image
+    img_query = imgs_query[i]  
     query_name = query_names[i]
     imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]
     names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
-    #outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
-    plot_query_retrieval(img_query, imgs_retrieval, None)
+    if args.plot == 'True':
+        outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
+        plot_query_retrieval(img_query, imgs_retrieval, None)
     create_results_dict(final_res, query_name,names_retrieval)
 
 final_results = create_final_dict(final_res)
