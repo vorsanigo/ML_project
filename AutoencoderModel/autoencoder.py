@@ -170,8 +170,35 @@ class TripletsEncoder():
         self.triplets_encoder.compile(optimizer=optimizer, loss=triplet_loss, metrics=['accuracy'] )
 
 
-    def fit_triplets(self,data_generator, steps_per_epoch=1, epochs=3):
-        self.triplets_encoder.fit(data_generator, steps_per_epoch=steps_per_epoch, epochs=epochs)
+    def fit_triplets(self,data_generator, steps_per_epoch=1, epochs=3, batch_size=256, wandb='True'):
+        # Learning rate scheduler
+        def scheduler(n_epochs, lr=0.0001):
+            if n_epochs < 10:
+                return lr
+            else:
+                return lr * tf.math.exp(-0.1)
+
+        callback = tf.keras.callbacks.LearningRateScheduler(scheduler)
+
+        if wandb == 'True':
+            self.triplets_encoder.fit(data_generator,
+                                 steps_per_epoch=steps_per_epoch,
+                                 epochs=epochs,
+                                 batch_size=batch_size,
+                                 shuffle=True,
+                                 callbacks=[callback, WandbCallback()],
+                                 verbose=1)
+        else:
+            self.triplets_encoder.fit(data_generator,
+                                 steps_per_epoch=steps_per_epoch,
+                                 epochs=epochs,
+                                 batch_size=batch_size,
+                                 shuffle=True,
+                                 verbose=1)
+
+        #original:
+        #self.triplets_encoder.fit(data_generator, steps_per_epoch=steps_per_epoch, epochs=epochs)
+
 
     def predict_triplets(self, x):
         return self.triplets_encoder.layers[3].predict(x, verbose=1)

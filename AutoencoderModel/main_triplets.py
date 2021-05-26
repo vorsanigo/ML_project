@@ -11,6 +11,7 @@ from visualization import *
 import argparse
 import os
 import numpy as np
+import wandb
 
 parser = argparse.ArgumentParser(description='Challenge presentation example')
 parser.add_argument('--data_path',
@@ -57,7 +58,22 @@ parser.add_argument('-metric',
                     type=str,
                     default='minkowski',
                     help='metric to compute distance query-gallery')
+parser.add_argument('-step',
+                    type=int,
+                    default=1,
+                    help='number of steps per epoch')
+
 args = parser.parse_args()
+
+if args.wandb == 'True':
+    # Login to wandb
+    wandb.login(key='f97918185ed02886a90fa4464e7469c13c017460')
+    # Save results online
+    os.environ['WANDB_MODE'] = 'dryrun'
+    # Start a W&B run
+    wandb.init(project='aml-challenge',)
+    wandb.config.epochs = args.e
+    wandb.config.batch_size = args.bs
 
 
 
@@ -112,7 +128,8 @@ if args.mode == "training model":
     triplet_model.compile_triplets(triplet_loss, optimizer='adam')
 
     print('fitting')
-    triplet_model.fit_triplets(data_generator(train_classes, X_train, 64), steps_per_epoch=1, epochs = 3)
+    triplet_model.fit_triplets(data_generator(train_classes, X_train, 64), steps_per_epoch = args.step, epochs = args.e,
+                               batch_size = args.bs, wandb=args.wandb)
 
     print('saving')
     triplet_model.save_triplets()
