@@ -12,13 +12,6 @@ import argparse
 import os
 import numpy as np
 
-
-
-
-output_shape_model = (100)
-input_shape_model = (324, 324, 3)
-
-
 parser = argparse.ArgumentParser(description='Challenge presentation example')
 parser.add_argument('--data_path',
                     '-d',
@@ -106,7 +99,7 @@ if args.mode == "training model":
 
     # Convert images to numpy array of right dimensions
     print("\nConverting to numpy array of right dimensions")
-    X_train = np.array(imgs_train).reshape((-1,) + (324, 324, 3))
+    X_train = np.array(imgs_train).reshape((-1,) + shape_img)
     print(">>> X_train.shape = " + str(X_train.shape))
 
     # Create object for train augmentation
@@ -119,18 +112,11 @@ if args.mode == "training model":
     triplet_model.compile_triplets(triplet_loss, optimizer='adam')
 
     print('fitting')
-    triplet_model.fit_triplets(data_generator(train_classes,completeTrainGen, 64), steps_per_epoch=1, epochs = 3)
+    triplet_model.fit_triplets(data_generator(train_classes, X_train, 64), steps_per_epoch=1, epochs = 3)
 
     print('saving')
     triplet_model.save_triplets()
 
-
-    print("\nCreating embeddings")
-    E_train = triplet_model.predict_triplets(X_train)
-    print(E_train.shape)
-    E_train_flatten = E_train.reshape((-1, np.prod(output_shape_model)))
-    print(">>> E_train.shape = " + str(E_train.shape))
-    print(">>> E_train_flatten.shape = " + str(E_train_flatten.shape))
 
 # Read images
 query_map = loader.get_files(QueryDir)
@@ -146,8 +132,8 @@ imgs_gallery = normalize_img(imgs_gallery)
 
 # Convert images to numpy array of right dimensions
 print("\nConverting to numpy array of right dimensions")
-X_query = np.array(imgs_query).reshape((-1,) + input_shape_model)
-X_gallery = np.array(imgs_gallery).reshape((-1,) + input_shape_model)
+X_query = np.array(imgs_query).reshape((-1,) + shape_img)
+X_gallery = np.array(imgs_gallery).reshape((-1,) + shape_img)
 print(">>> X_query.shape = " + str(X_query.shape))
 print(">>> X_gallery.shape = " + str(X_gallery.shape))
 
@@ -158,16 +144,13 @@ if args.mode != "training model":
 # Create embeddings using model
 print("\nCreating embeddings")
 E_query = triplet_model.predict_triplets(X_query)
-E_query_flatten = E_query.reshape((-1, np.prod(output_shape_model)))
 E_gallery = triplet_model.predict_triplets(X_gallery)
-E_gallery_flatten = E_gallery.reshape((-1, np.prod(output_shape_model)))
 print(">>> E_query.shape = " + str(E_query.shape))
 print(">>> E_gallery.shape = " + str(E_gallery.shape))
-print(">>> E_query_flatten.shape = " + str(E_query_flatten.shape))
-print(">>> E_gallery_flatten.shape = " + str(E_gallery_flatten.shape))
+
 
 # define the distance between query - gallery features vectors
-pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, args.metric, p=2.)
+pairwise_dist = spatial.distance.cdist(E_query, E_gallery, args.metric, p=2.)
 # rows -> queries | columns -> gallery --> cell = distance between query-gallery image
 print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
 
@@ -203,13 +186,13 @@ for k in [1, 3, 10]:
 print("\nFitting KNN model on training data...")
 k = 10
 knn = NearestNeighbors(n_neighbors=k, metric="cosine")
-knn.fit(E_gallery_flatten)
+knn.fit(E_gallery)
 print("Done fitting")
 
 # Querying on test images
 final_res = dict()
 print("\nQuerying...")
-for i, emb_flatten in enumerate(E_query_flatten):
+for i, emb_flatten in enumerate(E_query):
     distances, indx = knn.kneighbors([emb_flatten])
     # print("\nFor query image_" + str(i))
     # print(">> Indices:" + str(indx))
@@ -219,7 +202,8 @@ for i, emb_flatten in enumerate(E_query_flatten):
     imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]
     names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
     # outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
-    plot_query_retrieval(img_query, imgs_retrieval, None)
+    #plot_query_retrieval(img_query, imgs_retrieval, None)
+    #TODO the to plot the images remove the comment above
     create_results_dict(final_res, query_name, names_retrieval)
 
 

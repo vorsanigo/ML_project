@@ -158,7 +158,7 @@ class TripletsEncoder():
 
     def load_triplets(self, triplet_loss, optimizer="adam"):
             print("Loading model...")
-            self.triplets_encoder = tf.keras.models.load_model(self.tripletsFile, custum_objects={'loss': triplet_loss(loss)})
+            self.triplets_encoder = tf.keras.models.load_model(self.tripletsFile, custom_objects={'triplet_loss':triplet_loss})
             self.triplets_encoder.compile(optimizer=optimizer, loss=triplet_loss)
 
 
