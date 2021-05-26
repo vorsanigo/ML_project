@@ -5,10 +5,13 @@ from scipy import spatial
 from sklearn.neighbors import NearestNeighbors
 from image_loading import Loader
 from autoencoder import AutoEncoder
-from transform import normalize_img
+from transform import normalize_img, data_augmentation
 from final_display import *
 from visualization import *
 import argparse
+import os
+import numpy as np
+
 
 
 
@@ -99,10 +102,16 @@ if args.mode == "training model":
     print("\nNormalizing training images")
     imgs_train = normalize_img(imgs_train)
 
+
+
     # Convert images to numpy array of right dimensions
     print("\nConverting to numpy array of right dimensions")
     X_train = np.array(imgs_train).reshape((-1,) + (324, 324, 3))
     print(">>> X_train.shape = " + str(X_train.shape))
+
+    # Create object for train augmentation
+    completeTrainGen = data_augmentation(X_train, args.bs)
+    print('type:', type(completeTrainGen))
 
 
 
@@ -110,7 +119,7 @@ if args.mode == "training model":
     triplet_model.compile_triplets(triplet_loss, optimizer='adam')
 
     print('fitting')
-    triplet_model.fit_triplets(data_generator(train_classes,X_train, 64), steps_per_epoch=1, epochs = 3)
+    triplet_model.fit_triplets(data_generator(train_classes,completeTrainGen, 64), steps_per_epoch=1, epochs = 3)
 
     print('saving')
     triplet_model.save_triplets()
