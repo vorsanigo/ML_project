@@ -7,18 +7,22 @@ from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.preprocessing.image import load_img
 
 
-# Read images with common extensions from a directory
 class Loader():
+    
+    '''This class reads images with common extensions from a directory and helps to load images for later use'''
 
     def __init__(self, img_length, img_height, num_channels):
+        
         self.img_length = img_length
         self.img_height = img_height
         self.num_channels = num_channels
 
     def get_files(self, data_path):
-        assert os.path.exists(data_path), 'Insert a valid path!'
-        data_classes = os.listdir(data_path)  # subfolders -> classes (1, 2, distractor ...)
 
+        '''This function returns the data mapping'''
+        
+        assert os.path.exists(data_path), 'Insert a valid path!'
+        data_classes = os.listdir(data_path)  
         data_mapping = {}
 
         for c, c_name in enumerate(data_classes):
@@ -32,17 +36,23 @@ class Loader():
                     if c_name == 'distractor':
                         data_mapping[img_tmp] = -1
                     else:
-                        data_mapping[img_tmp] = int(c_name)
+                        if c_name.isdigit():
+                            data_mapping[img_tmp] = int(c_name)
+                        else:
+                            data_mapping[img_tmp] = c_name
 
         print('\nLoaded {:d} from {:s} images'.format(len(data_mapping.keys()), data_path))
 
         return data_mapping
 
     def get_data_paths(self, data_mapping):
-        images_paths = []  # images paths
-        images_arrays = []  # images as arrays
-        classes = []  # classes of images
-        images_names = []  # names of images
+
+        '''This function returns the image path, the image name and the image as a numpy array'''
+        
+        images_paths = []  
+        images_arrays = [] 
+        classes = []  
+        images_names = []  
 
         img_length = self.img_length
         img_height = self.img_height
@@ -60,10 +70,6 @@ class Loader():
                 # transform image into array
                 img = img_to_array(img)
 
-                # alternative code for loading images
-                '''img = skimage.io.imread(img_path, as_gray=False)
-                img = resize(img, (324, 324, 3), anti_aliasing=True, preserve_range=True)'''
-
                 # reshape dimension of channels to 3
                 if img.shape[2] == 1:
                     img = np.repeat(img, 3, axis=2)
@@ -76,8 +82,10 @@ class Loader():
         return images_names, images_paths, images_arrays, np.array(classes)
 
 
-# Read images with common extensions from a directory with no subfolders
 def read_imgs_no_subfolders(dirPath, extensions=None):
+
+    '''This function reads images with common extensions from a directory with no subfolders'''
+
     if extensions is None:
         extensions = ['.jpg', '.png', '.jpeg']
 
@@ -98,3 +106,4 @@ def read_imgs_no_subfolders(dirPath, extensions=None):
                 all_img.append(new_img)
 
     return all_img, img_list
+

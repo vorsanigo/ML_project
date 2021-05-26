@@ -2,7 +2,6 @@ import os
 import numpy as np
 import tensorflow as tf
 from sklearn.neighbors import NearestNeighbors
-
 from image_loading import Loader
 from transform import normalize_img
 from final_display import *
@@ -12,6 +11,7 @@ import wandb
 
 
 parser = argparse.ArgumentParser(description='Challenge presentation example')
+
 parser.add_argument('--data_path',
                     '-d',
                     type=str,
@@ -21,9 +21,6 @@ parser.add_argument('-mode',
                     type=str,
                     default='training model',
                     help='training or test')
-parser.add_argument('-n',
-                    type=str,
-                    default='training')
 parser.add_argument('-lr',
                     type=float,
                     default=1e-4,
@@ -42,8 +39,8 @@ parser.add_argument('-loss',
                     help='loss function')
 parser.add_argument('-wandb',
                     type=str,
-                    default='True',
-                    help='Log on WandB (default = True)')
+                    default='False',
+                    help='Log on WandB (default = False)')
 parser.add_argument('-img_size',
                     type=int,
                     default=324,
@@ -56,6 +53,10 @@ parser.add_argument('-metric',
                     type=str,
                     default='minkowski',
                     help='metric to compute distance query-gallery')
+parser.add_argument('-plot',
+                    type=str,
+                    default='True',
+                    help='Helper to visualize the results (default = True)')
 args = parser.parse_args()
 
 wandb.login(key='f97918185ed02886a90fa4464e7469c13c017460')
@@ -69,17 +70,6 @@ wandb.init(project='aml-challenge',
            )
 wandb.config.epochs = args.e
 wandb.config.batch_size = args.bs
-
-'''wandb.init(project='aml-challenge',
-           entity='innominati',
-           group=args.mode,
-           name=args.n,
-           config={  # and include hyperparameters and metadata
-               #"learning_rate": args.lr,
-               "epochs": args.e,
-               "batch_size": args.bs,
-         })
-config = wandb.config'''
 
 # Make paths
 TrainDir = os.path.join(os.getcwd(), args.data_path, "training")
@@ -112,7 +102,6 @@ shape_img_resize = tuple([int(x) for x in model.input.shape[1:]])
 input_shape_model = tuple([int(x) for x in model.input.shape[1:]])
 output_shape_model = tuple([int(x) for x in model.output.shape[1:]])
 
-
 # Normalize all images
 print("Normalizing query images")
 imgs_query = normalize_img(imgs_query)
@@ -132,10 +121,6 @@ E_query = model.predict(X_query)
 E_query_flatten = E_query.reshape((-1, np.prod(output_shape_model)))
 E_gallery = model.predict(X_gallery)
 E_gallery_flatten = E_gallery.reshape((-1, np.prod(output_shape_model)))
-print(">>> E_query.shape = " + str(E_query.shape))
-print(">>> E_gallery.shape = " + str(E_gallery.shape))
-print(">>> E_query_flatten.shape = " + str(E_query_flatten.shape))
-print(">>> E_gallery_flatten.shape = " + str(E_gallery_flatten.shape))
 
 # define the distance between query - gallery features vectors
 pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, args.metric, p=2.)
@@ -144,13 +129,8 @@ print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
 
 print("\nCalculating indices...")
 indices = np.argsort(pairwise_dist, axis=-1)
-print("Indices: {}".format(indices))
 
-print("\nGallery classes", gallery_classes)
 gallery_matches = gallery_classes[indices]
-print("\nMatches")
-print(gallery_matches)
-
 
 def topk_accuracy(gt_label, matched_label, k=1):
     matched_label = matched_label[:, :k]
@@ -182,17 +162,18 @@ final_res = dict()
 print("\nQuerying...")
 for i, emb_flatten in enumerate(E_query_flatten):
     distances, indx = knn.kneighbors([emb_flatten])
-    #print("\nFor query image_" + str(i))
-    #print(">> Indices:" + str(indx))
-    #print(">> Distances:" + str(distances))
-    img_query = imgs_query[i]  # query image
+    img_query = imgs_query[i]  
     query_name = query_names[i]
     imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]
     names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
-    #outFile = os.path.join(OutputDir, "Pretr_retrieval_" + str(i) + ".png")
-    #plot_query_retrieval(img_query, imgs_retrieval, None)
+    
+    if args.plot == 'True':
+        outFile = os.path.join(OutputDir, "Pretr_retrieval_" + str(i) + ".png")
+        plot_query_retrieval(img_query, imgs_retrieval, outFile)
+
     create_results_dict(final_res, query_name, names_retrieval)
 
+print('Saving results')
 final_results = create_final_dict(final_res)
 url = "http://kamino.disi.unitn.it:3001/results/"
-#submit(final_results, url)
+

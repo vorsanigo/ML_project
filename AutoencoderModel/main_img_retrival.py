@@ -23,9 +23,6 @@ parser.add_argument('-mode',
                     type=str,
                     default='training model',
                     help='training or test')
-parser.add_argument('-n',
-                    type=str,
-                    default='training')
 parser.add_argument('-lr',
                     type=float,
                     default=1e-4,
@@ -44,8 +41,8 @@ parser.add_argument('-loss',
                     help='loss function')
 parser.add_argument('-wandb',
                     type=str,
-                    default='True',
-                    help='Log on WandB (default = True)')
+                    default='False',
+                    help='Log on WandB (default = False)')
 parser.add_argument('-img_size',
                     type=int,
                     default=324,

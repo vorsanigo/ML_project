@@ -6,16 +6,9 @@ dir_path = 'C:\\Users\\alber\\Desktop\\UniTn\\Data Science\\Second_Semester\\Mac
 
 
 def read_imgs_no_subfolders(dirPath, extensions=None):
+    
     all_img = []
     img_list = glob.glob(os.path.join(dirPath, '*'))
-
-    
-    """for img_path in img_list:
-        if img_path.endswith(ext):
-            head_tail = os.path.split(img_path)
-            image_name = head_tail[1]
-            all_img.append(image_name)"""
-    
 
     return img_list
 
