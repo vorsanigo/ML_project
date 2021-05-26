@@ -23,17 +23,17 @@ parser.add_argument('-img_size',
 parser.add_argument('-model',
                     type=str,
                     default='Autoencoder',
-                    help='Default model = Autoencoder')
+                    help='Default model = Autoencoder, other options: Pretrained, Triplets')
 
 args = parser.parse_args()
-
 
 QueryDir = os.path.join(os.getcwd(), args.data_path, "validation", "query")
 GalleryDir = os.path.join(os.getcwd(), args.data_path, "validation", "gallery")
 OutputDir = os.path.join(os.getcwd(), "output_{}".format(args.model))
 if not os.path.exists(OutputDir):
     os.makedirs(OutputDir)
-QueryImgs, QueryName =  read_imgs_no_subfolders(QueryDir)
+
+QueryImgs, QueryName = read_imgs_no_subfolders(QueryDir)
 GalleryImgs, GalleryName = read_imgs_no_subfolders(GalleryDir)
 QueryName = [os.path.split(img_path)[1] for img_path in QueryName]
 GalleryName = [os.path.split(img_path)[1] for img_path in GalleryName]
@@ -44,9 +44,8 @@ QueryImgs = normalize_img(QueryImgs)
 print("Normalizing gallery images")
 GalleryImgs = normalize_img(GalleryImgs)
 
-
-
 if args.model == 'Autoencoder':
+
     # Build models
     autoencoderFile = os.path.join(OutputDir, "ConvAE_autoecoder.h5")
     encoderFile = os.path.join(OutputDir, "ConvAE_encoder.h5")
@@ -57,7 +56,8 @@ if args.model == 'Autoencoder':
     input_shape_model = tuple([int(x) for x in model.encoder.input.shape[1:]])
     output_shape_model = tuple([int(x) for x in model.encoder.output.shape[1:]])
 
-    model.load_models(loss = 'mse', optimizer = "adam")
+    # Loading model
+    model.load_models(loss='mse', optimizer="adam")
     
     # Convert images to numpy array of right dimensions
     print("\nConverting to numpy array of right dimensions")
@@ -73,14 +73,12 @@ if args.model == 'Autoencoder':
     E_gallery = model.predict(X_gallery)
     E_gallery_flatten = E_gallery.reshape((-1, np.prod(output_shape_model)))
 
-
     # Fit kNN model on training images
     print("\nFitting KNN model on training data...")
     k = 10
     knn = NearestNeighbors(n_neighbors=k, metric="cosine")
     knn.fit(E_gallery_flatten)
     print("Done fitting")
-
 
     # Querying on test images
     final_res = dict()
@@ -91,23 +89,25 @@ if args.model == 'Autoencoder':
         query_name = QueryName[i]
         imgs_retrieval = [GalleryImgs[idx] for idx in indx.flatten()]
         names_retrieval = [GalleryName[idx] for idx in indx.flatten()]
+
         if args.plot == 'True':
             outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
             plot_query_retrieval(img_query, imgs_retrieval, outFile)
+
         create_results_dict(final_res, query_name, names_retrieval)
 
+    print('Saving results...')
     final_results = create_final_dict(final_res)
     url = "http://kamino.disi.unitn.it:3001/results/"
-    #submit(final_results, url)
+    # submit(final_results, url)
+    print("Done saving")
 
 
-
-elif  args.model == 'Pretrained':
+elif args.model == 'Pretrained':
 
     # Load pre-trained VGG19 model + higher level layers
     print("\nLoading model...")
     model = tf.keras.applications.VGG19(weights='imagenet', include_top=False, input_shape=shape_img)
-    model.summary()
 
     shape_img_resize = tuple([int(x) for x in model.input.shape[1:]])
     input_shape_model = tuple([int(x) for x in model.input.shape[1:]])
@@ -150,9 +150,11 @@ elif  args.model == 'Pretrained':
 
         create_results_dict(final_res, query_name, names_retrieval)
 
-    print('Saving results')
+    print('Saving results...')
     final_results = create_final_dict(final_res)
     url = "http://kamino.disi.unitn.it:3001/results/"
+    # submit(final_results, url)
+    print("Done saving")
 
 else:
     pass
@@ -162,3 +164,24 @@ else:
     X_gallery = np.array(GalleryImgs).reshape((-1,) + input_shape_model)
     print(">>> X_query.shape = " + str(X_query.shape))
     print(">>> X_gallery.shape = " + str(X_gallery.shape))
+
+    # Querying on test images
+    final_res = dict()
+    print("\nQuerying...")
+    for i, emb_flatten in enumerate(E_query):
+        distances, indx = knn.kneighbors([emb_flatten])
+        img_query = imgs_query[i]
+        query_name = query_names[i]
+        imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]
+        names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
+        if args.plot == 'True':
+            outFile = os.path.join(OutputDir, "Triplets_retrieval_" + str(i) + ".png")
+            plot_query_retrieval(img_query, imgs_retrieval, None)
+
+        create_results_dict(final_res, query_name, names_retrieval)
+
+    print('Saving results...')
+    final_results = create_final_dict(final_res)
+    url = "http://kamino.disi.unitn.it:3001/results/"
+    # submit(final_results, url)
+    print("Done saving")

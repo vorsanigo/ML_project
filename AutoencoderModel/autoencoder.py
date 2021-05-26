@@ -3,7 +3,7 @@ from wandb.keras import WandbCallback
 from sklearn.model_selection import GridSearchCV, train_test_split
 
 
-class AutoEncoder():
+class AutoEncoder:
 
     def __init__(self, shape_img, autoencoderFile, encoderFile):
         self.shape_img = shape_img
@@ -57,31 +57,6 @@ class AutoEncoder():
     def compile(self, loss="mse", optimizer="adam"):
         self.autoencoder.compile(optimizer=optimizer, loss=loss, metrics=['accuracy'] )
 
-    # Grid search
-    def grid_search(self, X_train):
-
-        x_tr, x_ts = train_test_split(X_train, train_size=0.7)
-        # Scikit-learn to grid search
-        activation = ['relu', 'tanh', 'sigmoid', 'hard_sigmoid', 'softmax', 'softplus', 'softsign']
-        learn_rate = [0.001, 0.01, 0.1, 0.2, 0.3]
-        optimizer = ['SGD', 'RMSprop', 'Adagrad', 'Adadelta', 'Adam', 'Adamax', 'Nadam']
-
-        # grid search epochs, batch size
-        batch_size = [5, 10, 20, 40, 60, 80, 100, 120, 150, 200, 250, 500, 750, 1000, 5000]
-        param_grid = dict(batch_size=batch_size, activation=activation, optimizer=optimizer)
-
-        kmodel = tf.keras.wrappers.scikit_learn.KerasRegressor(build_fn=self.autoencoder, verbose=1)
-        grid = GridSearchCV(estimator=kmodel, param_grid=param_grid, scoring="accuracy", n_jobs=-1, cv=2)
-        grid_result = grid.fit(x_tr, x_ts)
-
-        # summarize results
-        print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
-        means = grid_result.cv_results_['mean_test_score']
-        stds = grid_result.cv_results_['std_test_score']
-        params = grid_result.cv_results_['params']
-        for mean, stdev, param in zip(means, stds, params):
-            print("%f (%f) with: %r" % (mean, stdev, param))
-
     # Fitting
     def fit(self, X, n_epochs=50, batch_size=256, wandb='True'):
         X_train = X
@@ -125,14 +100,17 @@ class AutoEncoder():
         self.encoder.compile(optimizer=optimizer, loss=loss)
 
 
-
-
-class TripletsEncoder():
+class TripletsEncoder:
     def __init__(self, shape_img, tripletsFile):
         self.shape_img = shape_img
         self.tripletsFile = tripletsFile
-        self.triplets_encoder= None
+        self.triplets_encoder = None
 
+    # Inference
+    def predict_triplets(self, x):
+        return self.triplets_encoder.layers[3].predict(x, verbose=1)
+
+    # Set neural network architecture
     def set_arch(self):
         input = tf.keras.layers.Input(shape=self.shape_img)
         x = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', padding='same')(input)
@@ -145,7 +123,7 @@ class TripletsEncoder():
         x = tf.keras.layers.Flatten()(x)
         x = tf.keras.layers.Dense(100, activation='relu')(x)
 
-        # modellll
+        # Model
         model = tf.keras.models.Model(input, x)
         triplet_model_a = tf.keras.layers.Input(self.shape_img)
         triplet_model_p = tf.keras.layers.Input(self.shape_img)
@@ -156,21 +134,12 @@ class TripletsEncoder():
         self.triplets_encoder = triplet_model
         triplet_model.summary()
 
-    def load_triplets(self, triplet_loss, optimizer="adam"):
-            print("Loading model...")
-            self.triplets_encoder = tf.keras.models.load_model(self.tripletsFile, custom_objects={'triplet_loss':triplet_loss})
-            self.triplets_encoder.compile(optimizer=optimizer, loss=triplet_loss)
-
-
-    def save_triplets(self):
-        print("Saving models...")
-        self.triplets_encoder.save(self.tripletsFile)
-
+    # Compiling
     def compile_triplets(self, triplet_loss, optimizer="adam"):
-        self.triplets_encoder.compile(optimizer=optimizer, loss=triplet_loss, metrics=['accuracy'] )
+        self.triplets_encoder.compile(optimizer=optimizer, loss=triplet_loss, metrics=['accuracy'])
 
-
-    def fit_triplets(self,data_generator, steps_per_epoch=1, epochs=3, batch_size=256, wandb='True'):
+    # Fitting
+    def fit_triplets(self, data_generator, steps_per_epoch=1, epochs=3, batch_size=256, wandb='True'):
         # Learning rate scheduler
         def scheduler(n_epochs, lr=0.0001):
             if n_epochs < 10:
@@ -182,26 +151,38 @@ class TripletsEncoder():
 
         if wandb == 'True':
             self.triplets_encoder.fit(data_generator,
-                                 steps_per_epoch=steps_per_epoch,
-                                 epochs=epochs,
-                                 batch_size=batch_size,
-                                 shuffle=True,
-                                 callbacks=[callback, WandbCallback()],
-                                 verbose=1)
+                                      steps_per_epoch=steps_per_epoch,
+                                      epochs=epochs,
+                                      batch_size=batch_size,
+                                      shuffle=True,
+                                      callbacks=[callback, WandbCallback()],
+                                      verbose=1)
         else:
             self.triplets_encoder.fit(data_generator,
-                                 steps_per_epoch=steps_per_epoch,
-                                 epochs=epochs,
-                                 batch_size=batch_size,
-                                 shuffle=True,
-                                 verbose=1)
+                                      steps_per_epoch=steps_per_epoch,
+                                      epochs=epochs,
+                                      batch_size=batch_size,
+                                      shuffle=True,
+                                      verbose=1)
 
         #original:
         #self.triplets_encoder.fit(data_generator, steps_per_epoch=steps_per_epoch, epochs=epochs)
 
+    # Save model architecture and weights to file
+    def save_triplets(self):
+        print("Saving models...")
+        self.triplets_encoder.save(self.tripletsFile)
 
-    def predict_triplets(self, x):
-        return self.triplets_encoder.layers[3].predict(x, verbose=1)
+    # Load model architecture and weights
+    def load_triplets(self, triplet_loss, optimizer="adam"):
+        print("Loading model...")
+        self.triplets_encoder = tf.keras.models.load_model(self.tripletsFile, custom_objects={'triplet_loss':triplet_loss})
+        self.triplets_encoder.compile(optimizer=optimizer, loss=triplet_loss)
+
+
+
+
+
 
 
 

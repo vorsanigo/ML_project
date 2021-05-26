@@ -7,9 +7,9 @@ from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.preprocessing.image import load_img
 
 
-class Loader():
+class Loader:
     
-    '''This class reads images with common extensions from a directory and helps to load images for later use'''
+    """This class reads images with common extensions from a directory for later use"""
 
     def __init__(self, img_length, img_height, num_channels):
         
@@ -19,7 +19,7 @@ class Loader():
 
     def get_files(self, data_path):
 
-        '''This function returns the data mapping'''
+        """This function returns the data mapping"""
         
         assert os.path.exists(data_path), 'Insert a valid path!'
         data_classes = os.listdir(data_path)  
@@ -47,7 +47,7 @@ class Loader():
 
     def get_data_paths(self, data_mapping):
 
-        '''This function returns the image path, the image name and the image as a numpy array'''
+        """This function returns the image path, the image name and the image as a numpy array"""
         
         images_paths = []  
         images_arrays = [] 
@@ -64,13 +64,10 @@ class Loader():
                 temp = "r"+img_path
                 images_names.append(os.path.split(temp)[1])
 
-                # load image with chosen size
                 img = load_img(img_path, target_size=(img_length, img_height))
 
-                # transform image into array
                 img = img_to_array(img)
 
-                # reshape dimension of channels to 3
                 if img.shape[2] == 1:
                     img = np.repeat(img, 3, axis=2)
                 if img.shape[2] == 4:
@@ -84,7 +81,7 @@ class Loader():
 
 def read_imgs_no_subfolders(dirPath, extensions=None):
 
-    '''This function reads images with common extensions from a directory with no subfolders'''
+    """This function reads images with common extensions from a directory with no subfolders"""
 
     if extensions is None:
         extensions = ['.jpg', '.png', '.jpeg']

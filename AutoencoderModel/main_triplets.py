@@ -1,17 +1,17 @@
-
-from triplets import *
-from autoencoder import TripletsEncoder
-from scipy import spatial
-from sklearn.neighbors import NearestNeighbors
-from image_loading import Loader
-from autoencoder import AutoEncoder
-from transform import normalize_img, data_augmentation
-from final_display import *
-from visualization import *
 import argparse
 import os
 import numpy as np
 import wandb
+from autoencoder import TripletsEncoder
+from scipy import spatial
+from sklearn.neighbors import NearestNeighbors
+from image_loading import Loader
+from triplets import *
+from autoencoder import AutoEncoder
+from transform import normalize_img, data_augmentation
+from final_display import *
+from visualization import *
+
 
 parser = argparse.ArgumentParser(description='Challenge presentation example')
 parser.add_argument('--data_path',
@@ -23,9 +23,6 @@ parser.add_argument('-mode',
                     type=str,
                     default='training model',
                     help='training or test')
-parser.add_argument('-n',
-                    type=str,
-                    default='training')
 parser.add_argument('-lr',
                     type=float,
                     default=1e-4,
@@ -62,6 +59,10 @@ parser.add_argument('-step',
                     type=int,
                     default=1,
                     help='number of steps per epoch')
+parser.add_argument('-plot',
+                    type=str,
+                    default='True',
+                    help='Helper to visualize the results (default = True)')
 
 args = parser.parse_args()
 
@@ -75,8 +76,7 @@ if args.wandb == 'True':
     wandb.config.epochs = args.e
     wandb.config.batch_size = args.bs
 
-
-
+# Make paths
 TrainDir = os.path.join(os.getcwd(), args.data_path, "training")
 QueryDir = os.path.join(os.getcwd(), args.data_path, "validation", "query")
 GalleryDir = os.path.join(os.getcwd(), args.data_path, "validation", "gallery")
@@ -84,35 +84,27 @@ OutputDir = os.path.join(os.getcwd(), "output", "triplets_loss")
 if not os.path.exists(OutputDir):
     os.makedirs(OutputDir)
 
-# Build models
-tripletsFile = os.path.join(OutputDir, "triplets_encoder.h5")
-
-
-
-print('loading_images')
-# create loader
+# Create loader
 loader = Loader(args.img_size, args.img_size, args.channels)
 
-# extract img final for the model
+# Extract img final for the model
 shape_img = (args.img_size, args.img_size, args.channels)  # bc we need it as argument for the Autoencoder()
 print("Image size", shape_img)
+
+# Build models
+tripletsFile = os.path.join(OutputDir, "triplets_encoder.h5")
 
 triplet_model = TripletsEncoder(shape_img, tripletsFile)
 triplet_model.set_arch()
 
 if args.mode == "training model":
-    print('start_training')
-    # TRAIN
     # Read images
-    print(TrainDir)
     train_map = loader.get_files(TrainDir)
     train_names, train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
 
     # Normalize all images
     print("\nNormalizing training images")
     imgs_train = normalize_img(imgs_train)
-
-
 
     # Convert images to numpy array of right dimensions
     print("\nConverting to numpy array of right dimensions")
@@ -121,19 +113,17 @@ if args.mode == "training model":
 
     # Create object for train augmentation
     completeTrainGen = data_augmentation(X_train, args.bs)
-    print('type:', type(completeTrainGen))
 
-
-
-    print('compile')
+    # Compiling
     triplet_model.compile_triplets(triplet_loss, optimizer='adam')
 
-    print('fitting')
-    triplet_model.fit_triplets(data_generator(train_classes, X_train, 64), steps_per_epoch = args.step, epochs = args.e,
-                               batch_size = args.bs, wandb=args.wandb)
-
-    print('saving')
+    # Fitting
+    triplet_model.fit_triplets(data_generator(train_classes, X_train, 64),
+                               steps_per_epoch=args.step, epochs=args.e,
+                               batch_size=args.bs, wandb=args.wandb)
+    # Saving
     triplet_model.save_triplets()
+    print("Done training")
 
 
 # Read images
@@ -152,8 +142,6 @@ imgs_gallery = normalize_img(imgs_gallery)
 print("\nConverting to numpy array of right dimensions")
 X_query = np.array(imgs_query).reshape((-1,) + shape_img)
 X_gallery = np.array(imgs_gallery).reshape((-1,) + shape_img)
-print(">>> X_query.shape = " + str(X_query.shape))
-print(">>> X_gallery.shape = " + str(X_gallery.shape))
 
 if args.mode != "training model":
     print("\nLoading model...")
@@ -163,24 +151,14 @@ if args.mode != "training model":
 print("\nCreating embeddings")
 E_query = triplet_model.predict_triplets(X_query)
 E_gallery = triplet_model.predict_triplets(X_gallery)
-print(">>> E_query.shape = " + str(E_query.shape))
-print(">>> E_gallery.shape = " + str(E_gallery.shape))
 
-
-# define the distance between query - gallery features vectors
+# Define the distance between query - gallery features vectors
 pairwise_dist = spatial.distance.cdist(E_query, E_gallery, args.metric, p=2.)
-# rows -> queries | columns -> gallery --> cell = distance between query-gallery image
 print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
 
-print("\nCalculating indices...")
+print("\nCalculating indices and gallery matches...")
 indices = np.argsort(pairwise_dist, axis=-1)
-print("Indices: {}".format(indices))
-
-
-print("\nGallery classes", gallery_classes)
 gallery_matches = gallery_classes[indices]
-print("\nMatches")
-print(gallery_matches)
 
 
 def topk_accuracy(gt_label, matched_label, k=1):
@@ -190,12 +168,10 @@ def topk_accuracy(gt_label, matched_label, k=1):
     for q_idx, q_lbl in enumerate(gt_label):
         correct += np.any(q_lbl == matched_label[q_idx, :]).item()
     acc_tmp = correct / total
-
     return acc_tmp
 
 
-print('\n########## RESULTS ##########')
-
+print('\nRESULTS:')
 for k in [1, 3, 10]:
     topk_acc = topk_accuracy(query_classes, gallery_matches, k)
     print('>>> Top-{:d} Accuracy: {:.3f}'.format(k, topk_acc))
@@ -212,23 +188,21 @@ final_res = dict()
 print("\nQuerying...")
 for i, emb_flatten in enumerate(E_query):
     distances, indx = knn.kneighbors([emb_flatten])
-    # print("\nFor query image_" + str(i))
-    # print(">> Indices:" + str(indx))
-    # print(">> Distances:" + str(distances))
-    img_query = imgs_query[i]  # query image
+    img_query = imgs_query[i]
     query_name = query_names[i]
     imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]
     names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
-    # outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
-    #plot_query_retrieval(img_query, imgs_retrieval, None)
-    #TODO the to plot the images remove the comment above
+    if args.plot == 'True':
+        outFile = os.path.join(OutputDir, "Triplets_retrieval_" + str(i) + ".png")
+        plot_query_retrieval(img_query, imgs_retrieval, None)
+
     create_results_dict(final_res, query_name, names_retrieval)
 
-
-print("\nDone querying, saving results...")
+print('Saving results...')
 final_results = create_final_dict(final_res)
 url = "http://kamino.disi.unitn.it:3001/results/"
-# submit(final_results, url)
-print("Results saved")
+#submit(final_results, url)
+print("Done saving")
+
 
 
