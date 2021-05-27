@@ -1,8 +1,10 @@
 import argparse
 import os 
 from sklearn.neighbors import NearestNeighbors
-import tensorflow as tf 
-from autoencoder import AutoEncoder
+import tensorflow as tf
+
+from AutoencoderModel.triplets import triplet_loss
+from autoencoder import AutoEncoder, TripletsEncoder
 from image_loading import read_imgs_no_subfolders
 from transform import normalize_img, data_augmentation
 from visualization import plot_query_retrieval
@@ -20,21 +22,31 @@ parser.add_argument('-img_size',
                     type=int,
                     default=324,
                     help='image size for the model')
+parser.add_argument('-channels',
+                    type=int,
+                    default=3,
+                    help='number of channels')
 parser.add_argument('-model',
                     type=str,
-                    default='Autoencoder',
-                    help='Default model = Autoencoder, other options: Pretrained, Triplets')
+                    default='convAE',
+                    help='Default model = convAE, other options: pretrained, triplets_loss')
+parser.add_argument('-plot',
+                    type=str,
+                    default='True',
+                    help='Helper to visualize the results (default = True)')
 
 args = parser.parse_args()
 
-QueryDir = os.path.join(os.getcwd(), args.data_path, "validation", "query")
-GalleryDir = os.path.join(os.getcwd(), args.data_path, "validation", "gallery")
-OutputDir = os.path.join(os.getcwd(), "output_{}".format(args.model))
+shape_img = (args.img_size, args.img_size, args.channels)
+
+QueryDir = os.path.join(os.getcwd(), args.data_path, "query")
+GalleryDir = os.path.join(os.getcwd(), args.data_path, "gallery")
+OutputDir = os.path.join(os.getcwd(), "output", args.model)
 if not os.path.exists(OutputDir):
     os.makedirs(OutputDir)
 
-QueryImgs, QueryName = read_imgs_no_subfolders(QueryDir)
-GalleryImgs, GalleryName = read_imgs_no_subfolders(GalleryDir)
+QueryImgs, QueryName = read_imgs_no_subfolders(QueryDir, args.img_size)
+GalleryImgs, GalleryName = read_imgs_no_subfolders(GalleryDir, args.img_size)
 QueryName = [os.path.split(img_path)[1] for img_path in QueryName]
 GalleryName = [os.path.split(img_path)[1] for img_path in GalleryName]
 
@@ -44,12 +56,13 @@ QueryImgs = normalize_img(QueryImgs)
 print("Normalizing gallery images")
 GalleryImgs = normalize_img(GalleryImgs)
 
-if args.model == 'Autoencoder':
+if args.model == 'convAE':
 
     # Build models
     autoencoderFile = os.path.join(OutputDir, "ConvAE_autoecoder.h5")
+    print("autoencoder file", autoencoderFile)
     encoderFile = os.path.join(OutputDir, "ConvAE_encoder.h5")
-    model = AutoEncoder(args.img_size, autoencoderFile, encoderFile)
+    model = AutoEncoder(shape_img, autoencoderFile, encoderFile)
     model.set_arch()
 
     input_shape_model = tuple([int(x) for x in model.encoder.input.shape[1:]])
@@ -98,15 +111,16 @@ if args.model == 'Autoencoder':
     print('Saving results...')
     final_results = create_final_dict(final_res)
     url = "http://kamino.disi.unitn.it:3001/results/"
-    # submit(final_results, url)
+    submit(final_results, url)
     print("Done saving")
 
 
-elif args.model == 'Pretrained':
+elif args.model == 'pretrained':
 
     # Load pre-trained VGG19 model + higher level layers
     print("\nLoading model...")
-    model = tf.keras.applications.VGG19(weights='imagenet', include_top=False, input_shape=shape_img)
+    model = tf.keras.applications.ResNet50(weights='imagenet', include_top=False, input_shape=shape_img)
+    model.summary()
 
     shape_img_resize = tuple([int(x) for x in model.input.shape[1:]])
     input_shape_model = tuple([int(x) for x in model.input.shape[1:]])
@@ -163,8 +177,8 @@ else:
 
     # Convert images to numpy array of right dimensions
     print("\nConverting to numpy array of right dimensions")
-    X_query = np.array(imgs_query).reshape((-1,) + args.img_size)
-    X_gallery = np.array(imgs_gallery).reshape((-1,) + args.img_size)
+    X_query = np.array(QueryImgs).reshape((-1,) + shape_img)
+    X_gallery = np.array(GalleryImgs).reshape((-1,) + shape_img)
 
     # Loading model
     triplet_model.load_triplets(triplet_loss, optimizer="adam")
@@ -186,10 +200,10 @@ else:
     print("\nQuerying...")
     for i, emb_flatten in enumerate(E_query):
         distances, indx = knn.kneighbors([emb_flatten])
-        img_query = imgs_query[i]
-        query_name = query_names[i]
-        imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]
-        names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
+        img_query = QueryImgs[i]
+        query_name = QueryName[i]
+        imgs_retrieval = [GalleryImgs[idx] for idx in indx.flatten()]
+        names_retrieval = [GalleryName[idx] for idx in indx.flatten()]
         if args.plot == 'True':
             outFile = os.path.join(OutputDir, "Triplets_retrieval_" + str(i) + ".png")
             plot_query_retrieval(img_query, imgs_retrieval, None)
