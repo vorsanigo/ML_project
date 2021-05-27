@@ -52,7 +52,6 @@ if args.model == 'Autoencoder':
     model = AutoEncoder(args.img_size, autoencoderFile, encoderFile)
     model.set_arch()
 
-    # Convert images to numpy array of right dimensions
     input_shape_model = tuple([int(x) for x in model.encoder.input.shape[1:]])
     output_shape_model = tuple([int(x) for x in model.encoder.output.shape[1:]])
 
@@ -73,7 +72,7 @@ if args.model == 'Autoencoder':
     E_gallery = model.predict(X_gallery)
     E_gallery_flatten = E_gallery.reshape((-1, np.prod(output_shape_model)))
 
-    # Fit kNN model on training images
+    # Fit kNN model on gallery images
     print("\nFitting KNN model on training data...")
     k = 10
     knn = NearestNeighbors(n_neighbors=k, metric="cosine")
@@ -127,7 +126,7 @@ elif args.model == 'Pretrained':
     E_gallery = model.predict(X_gallery)
     E_gallery_flatten = E_gallery.reshape((-1, np.prod(output_shape_model)))
 
-    # Fit kNN model on training images
+    # Fit kNN model on gallery images
     print("\nFitting KNN model on training data...")
     k = 10
     knn = NearestNeighbors(n_neighbors=k, metric="cosine")
@@ -157,13 +156,30 @@ elif args.model == 'Pretrained':
     print("Done saving")
 
 else:
-    pass
+    # Build model
+    tripletsFile = os.path.join(OutputDir, "triplets_encoder.h5")
+    triplet_model = TripletsEncoder(shape_img, tripletsFile)
+    triplet_model.set_arch()
+
     # Convert images to numpy array of right dimensions
     print("\nConverting to numpy array of right dimensions")
-    X_query = np.array(QueryImgs).reshape((-1,) + input_shape_model)
-    X_gallery = np.array(GalleryImgs).reshape((-1,) + input_shape_model)
-    print(">>> X_query.shape = " + str(X_query.shape))
-    print(">>> X_gallery.shape = " + str(X_gallery.shape))
+    X_query = np.array(imgs_query).reshape((-1,) + args.img_size)
+    X_gallery = np.array(imgs_gallery).reshape((-1,) + args.img_size)
+
+    # Loading model
+    triplet_model.load_triplets(triplet_loss, optimizer="adam")
+
+    # Create embeddings using model
+    print("\nCreating embeddings")
+    E_query = triplet_model.predict_triplets(X_query)
+    E_gallery = triplet_model.predict_triplets(X_gallery)
+
+    # Fit kNN model on gallery images
+    print("\nFitting KNN model on training data...")
+    k = 10
+    knn = NearestNeighbors(n_neighbors=k, metric="cosine")
+    knn.fit(E_gallery)
+    print("Done fitting")
 
     # Querying on test images
     final_res = dict()

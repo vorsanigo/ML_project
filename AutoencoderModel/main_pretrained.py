@@ -137,7 +137,7 @@ for k in [1, 3, 10]:
     print('>> Top-{:d} Accuracy: {:.3f}'.format(k, topk_acc))
 
 
-# Fit kNN model on training images
+# Fit kNN model on gallery images
 print("\nFitting KNN model on training data...")
 k = 10
 knn = NearestNeighbors(n_neighbors=k, metric="cosine")
