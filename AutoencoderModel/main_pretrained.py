@@ -2,6 +2,8 @@ import os
 import numpy as np
 import tensorflow as tf
 from sklearn.neighbors import NearestNeighbors
+
+from AutoencoderModel.visualization import plot_query_retrieval
 from image_loading import Loader
 from transform import normalize_img
 from final_display import *
@@ -86,9 +88,9 @@ query_names, query_paths, imgs_query, query_classes = loader.get_data_paths(quer
 gallery_map = loader.get_files(GalleryDir)
 gallery_names, gallery_paths, imgs_gallery, gallery_classes = loader.get_data_paths(gallery_map)
 
-# Load pre-trained VGG19 model + higher level layers
+# Load pre-trained ResNet50 model + higher level layers
 print("\nLoading model...")
-model = tf.keras.applications.VGG19(weights='imagenet', include_top=False, input_shape=shape_img)
+model = tf.keras.applications.ResNet50(weights='imagenet', include_top=False, input_shape=shape_img)
 model.summary()
 
 shape_img_resize = tuple([int(x) for x in model.input.shape[1:]])
