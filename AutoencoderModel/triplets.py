@@ -74,5 +74,5 @@ def triplet_loss(y_true, y_pred):
     negative_out = y_pred[:, 200: 300]
     pos_dist = K.sum(K.abs(anchor_out - positive_out), axis=1)
     neg_dist = K.sum(K.abs(anchor_out - negative_out), axis=1)
-    probs = K.softmax([pos_dist, neg_dist], axis=1)
+    probs = K.softmax([pos_dist, neg_dist], axis=0)
     return K.mean(K.abs(probs[0]) + K.abs(1.0 - probs[1]))

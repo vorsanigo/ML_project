@@ -1,0 +1,27 @@
+{
+    "os": "Linux-5.8.0-53-generic-x86_64-with-glibc2.29",
+    "python": "3.8.5",
+    "heartbeatAt": "2021-05-27T13:19:18.138480",
+    "startedAt": "2021-05-27T13:19:16.083320",
+    "docker": null,
+    "cpu_count": 8,
+    "cuda": null,
+    "args": [
+        "-e",
+        "1",
+        "-bs",
+        "3"
+    ],
+    "state": "running",
+    "program": "/home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/main_triplets.py",
+    "codePath": "AutoencoderModel/main_triplets.py",
+    "git": {
+        "remote": "https://github.com/vorsanigo/ML_project.git",
+        "commit": "89ff787eb0e7dd755860fc518dbea4f68e203ef8"
+    },
+    "email": "verorsanigo@gmail.com",
+    "root": "/home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project",
+    "host": "veror-Swift-SF314-52",
+    "username": "veror",
+    "executable": "/home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/venv/bin/python"
+}
