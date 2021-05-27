@@ -1,0 +1,163 @@
+2021-05-27 11:57:43,032 INFO    MainThread:31353 [internal.py:wandb_internal():88] W&B internal server running at pid: 31353, started at: 2021-05-27 11:57:43.031931
+2021-05-27 11:57:43,033 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: check_version
+2021-05-27 11:57:43,033 INFO    WriterThread:31353 [datastore.py:open_for_write():77] open: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/run-18w4j4rm.wandb
+2021-05-27 11:57:43,035 DEBUG   SenderThread:31353 [sender.py:send():176] send: header
+2021-05-27 11:57:43,035 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: check_version
+2021-05-27 11:57:43,109 DEBUG   SenderThread:31353 [sender.py:send():176] send: run
+2021-05-27 11:57:43,326 INFO    SenderThread:31353 [dir_watcher.py:__init__():168] watching files in: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files
+2021-05-27 11:57:43,326 INFO    SenderThread:31353 [sender.py:_start_run_threads():696] run started: 18w4j4rm with start time 1622109462
+2021-05-27 11:57:43,326 DEBUG   SenderThread:31353 [sender.py:send():176] send: summary
+2021-05-27 11:57:43,327 INFO    SenderThread:31353 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-05-27 11:57:43,327 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: run_start
+2021-05-27 11:57:44,330 INFO    Thread-8  :31353 [dir_watcher.py:_on_file_created():216] file/dir created: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/wandb-summary.json
+2021-05-27 11:57:44,548 DEBUG   HandlerThread:31353 [meta.py:__init__():39] meta init
+2021-05-27 11:57:44,549 DEBUG   HandlerThread:31353 [meta.py:__init__():53] meta init done
+2021-05-27 11:57:44,549 DEBUG   HandlerThread:31353 [meta.py:probe():210] probe
+2021-05-27 11:57:44,550 DEBUG   HandlerThread:31353 [meta.py:_setup_git():200] setup git
+2021-05-27 11:57:44,570 DEBUG   HandlerThread:31353 [meta.py:_setup_git():207] setup git done
+2021-05-27 11:57:44,570 DEBUG   HandlerThread:31353 [meta.py:_save_pip():57] save pip
+2021-05-27 11:57:44,571 DEBUG   HandlerThread:31353 [meta.py:_save_pip():71] save pip done
+2021-05-27 11:57:44,571 DEBUG   HandlerThread:31353 [meta.py:probe():252] probe done
+2021-05-27 11:57:44,574 DEBUG   SenderThread:31353 [sender.py:send():176] send: files
+2021-05-27 11:57:44,574 INFO    SenderThread:31353 [sender.py:_save_file():821] saving file wandb-metadata.json with policy now
+2021-05-27 11:57:44,579 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: stop_status
+2021-05-27 11:57:44,580 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: stop_status
+2021-05-27 11:57:44,757 DEBUG   SenderThread:31353 [sender.py:send():176] send: config
+2021-05-27 11:57:44,757 DEBUG   SenderThread:31353 [sender.py:send():176] send: config
+2021-05-27 11:57:44,800 DEBUG   SenderThread:31353 [sender.py:send():176] send: files
+2021-05-27 11:57:44,800 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: get_summary
+2021-05-27 11:57:44,800 INFO    SenderThread:31353 [sender.py:_save_file():821] saving file model-best.h5 with policy live
+2021-05-27 11:57:45,196 INFO    Thread-11 :31353 [upload_job.py:push():133] Uploaded file /tmp/tmpujlpiibkwandb/hkx9evij-wandb-metadata.json
+2021-05-27 11:57:45,330 INFO    Thread-8  :31353 [dir_watcher.py:_on_file_created():216] file/dir created: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/wandb-metadata.json
+2021-05-27 11:57:45,330 INFO    Thread-8  :31353 [dir_watcher.py:_on_file_created():216] file/dir created: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/output.log
+2021-05-27 11:57:45,330 INFO    Thread-8  :31353 [dir_watcher.py:_on_file_created():216] file/dir created: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/requirements.txt
+2021-05-27 11:57:46,330 INFO    Thread-8  :31353 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/config.yaml
+2021-05-27 11:57:48,451 DEBUG   SenderThread:31353 [sender.py:send():176] send: files
+2021-05-27 11:57:48,451 INFO    SenderThread:31353 [sender.py:_save_file():821] saving file media/graph/graph_summary_4b69bdf9.graph.json with policy now
+2021-05-27 11:57:48,452 DEBUG   SenderThread:31353 [sender.py:send():176] send: summary
+2021-05-27 11:57:48,455 INFO    SenderThread:31353 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-05-27 11:57:48,456 DEBUG   SenderThread:31353 [sender.py:send():176] send: history
+2021-05-27 11:57:48,456 DEBUG   SenderThread:31353 [sender.py:send():176] send: summary
+2021-05-27 11:57:48,456 INFO    SenderThread:31353 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-05-27 11:57:49,027 INFO    Thread-12 :31353 [upload_job.py:push():133] Uploaded file /tmp/tmpujlpiibkwandb/22vfcogj-media/graph/graph_summary_4b69bdf9.graph.json
+2021-05-27 11:57:49,335 INFO    Thread-8  :31353 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/wandb-summary.json
+2021-05-27 11:57:49,336 INFO    Thread-8  :31353 [dir_watcher.py:_on_file_created():216] file/dir created: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/media/graph/graph_summary_4b69bdf9.graph.json
+2021-05-27 11:57:49,336 INFO    Thread-8  :31353 [dir_watcher.py:_on_file_created():216] file/dir created: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/media
+2021-05-27 11:57:49,336 INFO    Thread-8  :31353 [dir_watcher.py:_on_file_created():216] file/dir created: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/media/graph
+2021-05-27 11:57:51,281 DEBUG   SenderThread:31353 [sender.py:send():176] send: history
+2021-05-27 11:57:51,281 DEBUG   SenderThread:31353 [sender.py:send():176] send: summary
+2021-05-27 11:57:51,282 INFO    SenderThread:31353 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-05-27 11:57:51,336 INFO    Thread-8  :31353 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/wandb-summary.json
+2021-05-27 11:57:54,402 DEBUG   SenderThread:31353 [sender.py:send():176] send: history
+2021-05-27 11:57:54,404 DEBUG   SenderThread:31353 [sender.py:send():176] send: summary
+2021-05-27 11:57:54,407 INFO    SenderThread:31353 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-05-27 11:57:55,350 INFO    Thread-8  :31353 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/wandb-summary.json
+2021-05-27 11:57:59,758 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: stop_status
+2021-05-27 11:57:59,758 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: stop_status
+2021-05-27 11:58:12,701 DEBUG   SenderThread:31353 [sender.py:send():176] send: stats
+2021-05-27 11:58:14,938 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: stop_status
+2021-05-27 11:58:14,938 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: stop_status
+2021-05-27 11:58:25,693 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: poll_exit
+2021-05-27 11:58:25,693 DEBUG   SenderThread:31353 [sender.py:send():176] send: telemetry
+2021-05-27 11:58:25,693 DEBUG   SenderThread:31353 [sender.py:send():176] send: exit
+2021-05-27 11:58:25,693 INFO    SenderThread:31353 [sender.py:send_exit():281] handling exit code: 0
+2021-05-27 11:58:25,693 INFO    SenderThread:31353 [sender.py:send_exit():289] send defer
+2021-05-27 11:58:25,693 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: poll_exit
+2021-05-27 11:58:25,694 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: defer
+2021-05-27 11:58:25,694 INFO    HandlerThread:31353 [handler.py:handle_request_defer():138] handle defer: 0
+2021-05-27 11:58:25,694 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: defer
+2021-05-27 11:58:25,694 INFO    SenderThread:31353 [sender.py:send_request_defer():298] handle sender defer: 0
+2021-05-27 11:58:25,694 INFO    SenderThread:31353 [sender.py:send_request_defer():336] send defer: 1
+2021-05-27 11:58:25,694 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: defer
+2021-05-27 11:58:25,695 INFO    HandlerThread:31353 [handler.py:handle_request_defer():138] handle defer: 1
+2021-05-27 11:58:25,729 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: defer
+2021-05-27 11:58:25,730 INFO    SenderThread:31353 [sender.py:send_request_defer():298] handle sender defer: 1
+2021-05-27 11:58:25,730 INFO    SenderThread:31353 [sender.py:send_request_defer():336] send defer: 2
+2021-05-27 11:58:25,730 DEBUG   SenderThread:31353 [sender.py:send():176] send: stats
+2021-05-27 11:58:25,730 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: defer
+2021-05-27 11:58:25,730 INFO    HandlerThread:31353 [handler.py:handle_request_defer():138] handle defer: 2
+2021-05-27 11:58:25,730 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: defer
+2021-05-27 11:58:25,730 INFO    SenderThread:31353 [sender.py:send_request_defer():298] handle sender defer: 2
+2021-05-27 11:58:25,730 INFO    SenderThread:31353 [sender.py:send_request_defer():336] send defer: 3
+2021-05-27 11:58:25,731 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: defer
+2021-05-27 11:58:25,731 INFO    HandlerThread:31353 [handler.py:handle_request_defer():138] handle defer: 3
+2021-05-27 11:58:25,731 DEBUG   SenderThread:31353 [sender.py:send():176] send: summary
+2021-05-27 11:58:25,731 INFO    SenderThread:31353 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-05-27 11:58:25,732 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: defer
+2021-05-27 11:58:25,732 INFO    SenderThread:31353 [sender.py:send_request_defer():298] handle sender defer: 3
+2021-05-27 11:58:25,732 INFO    SenderThread:31353 [sender.py:send_request_defer():336] send defer: 4
+2021-05-27 11:58:25,732 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: defer
+2021-05-27 11:58:25,732 INFO    HandlerThread:31353 [handler.py:handle_request_defer():138] handle defer: 4
+2021-05-27 11:58:25,732 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: defer
+2021-05-27 11:58:25,732 INFO    SenderThread:31353 [sender.py:send_request_defer():298] handle sender defer: 4
+2021-05-27 11:58:25,795 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: poll_exit
+2021-05-27 11:58:25,949 INFO    SenderThread:31353 [sender.py:send_request_defer():336] send defer: 5
+2021-05-27 11:58:25,949 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: poll_exit
+2021-05-27 11:58:25,950 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: defer
+2021-05-27 11:58:25,950 INFO    HandlerThread:31353 [handler.py:handle_request_defer():138] handle defer: 5
+2021-05-27 11:58:25,950 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: defer
+2021-05-27 11:58:25,950 INFO    SenderThread:31353 [sender.py:send_request_defer():298] handle sender defer: 5
+2021-05-27 11:58:25,950 INFO    SenderThread:31353 [dir_watcher.py:finish():282] shutting down directory watcher
+2021-05-27 11:58:26,051 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: poll_exit
+2021-05-27 11:58:26,356 INFO    SenderThread:31353 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/output.log
+2021-05-27 11:58:26,357 INFO    SenderThread:31353 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/wandb-summary.json
+2021-05-27 11:58:26,357 INFO    SenderThread:31353 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/config.yaml
+2021-05-27 11:58:26,358 INFO    SenderThread:31353 [dir_watcher.py:finish():312] scan: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files
+2021-05-27 11:58:26,358 INFO    SenderThread:31353 [dir_watcher.py:finish():318] scan save: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/config.yaml config.yaml
+2021-05-27 11:58:26,359 INFO    SenderThread:31353 [dir_watcher.py:finish():318] scan save: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/wandb-metadata.json wandb-metadata.json
+2021-05-27 11:58:26,359 INFO    SenderThread:31353 [dir_watcher.py:finish():318] scan save: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/requirements.txt requirements.txt
+2021-05-27 11:58:26,366 INFO    SenderThread:31353 [dir_watcher.py:finish():318] scan save: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/output.log output.log
+2021-05-27 11:58:26,367 INFO    SenderThread:31353 [dir_watcher.py:finish():318] scan save: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/wandb-summary.json wandb-summary.json
+2021-05-27 11:58:26,385 INFO    SenderThread:31353 [dir_watcher.py:finish():318] scan save: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/media/graph/graph_summary_4b69bdf9.graph.json media/graph/graph_summary_4b69bdf9.graph.json
+2021-05-27 11:58:26,385 INFO    SenderThread:31353 [sender.py:send_request_defer():336] send defer: 6
+2021-05-27 11:58:26,386 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: poll_exit
+2021-05-27 11:58:26,393 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: defer
+2021-05-27 11:58:26,393 INFO    HandlerThread:31353 [handler.py:handle_request_defer():138] handle defer: 6
+2021-05-27 11:58:26,395 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: defer
+2021-05-27 11:58:26,395 INFO    SenderThread:31353 [sender.py:send_request_defer():298] handle sender defer: 6
+2021-05-27 11:58:26,395 INFO    SenderThread:31353 [file_pusher.py:finish():176] shutting down file pusher
+2021-05-27 11:58:26,395 INFO    SenderThread:31353 [sender.py:send_request_defer():336] send defer: 7
+2021-05-27 11:58:26,396 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: defer
+2021-05-27 11:58:26,396 INFO    HandlerThread:31353 [handler.py:handle_request_defer():138] handle defer: 7
+2021-05-27 11:58:26,397 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: defer
+2021-05-27 11:58:26,397 INFO    SenderThread:31353 [sender.py:send_request_defer():298] handle sender defer: 7
+2021-05-27 11:58:26,495 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: poll_exit
+2021-05-27 11:58:26,712 INFO    SenderThread:31353 [sender.py:send_request_defer():336] send defer: 8
+2021-05-27 11:58:26,712 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: poll_exit
+2021-05-27 11:58:26,712 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: defer
+2021-05-27 11:58:26,713 INFO    HandlerThread:31353 [handler.py:handle_request_defer():138] handle defer: 8
+2021-05-27 11:58:26,713 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: defer
+2021-05-27 11:58:26,713 INFO    SenderThread:31353 [sender.py:send_request_defer():298] handle sender defer: 8
+2021-05-27 11:58:26,713 INFO    SenderThread:31353 [sender.py:send_request_defer():336] send defer: 9
+2021-05-27 11:58:26,714 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: defer
+2021-05-27 11:58:26,714 DEBUG   SenderThread:31353 [sender.py:send():176] send: final
+2021-05-27 11:58:26,714 INFO    HandlerThread:31353 [handler.py:handle_request_defer():138] handle defer: 9
+2021-05-27 11:58:26,715 DEBUG   SenderThread:31353 [sender.py:send():176] send: footer
+2021-05-27 11:58:26,715 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: defer
+2021-05-27 11:58:26,715 INFO    SenderThread:31353 [sender.py:send_request_defer():298] handle sender defer: 9
+2021-05-27 11:58:26,815 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: poll_exit
+2021-05-27 11:58:26,815 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: poll_exit
+2021-05-27 11:58:26,917 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: poll_exit
+2021-05-27 11:58:26,918 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: poll_exit
+2021-05-27 11:58:26,959 INFO    Thread-13 :31353 [upload_job.py:push():133] Uploaded file /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/config.yaml
+2021-05-27 11:58:26,972 INFO    Thread-16 :31353 [upload_job.py:push():133] Uploaded file /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/wandb-summary.json
+2021-05-27 11:58:27,021 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: poll_exit
+2021-05-27 11:58:27,021 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: poll_exit
+2021-05-27 11:58:27,028 INFO    Thread-15 :31353 [upload_job.py:push():133] Uploaded file /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/output.log
+2021-05-27 11:58:27,056 INFO    Thread-14 :31353 [upload_job.py:push():133] Uploaded file /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/files/requirements.txt
+2021-05-27 11:58:27,123 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: poll_exit
+2021-05-27 11:58:27,123 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: poll_exit
+2021-05-27 11:58:27,224 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: poll_exit
+2021-05-27 11:58:27,225 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: poll_exit
+2021-05-27 11:58:27,327 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: poll_exit
+2021-05-27 11:58:27,327 DEBUG   SenderThread:31353 [sender.py:send_request():186] send_request: poll_exit
+2021-05-27 11:58:27,328 INFO    SenderThread:31353 [file_pusher.py:join():181] waiting for file pusher
+2021-05-27 11:58:27,329 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: get_summary
+2021-05-27 11:58:27,331 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: sampled_history
+2021-05-27 11:58:27,333 DEBUG   HandlerThread:31353 [handler.py:handle_request():121] handle_request: shutdown
+2021-05-27 11:58:27,334 INFO    HandlerThread:31353 [handler.py:finish():632] shutting down handler
+2021-05-27 11:58:27,714 INFO    WriterThread:31353 [datastore.py:close():258] close: /home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/wandb/run-20210527_115742-18w4j4rm/run-18w4j4rm.wandb
+2021-05-27 11:58:28,328 INFO    SenderThread:31353 [sender.py:finish():925] shutting down sender
+2021-05-27 11:58:28,328 INFO    SenderThread:31353 [file_pusher.py:finish():176] shutting down file pusher
+2021-05-27 11:58:28,328 INFO    SenderThread:31353 [file_pusher.py:join():181] waiting for file pusher
+2021-05-27 11:58:28,329 INFO    MainThread:31353 [internal.py:handle_exit():78] Internal process exited
