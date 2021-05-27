@@ -14,7 +14,7 @@ from transform import *
 
 def data_generator_1(train_classes, x_train, batch_size):
 
-    """ This function generates triplets to use for the triplets loss """
+    """ This function generates triplets to use for the triplets loss without data augmentation"""
 
     classes_list = list(set(train_classes))
 
@@ -25,8 +25,6 @@ def data_generator_1(train_classes, x_train, batch_size):
         for _ in range(batch_size):
             pos_neg = random.sample(classes_list, 2)
             positive_samples = random.sample(list(x_train[train_classes == pos_neg[0]]), 2)
-            # print('type:',type(positive_samples))
-            # print('positive_sample', positive_samples)
             negative_samples = random.choice(list(x_train[train_classes == pos_neg[1]]))
             a.append(positive_samples[0])
             p.append(positive_samples[1])
@@ -37,6 +35,9 @@ def data_generator_1(train_classes, x_train, batch_size):
 
         
 def data_generator(train_classes, X_train, batch_size):
+
+    """ This function generates triplets to use for the triplets loss with data augmentation"""
+
     # train classes retrieved by loader
     # defined in main at row 104
     classes_list = list(set(train_classes))
@@ -52,7 +53,7 @@ def data_generator(train_classes, X_train, batch_size):
         a.append(positive_samples[0])
         p.append(positive_samples[1])
         n.append(negative_samples)
-        print("A", a)
+
         trainGenAnchor, trainGenPositive, trainGenNegative = data_augmentation_triplet(np.array(a), np.array(p),
                                                                                        np.array(n), batch_size)
         print("DONEEEEEEEEEEE")
@@ -77,15 +78,3 @@ def triplet_loss(y_true, y_pred):
     neg_dist = K.sum(K.abs(anchor_out - negative_out), axis=1)
     probs = K.softmax([pos_dist, neg_dist], axis=1)
     return K.mean(K.abs(probs[0]) + K.abs(1.0 - probs[1]))
-
-
-
-
-
-
-
-
-
-
-
-
