@@ -37,8 +37,8 @@ parser.add_argument('-loss',
                     help='loss function')
 parser.add_argument('-wandb',
                     type=str,
-                    default='False',
-                    help='Log on WandB (default = False)')
+                    default='True',
+                    help='Log on WandB (default = True)')
 parser.add_argument('-img_size',
                     type=int,
                     default=324,
@@ -53,8 +53,8 @@ parser.add_argument('-metric',
                     help='metric to compute distance query-gallery')
 parser.add_argument('-plot',
                     type=str,
-                    default='True',
-                    help='Helper to visualize the results (default = True)')
+                    default='False',
+                    help='Helper to visualize the results (default = False)')
 args = parser.parse_args()
 
 if args.wandb == 'True':

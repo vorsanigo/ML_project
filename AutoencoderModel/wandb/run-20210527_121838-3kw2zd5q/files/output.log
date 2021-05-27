@@ -1,0 +1,1 @@
+2021-05-27 12:18:59.038463: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 47029248 exceeds 10% of free system memory.

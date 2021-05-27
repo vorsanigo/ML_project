@@ -41,8 +41,8 @@ parser.add_argument('-loss',
                     help='loss function')
 parser.add_argument('-wandb',
                     type=str,
-                    default='False',
-                    help='Log on WandB (default = False)')
+                    default='True',
+                    help='Log on WandB (default = True)')
 parser.add_argument('-img_size',
                     type=int,
                     default=324,

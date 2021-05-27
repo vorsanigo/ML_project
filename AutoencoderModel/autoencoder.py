@@ -163,7 +163,7 @@ class TripletsEncoder:
                                       steps_per_epoch=steps_per_epoch,
                                       epochs=epochs,
                                       batch_size=batch_size,
-                                      callbacks=[callback, WandbCallback()],
+                                      callbacks=[callback],
                                       shuffle=True,
                                       verbose=1)
 
