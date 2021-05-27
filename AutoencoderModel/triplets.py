@@ -64,10 +64,6 @@ def data_generator(train_classes, X_train, batch_size):
             yield [Xa[0], Xp[0], Xn[0]], Xa[1]
 
 
-# change
-
-
-            
 def triplet_loss(y_true, y_pred):
 
     """ This function returns the triplets loss """
@@ -79,6 +75,3 @@ def triplet_loss(y_true, y_pred):
     neg_dist = K.sum(K.abs(anchor_out - negative_out), axis=1)
     probs = K.softmax([pos_dist, neg_dist], axis=0)
     return K.mean(K.abs(probs[0]) + K.abs(1.0 - probs[1]))
-
-
-#ciao
