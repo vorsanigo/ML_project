@@ -56,8 +56,7 @@ def data_generator(train_classes, X_train, batch_size):
 
         trainGenAnchor, trainGenPositive, trainGenNegative = data_augmentation_triplet(np.array(a), np.array(p),
                                                                                        np.array(n), batch_size)
-        print("DONEEEEEEEEEEE")
-        # yield ([np.array(a), np.array(p), np.array(n)], np.zeros((batch_size, 1)).astype("float32"))
+
         while True:
             Xa = trainGenAnchor.next()
             Xp = trainGenPositive.next()
@@ -70,7 +69,6 @@ def triplet_loss(y_true, y_pred):
 
     """ This function returns the triplets loss """
 
-    # print('len', y_pred.shape)  # (none,300)
     anchor_out = y_pred[:, 0: 100]
     positive_out = y_pred[:, 100: 200]
     negative_out = y_pred[:, 200: 300]
