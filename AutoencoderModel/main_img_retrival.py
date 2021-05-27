@@ -55,8 +55,8 @@ parser.add_argument('-metric',
                     help='metric to compute distance query-gallery')
 parser.add_argument('-plot',
                     type=str,
-                    default='True',
-                    help='Helper to visualize the results (default = True)')
+                    default='False',
+                    help='Helper to visualize the results (default = False)')
 args = parser.parse_args()
 
 
