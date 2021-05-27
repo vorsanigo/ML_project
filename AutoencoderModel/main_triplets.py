@@ -61,8 +61,8 @@ parser.add_argument('-step',
                     help='number of steps per epoch')
 parser.add_argument('-plot',
                     type=str,
-                    default='True',
-                    help='Helper to visualize the results (default = True)')
+                    default='False',
+                    help='Helper to visualize the results (default = False)')
 
 args = parser.parse_args()
 
