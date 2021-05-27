@@ -82,7 +82,7 @@ if not os.path.exists(OutputDir):
 loader = Loader(args.img_size, args.img_size, args.channels)
 
 # Extract img final for the model
-shape_img = (args.img_size, args.img_size, args.channels)  # bc we need it as argument for the Autoencoder()
+shape_img = (args.img_size, args.img_size, args.channels)
 print("Image size", shape_img)
 
 # Build models

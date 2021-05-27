@@ -140,9 +140,10 @@ class TripletsEncoder:
 
     # Fitting
     def fit_triplets(self, data_generator, steps_per_epoch=1, epochs=3, batch_size=256, wandb='True'):
+
         # Learning rate scheduler
-        def scheduler(n_epochs, lr=0.0001):
-            if n_epochs < 10:
+        def scheduler(epochs, lr=0.0001):
+            if epochs < 10:
                 return lr
             else:
                 return lr * tf.math.exp(-0.1)
@@ -162,6 +163,7 @@ class TripletsEncoder:
                                       steps_per_epoch=steps_per_epoch,
                                       epochs=epochs,
                                       batch_size=batch_size,
+                                      callbacks=[callback, WandbCallback()],
                                       shuffle=True,
                                       verbose=1)
 
