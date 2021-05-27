@@ -32,8 +32,8 @@ parser.add_argument('-model',
                     help='Default model = convAE, other options: pretrained, triplets_loss')
 parser.add_argument('-plot',
                     type=str,
-                    default='True',
-                    help='Helper to visualize the results (default = True)')
+                    default='False',
+                    help='Helper to visualize the results (default = False)')
 
 args = parser.parse_args()
 
