@@ -66,7 +66,7 @@ if args.wandb == 'True':
     # Save results online
     os.environ['WANDB_MODE'] = 'dryrun'
     # Start a W&B run
-    wandb.init(project='aml-challenge',)
+    wandb.init(project='aml-challenge', entity='innominati')
     wandb.config.epochs = args.e
     wandb.config.batch_size = args.bs
 
