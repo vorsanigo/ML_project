@@ -112,7 +112,7 @@ def data_augmentation_triplet(set_anchor, set_positive, set_negative, batch_size
     )
 
     # code to see the modified images
-    for _ in range(10):
+    '''for _ in range(10):
     
         img, label = trainGenAnchor.next()
         print(img.shape)  # (1,256,256,3)
@@ -127,6 +127,6 @@ def data_augmentation_triplet(set_anchor, set_positive, set_negative, batch_size
         img, label = trainGenNegative.next()
         print(img.shape)  # (1,256,256,3)
         plt.imshow(img[0])
-        plt.show()
+        plt.show()'''
 
     return trainGenAnchor, trainGenPositive, trainGenNegative
