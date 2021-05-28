@@ -115,14 +115,9 @@ E_query_flatten = E_query.reshape((-1, np.prod(output_shape_model)))
 E_gallery = model.predict(X_gallery)
 E_gallery_flatten = E_gallery.reshape((-1, np.prod(output_shape_model)))
 
-# Define the distance between query - gallery features vectors
-pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, args.metric, p=2.)
-print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
 
-print("\nCalculating indices and gallery matches...")
-indices = np.argsort(pairwise_dist, axis=-1)
-gallery_matches = gallery_classes[indices]
 
+# Compute top-k
 def topk_accuracy(gt_label, matched_label, k=1):
     matched_label = matched_label[:, :k]
     total = matched_label.shape[0]
@@ -133,11 +128,41 @@ def topk_accuracy(gt_label, matched_label, k=1):
     return acc_tmp
 
 
-print('\nRESULTS:')
+# Distancces between query and gallery with pairwise distance
+
+print("\nComputing pairwise distance between query and gallery images")
+
+# Define the distance between query - gallery features vectors
+pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, args.metric, p=2.)
+print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
+
+print("\nCalculating indices and gallery matches...")
+indices = np.argsort(pairwise_dist, axis=-1)
+gallery_matches = gallery_classes[indices]
+
+final_res_pairwise = dict()
+for i, emb_flatten in enumerate(indices):
+    img_query = imgs_query[i]
+    query_name = query_names[i]
+    imgs_retrieval = [imgs_gallery[indx] for indx in indices[i][:10]]
+    names_retrieval = [gallery_names[indx] for indx in indices[i][:10]]
+
+    if args.plot == 'True':
+        outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
+        plot_query_retrieval(img_query, imgs_retrieval, None)
+
+    create_results_dict(final_res_pairwise, query_name, names_retrieval)
+
+print('\nRESULTS pairwise:')
 for k in [1, 3, 10]:
     topk_acc = topk_accuracy(query_classes, gallery_matches, k)
-    print('>> Top-{:d} Accuracy: {:.3f}'.format(k, topk_acc))
+    print('>>> Top-{:d} Accuracy with pairwise distance: {:.3f}'.format(k, topk_acc))
 
+
+
+# Distances between query and gallery with knn distance
+
+print("\nComputing knn for distance between query and gallery images")
 
 # Fit kNN model on gallery images
 print("\nFitting KNN model on training data...")
@@ -147,23 +172,33 @@ knn.fit(E_gallery_flatten)
 print("Done fitting")
 
 # Querying on test images
-final_res = dict()
+final_res_knn = dict()
 print("\nQuerying...")
+query_classes_knn = []
+class_retrieval_knn = []
 for i, emb_flatten in enumerate(E_query_flatten):
     distances, indx = knn.kneighbors([emb_flatten])
-    img_query = imgs_query[i]  
+    img_query = imgs_query[i]
     query_name = query_names[i]
+    query_classes_knn.append(query_classes[i])
     imgs_retrieval = [imgs_gallery[idx] for idx in indx.flatten()]
     names_retrieval = [gallery_names[idx] for idx in indx.flatten()]
-    
-    if args.plot == 'True':
-        outFile = os.path.join(OutputDir, "pretrained_retrieval_" + str(i) + ".png")
-        plot_query_retrieval(img_query, imgs_retrieval, outFile)
+    class_retrieval_knn.append([gallery_classes[idx] for idx in indx.flatten()])
 
-    create_results_dict(final_res, query_name, names_retrieval)
+    if args.plot == 'True':
+        outFile = os.path.join(OutputDir, "ConvAE_retrieval_knn_" + str(i) + ".png")
+        plot_query_retrieval(img_query, imgs_retrieval, None)
+
+    create_results_dict(final_res_knn, query_name, names_retrieval)
+
+print('\nRESULTS knn:')
+for k in [1, 3, 10]:
+    topk_acc = topk_accuracy(np.array(query_classes_knn), np.array(class_retrieval_knn), k)
+    print('>>> Top-{:d} Accuracy with knn: {:.3f}'.format(k, topk_acc))
 
 print('Saving results...')
-final_results = create_final_dict(final_res)
+final_results_pairwise = create_final_dict(final_res_pairwise)
+final_results_knn = create_final_dict(final_res_knn)
 url = "http://kamino.disi.unitn.it:3001/results/"
 #submit(final_results, url)
 print("Done saving")
