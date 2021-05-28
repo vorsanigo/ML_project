@@ -4,8 +4,6 @@
     <list default="true" id="a757b83e-a94c-456a-9152-7345bbd08807" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoencoderModel/main.test.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoencoderModel/main.test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoencoderModel/main_img_retrival.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoencoderModel/main_img_retrival.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoencoderModel/main_pretrained.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoencoderModel/main_pretrained.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoencoderModel/main_triplets.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoencoderModel/main_triplets.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoencoderModel/output/convAE/ConvAE_autoecoder.h5" beforeDir="false" afterPath="$PROJECT_DIR$/AutoencoderModel/output/convAE/ConvAE_autoecoder.h5" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoencoderModel/output/convAE/ConvAE_encoder.h5" beforeDir="false" afterPath="$PROJECT_DIR$/AutoencoderModel/output/convAE/ConvAE_encoder.h5" afterDir="false" />
@@ -30,7 +28,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/AutoencoderModel/main.test.py" />
   </component>
-  <component name="RunManager" selected="Python.main.test">
+  <component name="RunManager" selected="Python.main_triplets">
     <configuration name="main_img_retrival" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="ML_project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -86,7 +84,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/AutoencoderModel/main.test.py" />
-      <option name="PARAMETERS" value="-model triplets_loss" />
+      <option name="PARAMETERS" value="-model pretrained" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
