@@ -48,7 +48,7 @@ class Loader:
     def get_data_paths(self, data_mapping):
 
         """This function returns the image path, the image name and the image as a numpy array"""
-        
+
         images_paths = []  
         images_arrays = [] 
         classes = []  
@@ -56,6 +56,8 @@ class Loader:
 
         img_length = self.img_length
         img_height = self.img_height
+
+        print('\nProcessing images')
 
         for img_path in data_mapping.keys():
 
@@ -75,6 +77,8 @@ class Loader:
 
                 images_arrays.append(img)
                 classes.append(data_mapping[img_path])
+
+        print('\nPreprocessed images')
 
         return images_names, images_paths, images_arrays, np.array(classes)
 
