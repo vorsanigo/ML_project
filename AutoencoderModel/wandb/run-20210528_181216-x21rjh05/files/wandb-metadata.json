@@ -1,0 +1,27 @@
+{
+    "os": "Linux-5.8.0-53-generic-x86_64-with-glibc2.29",
+    "python": "3.8.5",
+    "heartbeatAt": "2021-05-28T16:12:18.965393",
+    "startedAt": "2021-05-28T16:12:16.977077",
+    "docker": null,
+    "cpu_count": 8,
+    "cuda": null,
+    "args": [
+        "-e",
+        "2",
+        "-plot",
+        "True"
+    ],
+    "state": "running",
+    "program": "/home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/AutoencoderModel/main_img_retrival.py",
+    "codePath": "AutoencoderModel/main_img_retrival.py",
+    "git": {
+        "remote": "https://github.com/vorsanigo/ML_project.git",
+        "commit": "f0ec2f411bc048c2539d6ec4d0ecc9bf7db4eece"
+    },
+    "email": "verorsanigo@gmail.com",
+    "root": "/home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project",
+    "host": "veror-Swift-SF314-52",
+    "username": "veror",
+    "executable": "/home/veror/Desktop/Uni/Applied Machine Learning/Challenge/ML_project/venv/bin/python"
+}

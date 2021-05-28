@@ -1,5 +1,7 @@
 import argparse
-import os 
+import os
+
+from scipy import spatial
 from sklearn.neighbors import NearestNeighbors
 import tensorflow as tf
 
@@ -16,7 +18,7 @@ parser = argparse.ArgumentParser(description='Description challenge test')
 parser.add_argument('--data_path',
                     '-d',
                     type=str,
-                    default='dataset',
+                    default='dataset_test',
                     help='Dataset path')
 parser.add_argument('-img_size',
                     type=int,
@@ -34,6 +36,10 @@ parser.add_argument('-plot',
                     type=str,
                     default='False',
                     help='Helper to visualize the results (default = False)')
+parser.add_argument('-metric',
+                    type=str,
+                    default='minkowski',
+                    help='metric to compute distance query-gallery')
 
 args = parser.parse_args()
 
@@ -85,6 +91,33 @@ if args.model == 'convAE':
     E_gallery = model.predict(X_gallery)
     E_gallery_flatten = E_gallery.reshape((-1, np.prod(output_shape_model)))
 
+
+
+    print("\nComputing pairwise distance between query and gallery images")
+
+    # Define the distance between query - gallery features vectors
+    pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, args.metric, p=2.)
+    print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
+
+    print("\nCalculating indices and gallery matches...")
+    indices = np.argsort(pairwise_dist, axis=-1)
+
+    final_res_pairwise = dict()
+    for i, emb_flatten in enumerate(indices):
+        img_query = QueryImgs[i]
+        query_name = QueryName[i]
+        imgs_retrieval = [GalleryImgs[indx] for indx in indices[i][:10]]
+        names_retrieval = [GalleryName[indx] for indx in indices[i][:10]]
+
+        if args.plot == 'True':
+            outFile = os.path.join(OutputDir, "ConvAE_retrieval_pairwise_" + str(i) + ".png")
+            plot_query_retrieval(img_query, imgs_retrieval, None)
+
+        create_results_dict(final_res_pairwise, query_name, names_retrieval)
+
+
+    print("\nComputing knn for distance between query and gallery images")
+
     # Fit kNN model on gallery images
     print("\nFitting KNN model on training data...")
     k = 10
@@ -93,7 +126,7 @@ if args.model == 'convAE':
     print("Done fitting")
 
     # Querying on test images
-    final_res = dict()
+    final_res_knn = dict()
     print("\nQuerying...")
     for i, emb_flatten in enumerate(E_query_flatten):
         distances, indx = knn.kneighbors([emb_flatten])
@@ -103,15 +136,16 @@ if args.model == 'convAE':
         names_retrieval = [GalleryName[idx] for idx in indx.flatten()]
 
         if args.plot == 'True':
-            outFile = os.path.join(OutputDir, "ConvAE_retrieval_" + str(i) + ".png")
+            outFile = os.path.join(OutputDir, "ConvAE_retrieval_knn_" + str(i) + ".png")
             plot_query_retrieval(img_query, imgs_retrieval, outFile)
 
-        create_results_dict(final_res, query_name, names_retrieval)
+        create_results_dict(final_res_knn, query_name, names_retrieval)
 
     print('Saving results...')
-    final_results = create_final_dict(final_res)
+    final_results_pairwise = create_final_dict(final_res_pairwise)
+    final_results_knn = create_final_dict(final_res_knn)
     url = "http://kamino.disi.unitn.it:3001/results/"
-    submit(final_results, url)
+    #submit(final_results, url)
     print("Done saving")
 
 
@@ -140,6 +174,33 @@ elif args.model == 'pretrained':
     E_gallery = model.predict(X_gallery)
     E_gallery_flatten = E_gallery.reshape((-1, np.prod(output_shape_model)))
 
+
+
+    print("\nComputing pairwise distance between query and gallery images")
+
+    # Define the distance between query - gallery features vectors
+    pairwise_dist = spatial.distance.cdist(E_query_flatten, E_gallery_flatten, args.metric, p=2.)
+    print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
+
+    print("\nCalculating indices and gallery matches...")
+    indices = np.argsort(pairwise_dist, axis=-1)
+
+    final_res_pairwise = dict()
+    for i, emb_flatten in enumerate(indices):
+        img_query = QueryImgs[i]
+        query_name = QueryName[i]
+        imgs_retrieval = [GalleryImgs[indx] for indx in indices[i][:10]]
+        names_retrieval = [GalleryName[indx] for indx in indices[i][:10]]
+
+        if args.plot == 'True':
+            outFile = os.path.join(OutputDir, "ConvAE_retrieval_pairwise_" + str(i) + ".png")
+            plot_query_retrieval(img_query, imgs_retrieval, None)
+
+        create_results_dict(final_res_pairwise, query_name, names_retrieval)
+
+
+    print("\nComputing knn for distance between query and gallery images")
+
     # Fit kNN model on gallery images
     print("\nFitting KNN model on training data...")
     k = 10
@@ -148,7 +209,7 @@ elif args.model == 'pretrained':
     print("Done fitting")
 
     # Querying on test images
-    final_res = dict()
+    final_res_knn = dict()
     print("\nQuerying...")
     for i, emb_flatten in enumerate(E_query_flatten):
         distances, indx = knn.kneighbors([emb_flatten])
@@ -158,13 +219,14 @@ elif args.model == 'pretrained':
         names_retrieval = [GalleryName[idx] for idx in indx.flatten()]
         
         if args.plot == 'True':
-            outFile = os.path.join(OutputDir, "Pretr_retrieval_" + str(i) + ".png")
+            outFile = os.path.join(OutputDir, "Pretr_retrieval_knn_" + str(i) + ".png")
             plot_query_retrieval(img_query, imgs_retrieval, outFile)
 
-        create_results_dict(final_res, query_name, names_retrieval)
+        create_results_dict(final_res_knn, query_name, names_retrieval)
 
     print('Saving results...')
-    final_results = create_final_dict(final_res)
+    final_results_pairwise = create_final_dict(final_res_pairwise)
+    final_results_knn = create_final_dict(final_res_knn)
     url = "http://kamino.disi.unitn.it:3001/results/"
     # submit(final_results, url)
     print("Done saving")
@@ -188,6 +250,32 @@ else:
     E_query = triplet_model.predict_triplets(X_query)
     E_gallery = triplet_model.predict_triplets(X_gallery)
 
+
+    print("\nComputing pairwise distance between query and gallery images")
+
+    # Define the distance between query - gallery features vectors
+    pairwise_dist = spatial.distance.cdist(E_query, E_gallery, args.metric, p=2.)
+    print('\nComputed distances and got c-dist {}'.format(pairwise_dist.shape))
+
+    print("\nCalculating indices and gallery matches...")
+    indices = np.argsort(pairwise_dist, axis=-1)
+
+    final_res_pairwise = dict()
+    for i, emb_flatten in enumerate(indices):
+        img_query = QueryImgs[i]
+        query_name = QueryName[i]
+        imgs_retrieval = [GalleryImgs[indx] for indx in indices[i][:10]]
+        names_retrieval = [GalleryName[indx] for indx in indices[i][:10]]
+
+        if args.plot == 'True':
+            outFile = os.path.join(OutputDir, "ConvAE_retrieval_pairwise_" + str(i) + ".png")
+            plot_query_retrieval(img_query, imgs_retrieval, None)
+
+        create_results_dict(final_res_pairwise, query_name, names_retrieval)
+
+
+    print("\nComputing knn for distance between query and gallery images")
+
     # Fit kNN model on gallery images
     print("\nFitting KNN model on training data...")
     k = 10
@@ -196,7 +284,7 @@ else:
     print("Done fitting")
 
     # Querying on test images
-    final_res = dict()
+    final_res_knn = dict()
     print("\nQuerying...")
     for i, emb_flatten in enumerate(E_query):
         distances, indx = knn.kneighbors([emb_flatten])
@@ -205,13 +293,14 @@ else:
         imgs_retrieval = [GalleryImgs[idx] for idx in indx.flatten()]
         names_retrieval = [GalleryName[idx] for idx in indx.flatten()]
         if args.plot == 'True':
-            outFile = os.path.join(OutputDir, "Triplets_retrieval_" + str(i) + ".png")
+            outFile = os.path.join(OutputDir, "Triplets_retrieval_knn_" + str(i) + ".png")
             plot_query_retrieval(img_query, imgs_retrieval, None)
 
-        create_results_dict(final_res, query_name, names_retrieval)
+        create_results_dict(final_res_knn, query_name, names_retrieval)
 
     print('Saving results...')
-    final_results = create_final_dict(final_res)
+    final_results_pairwise = create_final_dict(final_res_pairwise)
+    final_results_knn = create_final_dict(final_res_knn)
     url = "http://kamino.disi.unitn.it:3001/results/"
     # submit(final_results, url)
     print("Done saving")
