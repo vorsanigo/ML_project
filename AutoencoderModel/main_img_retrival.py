@@ -165,7 +165,7 @@ def topk_accuracy(gt_label, matched_label, k=1):
     total = matched_label.shape[0]
     correct = 0
     for q_idx, q_lbl in enumerate(gt_label):
-        correct += np.any(str(q_lbl) == matched_label[q_idx, :]).item()
+        correct += np.any(q_lbl == matched_label[q_idx, :]).item()
     acc_tmp = correct/total
     return acc_tmp
 
