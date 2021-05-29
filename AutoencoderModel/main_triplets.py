@@ -161,9 +161,11 @@ def topk_accuracy(gt_label, matched_label, k=1):
     total = matched_label.shape[0]
     correct = 0
     for q_idx, q_lbl in enumerate(gt_label):
-        correct += np.any(q_lbl == matched_label[q_idx, :]).item()
-        print(type(q_lb))
-        print(type(matched_label[q_idx, :]))
+        correct += np.any(str(q_lbl) == matched_label[q_idx, :]).item()
+        '''print("QQQ", q_lbl)
+        print("EEE", matched_label[q_idx, :])
+        print(type(q_lbl))
+        print(type(matched_label[q_idx, :]))'''
     acc_tmp = correct/total
     return acc_tmp
 
@@ -248,3 +250,5 @@ pickle.dump(final_results_pairwise, file_pairwise)
 url = "http://ec2-18-191-24-254.us-east-2.compute.amazonaws.com/results/"
 submit(final_results_knn, url)
 print("Done saving")
+
+# todo nomi cartelle devono essere numeriiiiiiii
