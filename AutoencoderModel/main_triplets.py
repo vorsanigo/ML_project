@@ -247,6 +247,7 @@ pickle.dump(final_results_knn, file_knn)
 file_pairwise = open("pairwise_dict.pickle", "wb")
 pickle.dump(final_results_pairwise, file_pairwise)
 
+
 url = "http://ec2-18-191-24-254.us-east-2.compute.amazonaws.com/results/"
 submit(final_results_knn, url)
 print("Done saving")
