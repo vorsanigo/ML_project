@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 from sklearn.neighbors import NearestNeighbors
 
-from AutoencoderModel.visualization import plot_query_retrieval
+from visualization import plot_query_retrieval
 from image_loading import Loader
 from transform import normalize_img
 from final_display import *
