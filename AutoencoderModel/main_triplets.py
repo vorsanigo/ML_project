@@ -11,6 +11,7 @@ from autoencoder import AutoEncoder
 from transform import normalize_img, data_augmentation
 from final_display import *
 from visualization import *
+import pickle
 
 
 parser = argparse.ArgumentParser(description='Challenge presentation example')
@@ -161,6 +162,8 @@ def topk_accuracy(gt_label, matched_label, k=1):
     correct = 0
     for q_idx, q_lbl in enumerate(gt_label):
         correct += np.any(q_lbl == matched_label[q_idx, :]).item()
+        print(type(q_lb))
+        print(type(matched_label[q_idx, :]))
     acc_tmp = correct/total
     return acc_tmp
 
@@ -236,6 +239,12 @@ for k in [1, 3, 10]:
 print('Saving results...')
 final_results_pairwise = create_final_dict(final_res_pairwise)
 final_results_knn = create_final_dict(final_res_knn)
+
+file_knn = open("knn_dict.pickle", "wb")
+pickle.dump(final_results_knn, file_knn)
+file_pairwise = open("pairwise_dict.pickle", "wb")
+pickle.dump(final_results_pairwise, file_pairwise)
+
 url = "http://ec2-18-191-24-254.us-east-2.compute.amazonaws.com/results/"
 submit(final_results_knn, url)
 print("Done saving")
