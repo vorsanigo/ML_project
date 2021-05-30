@@ -3,7 +3,7 @@ import os
 
 
 main_path =  'C:/Users/alber/Desktop/UniTn/Data Science/Second_Semester/Machine_Learning/Competition/Img_scarp/simple_images'
-immagini = ['sagrada familia', 'colosseum', 'empire state building, eiffel tower', 'arena di verona', 'pantheon', 'taj mahal']
+immagini = ['sagrada familia', 'colosseum', 'empire state building' 'eiffel tower', 'arena di verona', 'pantheon', 'taj mahal']
 
 for name in immagini :
 
