@@ -40,6 +40,23 @@ class Loader:
                             data_mapping[img_tmp] = int(c_name)
                         else:
                             data_mapping[img_tmp] = c_name
+                elif img_tmp.endswith('.jpeg'):
+                    if c_name == 'distractor':
+                        data_mapping[img_tmp] = -1
+                    else:
+                        if c_name.isdigit():
+                            data_mapping[img_tmp] = int(c_name)
+                        else:
+                            data_mapping[img_tmp] = c_name
+                elif img_tmp.endswith('.png'):
+                    if c_name == 'distractor':
+                        data_mapping[img_tmp] = -1
+                    else:
+                        if c_name.isdigit():
+                            data_mapping[img_tmp] = int(c_name)
+                        else:
+                            data_mapping[img_tmp] = c_name
+
 
         print('\nLoaded {:d} from {:s} images'.format(len(data_mapping.keys()), data_path))
 
