@@ -105,18 +105,18 @@ if args.mode == "training model":
     num_files = len(train_map.keys())
     steps_per_epoch = num_files // args.e
     print('steps-per-epoch', steps_per_epoch)
-    print('numero di batch', args.bs)
-    print('numero di epoche', args.e)
+    print('batch number', args.bs)
+    print('epochs number', args.e)
 
     # Normalize all images
     print("\nNormalizing training images")
     imgs_train = normalize_img(imgs_train)
-
+    print("Number of training images:", len(imgs_train))
     # Convert images to numpy array of right dimensions
-    print("\nConverting to numpy array of right dimensions")
+    print("\nConverting training images to numpy array of right dimensions")
     X_train = np.array(imgs_train).reshape((-1,) + input_shape_model)
     print(">>> X_train.shape = " + str(X_train.shape))
-
+    print("Number of training images:", len(X_train))
     # Create object for train augmentation
     completeTrainGen = data_augmentation(X_train, args.bs)
     print("\nStart training...")
@@ -148,7 +148,7 @@ print("Normalizing gallery images")
 imgs_gallery = normalize_img(imgs_gallery)
 
 # Convert images to numpy array of right dimensions
-print("\nConverting to numpy array of right dimensions")
+print("\nConverting validation images to numpy array of right dimensions")
 X_query = np.array(imgs_query).reshape((-1,) + input_shape_model)
 X_gallery = np.array(imgs_gallery).reshape((-1,) + input_shape_model)
 print(">>> X_query.shape = " + str(X_query.shape))
