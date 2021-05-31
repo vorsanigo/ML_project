@@ -33,7 +33,7 @@ def data_generator(train_classes, X_train, batch_size):
     # defined in main at row 104
     classes_list = list(set(train_classes))
     # X_train = list(X_train)
-    # while True:
+    #while True:
     for _ in range(batch_size):
         a = []
         p = []
@@ -45,14 +45,14 @@ def data_generator(train_classes, X_train, batch_size):
         p.append(positive_samples[1])
         n.append(negative_samples)
 
-        trainGenAnchor, trainGenPositive, trainGenNegative = data_augmentation_triplet(np.array(a), np.array(p),
-                                                                                       np.array(n), batch_size)
+    trainGenAnchor, trainGenPositive, trainGenNegative = data_augmentation_triplet(np.array(a), np.array(p),
+                                                                                   np.array(n), batch_size)
 
-        while True:
-            Xa = trainGenAnchor.next()
-            Xp = trainGenPositive.next()
-            Xn = trainGenNegative.next()
-            yield [Xa[0], Xp[0], Xn[0]], Xa[1]
+    while True:
+        Xa = trainGenAnchor.next()
+        Xp = trainGenPositive.next()
+        Xn = trainGenNegative.next()
+        yield [Xa[0], Xp[0], Xn[0]], Xa[1]
 
 
 def triplet_loss(y_true, y_pred):
