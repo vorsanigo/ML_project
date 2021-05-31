@@ -11,7 +11,6 @@ from autoencoder import AutoEncoder
 from transform import normalize_img, data_augmentation
 from final_display import *
 from visualization import *
-import pickle
 
 
 parser = argparse.ArgumentParser(description='Challenge presentation example')
@@ -259,5 +258,3 @@ submit(final_results_knn, url)
 print("Done saving")
 
 print("Done saving")
-
-# todo nomi cartelle devono essere numeriiiiiiii
