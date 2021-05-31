@@ -72,17 +72,17 @@ class AutoEncoder:
 
         if wandb == 'True':
             self.autoencoder.fit(X_train,
+                                 steps_per_epoch=steps_per_epoch,
                                  epochs=n_epochs,
                                  batch_size=batch_size,
-                                 steps_per_epoch=steps_per_epoch,
                                  shuffle=True,
                                  callbacks=[callback, WandbCallback()],
                                  verbose=1)
         else:
             self.autoencoder.fit(X_train,
+                                 steps_per_epoch=steps_per_epoch,
                                  epochs=n_epochs,
                                  batch_size=batch_size,
-                                 steps_per_epoch=steps_per_epoch,
                                  shuffle=True,
                                  callbacks=[callback],
                                  verbose=1)

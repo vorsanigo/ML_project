@@ -103,8 +103,11 @@ if args.mode == "training model":
     train_map = loader.get_files(TrainDir)
     train_names, train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
     
-   num_files = len(train_map.keys())
-   steps_per_epoch = num_files // args.e
+    num_files = len(train_map.keys())
+    steps_per_epoch = num_files // args.e
+    print('steps-per-epoch', steps_per_epoch)
+    print('numero di batch', args.bs)
+    print('numero di epoche', args.e)
 
     # Normalize all images
     print("\nNormalizing training images")

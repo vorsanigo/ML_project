@@ -104,6 +104,9 @@ if args.mode == "training model":
   
     num_files = len(train_map.keys())
     steps_per_epoch = num_files // args.e
+    print('steps-per-epoch', steps_per_epoch)
+    print('numero di batch', args.bs)
+    print('numero di epoche', args.e)
 
     # Normalize all images
     print("\nNormalizing training images")
