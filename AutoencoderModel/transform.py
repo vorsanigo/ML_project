@@ -1,4 +1,3 @@
-# todo rendere size no hard code
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 import numpy as np
