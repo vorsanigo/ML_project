@@ -58,7 +58,7 @@ class AutoEncoder:
         self.autoencoder.compile(optimizer=optimizer, loss=loss, metrics=['accuracy'] )
 
     # Fitting
-    def fit(self, X, n_epochs=50, batch_size=256, wandb='True'):
+    def fit(self, X, steps_per_epoch, n_epochs, batch_size, wandb):
         X_train = X
 
         # Learning rate scheduler
@@ -74,6 +74,7 @@ class AutoEncoder:
             self.autoencoder.fit(X_train,
                                  epochs=n_epochs,
                                  batch_size=batch_size,
+                                 steps_per_epoch=steps_per_epoch,
                                  shuffle=True,
                                  callbacks=[callback, WandbCallback()],
                                  verbose=1)
@@ -81,6 +82,7 @@ class AutoEncoder:
             self.autoencoder.fit(X_train,
                                  epochs=n_epochs,
                                  batch_size=batch_size,
+                                 steps_per_epoch=steps_per_epoch,
                                  shuffle=True,
                                  callbacks=[callback],
                                  verbose=1)
@@ -139,7 +141,7 @@ class TripletsEncoder:
         self.triplets_encoder.compile(optimizer=optimizer, loss=triplet_loss, metrics=['accuracy'])
 
     # Fitting
-    def fit_triplets(self, data_generator, steps_per_epoch=1, epochs=3, batch_size=256, wandb='True'):
+    def fit_triplets(self, data_generator, steps_per_epoch, epochs, batch_size, wandb):
 
         # Learning rate scheduler
         def scheduler(epochs, lr=0.0001):
