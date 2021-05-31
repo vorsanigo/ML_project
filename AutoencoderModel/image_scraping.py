@@ -1,5 +1,5 @@
 from simple_image_download import simple_image_download as simp
-import os 
+
 
 main_path =  'C:/Users/alber/Desktop/UniTn/Data Science/Second_Semester/Machine_Learning/Competition/Img_scarp/simple_images'
 immagini = ["Hagia Sophia","Guggenheim","Taj Mahal","Dancing House",

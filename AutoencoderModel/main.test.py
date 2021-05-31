@@ -1,10 +1,8 @@
 import argparse
 import os
-
 from scipy import spatial
 from sklearn.neighbors import NearestNeighbors
 import tensorflow as tf
-
 from triplets import triplet_loss
 from autoencoder import AutoEncoder, TripletsEncoder
 from image_loading import read_imgs_no_subfolders

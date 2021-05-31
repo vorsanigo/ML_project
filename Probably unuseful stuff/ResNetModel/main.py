@@ -1,15 +1,11 @@
 import loader
 import model
 import feature_extractor
-import pickle
 from scipy import spatial
 import numpy as np
 import os
 import argparse
 import wandb
-from wandb.keras import WandbCallback
-import keras
-
 
 # link seguito come spunto https://www.pyimagesearch.com/2020/04/27/fine-tuning-resnet-with-keras-tensorflow-and-deep-learning/
 
