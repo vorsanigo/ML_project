@@ -74,7 +74,7 @@ class Loader:
         img_length = self.img_length
         img_height = self.img_height
 
-        print('\nProcessing images')
+        print('\nProcessing images...')
 
         for img_path in data_mapping.keys():
 
@@ -95,7 +95,41 @@ class Loader:
                 images_arrays.append(img)
                 classes.append(data_mapping[img_path])
 
-        print('\nPreprocessed images')
+            elif img_path.endswith('.jpeg'):
+                images_paths.append(img_path)
+                temp = "r"+img_path
+                images_names.append(os.path.split(temp)[1])
+
+                img = load_img(img_path, target_size=(img_length, img_height))
+
+                img = img_to_array(img)
+
+                if img.shape[2] == 1:
+                    img = np.repeat(img, 3, axis=2)
+                if img.shape[2] == 4:
+                    img = img[:, :, :3]
+
+                images_arrays.append(img)
+                classes.append(data_mapping[img_path])
+
+            elif img_path.endswith('.png'):
+                images_paths.append(img_path)
+                temp = "r"+img_path
+                images_names.append(os.path.split(temp)[1])
+
+                img = load_img(img_path, target_size=(img_length, img_height))
+
+                img = img_to_array(img)
+
+                if img.shape[2] == 1:
+                    img = np.repeat(img, 3, axis=2)
+                if img.shape[2] == 4:
+                    img = img[:, :, :3]
+
+                images_arrays.append(img)
+                classes.append(data_mapping[img_path])
+
+        print('\nImages processed')
 
         return images_names, images_paths, images_arrays, np.array(classes)
 
