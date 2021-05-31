@@ -102,6 +102,9 @@ if args.mode == "training model":
     # Read images
     train_map = loader.get_files(TrainDir)
     train_names, train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
+    
+   num_files = len(train_map.keys())
+   steps_per_epoch = num_files // args.e
 
     # Normalize all images
     print("\nNormalizing training images")
@@ -120,7 +123,7 @@ if args.mode == "training model":
 
     # Fitting
     triplet_model.fit_triplets(data_generator(train_classes, X_train, args.bs),
-                               steps_per_epoch=args.step, epochs=args.e,
+                               steps_per_epoch=steps_per_epoch, epochs=args.e,
                                batch_size=args.bs, wandb=args.wandb)
     # Saving
     triplet_model.save_triplets()
