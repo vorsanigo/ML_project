@@ -100,6 +100,10 @@ if args.mode == "training model":
     # Read images
     train_map = loader.get_files(TrainDir)
     train_names, train_paths, imgs_train, train_classes = loader.get_data_paths(train_map)
+    
+  
+    num_files = len(train_map.keys())
+    steps_per_epoch = num_files // args.e
 
     # Normalize all images
     print("\nNormalizing training images")
@@ -118,7 +122,7 @@ if args.mode == "training model":
     model.compile(loss=args.loss, optimizer="adam")
 
     # Fitting
-    model.fit(completeTrainGen, n_epochs=args.e, batch_size=args.bs, wandb = args.wandb)
+    model.fit(completeTrainGen, steps_per_epoch, n_epochs=args.e, batch_size=args.bs, wandb = args.wandb)
 
     # Saving
     model.save_models()
