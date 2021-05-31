@@ -1,15 +1,6 @@
 from tensorflow.keras import backend as K
 import random
 from transform import *
-from tensorflow.keras import backend as K
-import random
-import numpy as np
-from tensorflow.keras.layers import *
-from tensorflow.keras.models import Model
-import os
-from image_loading import *
-import argparse
-from transform import *
 
 
 def data_generator_1(train_classes, x_train, batch_size):
