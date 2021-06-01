@@ -41,7 +41,7 @@ parser.add_argument('-metric',
                     type=str,
                     default='minkowski',
                     help='metric to compute distance query-gallery')
-parser.add_argument('distance',
+parser.add_argument('-distance',
                     type=str,
                     default='knn',
                     help='Knn or pairwise distance between query and gallery')
