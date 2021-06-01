@@ -1,5 +1,7 @@
 import argparse
 import os
+import pickle
+
 from scipy import spatial
 from sklearn.neighbors import NearestNeighbors
 import tensorflow as tf
@@ -39,6 +41,10 @@ parser.add_argument('-metric',
                     type=str,
                     default='minkowski',
                     help='metric to compute distance query-gallery')
+parser.add_argument('distance',
+                    type=str,
+                    default='knn',
+                    help='Knn or pairwise distance between query and gallery')
 
 args = parser.parse_args()
 
@@ -141,11 +147,21 @@ if args.model == 'convAE':
         create_results_dict(final_res_knn, query_name, names_retrieval)
 
     print('Saving results...')
-    final_results_pairwise = create_final_dict(final_res_pairwise)
-    final_results_knn = create_final_dict(final_res_knn)
+
     url = "http://ec2-18-191-24-254.us-east-2.compute.amazonaws.com/results/"
-    #submit(final_results_pairwise, url)
-    submit(final_results_knn, url)
+
+    if args.distance == 'knn':
+        final_results_knn = create_final_dict(final_res_knn)
+        submit(final_results_knn, url)
+        file_knn = open('/dictionaries_submission_pickle/knn_autoencoder.pickle', 'wb')
+        pickle.dump(final_results_knn, file_knn)
+
+    else:
+        final_results_pairwise = create_final_dict(final_res_pairwise)
+        submit(final_results_pairwise, url)
+        file_p = open('/dictionaries_submission_pickle/pairwise_autoencoder.pickle', 'wb')
+        pickle.dump(final_results_pairwise, file_p)
+
     print("Done saving")
 
 
@@ -225,11 +241,20 @@ elif args.model == 'pretrained':
         create_results_dict(final_res_knn, query_name, names_retrieval)
 
     print('Saving results...')
-    final_results_pairwise = create_final_dict(final_res_pairwise)
-    final_results_knn = create_final_dict(final_res_knn)
+
     url = "http://ec2-18-191-24-254.us-east-2.compute.amazonaws.com/results/"
-    #submit(final_results_pairwise, url)
-    submit(final_results_knn, url)
+
+    if args.distance == 'knn':
+        final_results_knn = create_final_dict(final_res_knn)
+        submit(final_results_knn, url)
+        file_knn = open('/dictionaries_submission_pickle/knn_pretrained.pickle', 'wb')
+        pickle.dump(final_results_knn, file_knn)
+    else:
+        final_results_pairwise = create_final_dict(final_res_pairwise)
+        submit(final_results_pairwise, url)
+        file_p = open('/dictionaries_submission_pickle/pairwise_pretrained.pickle', 'wb')
+        pickle.dump(final_results_pairwise, file_p)
+
     print("Done saving")
 
 else:
@@ -300,9 +325,18 @@ else:
         create_results_dict(final_res_knn, query_name, names_retrieval)
 
     print('Saving results...')
-    final_results_pairwise = create_final_dict(final_res_pairwise)
-    final_results_knn = create_final_dict(final_res_knn)
+
     url = "http://ec2-18-191-24-254.us-east-2.compute.amazonaws.com/results/"
-    #submit(final_results_pairwise, url)
-    submit(final_results_knn, url)
+
+    if args.distance == 'knn':
+        final_results_knn = create_final_dict(final_res_knn)
+        submit(final_results_knn, url)
+        file_knn = open('/dictionaries_submission_pickle/knn_triplets.pickle', 'wb')
+        pickle.dump(final_results_knn, file_knn)
+    else:
+        final_results_pairwise = create_final_dict(final_res_pairwise)
+        submit(final_results_pairwise, url)
+        file_p = open('/dictionaries_submission_pickle/pairwise_triplets.pickle', 'wb')
+        pickle.dump(final_results_pairwise, file_p)
+
     print("Done saving")
