@@ -247,11 +247,6 @@ print('Saving results...')
 final_results_pairwise = create_final_dict(final_res_pairwise)
 final_results_knn = create_final_dict(final_res_knn)
 
-'''file_knn = open("knn_dict.pickle", "wb")
-pickle.dump(final_results_knn, file_knn)
-file_pairwise = open("pairwise_dict.pickle", "wb")
-pickle.dump(final_results_pairwise, file_pairwise)'''
-
 url = "http://ec2-18-191-24-254.us-east-2.compute.amazonaws.com/results/"
 #submit(final_results_pairwise, url)
 submit(final_results_knn, url)

@@ -3,7 +3,9 @@ import json
 
 
 def submit(results, url):
+   
     """This function takes the dictionaty of results and sends it to the VPN and returns the accuracy"""
+   
     res = json.dumps(results)
     response = requests.post(url, res)
     result = json.loads(response.text)

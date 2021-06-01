@@ -19,4 +19,4 @@ p_triplets = pickle.load(file_p_triplets)
 # x = the one to submit
 url = "http://ec2-18-191-24-254.us-east-2.compute.amazonaws.com/results/"
 
-submit(knn_triplets, url)
+submit(p_triplets, url)

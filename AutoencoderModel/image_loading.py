@@ -159,18 +159,5 @@ def read_imgs_no_subfolders(dirPath, img_size, extensions=None):
 
                 all_img.append(img)
 
-    '''for ext in extensions:
-        for img_path in img_list:
-            if img_path.endswith(ext):
-                new_img = skimage.io.imread(img_path, as_gray=False)
-                new_img = resize(new_img, (img_size, img_size), anti_aliasing=True, preserve_range=True)
-
-                if new_img.shape[2] == 1:
-                    new_img = np.repeat(new_img, 3, axis=2)
-                if new_img.shape[2] == 4:
-                    new_img = new_img[:, :, :3]
-
-                all_img.append(new_img)'''
-
     return all_img, img_list
 

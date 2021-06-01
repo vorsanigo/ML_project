@@ -168,9 +168,6 @@ class TripletsEncoder:
                                       shuffle=True,
                                       verbose=1)
 
-        #original:
-        #self.triplets_encoder.fit(data_generator, steps_per_epoch=steps_per_epoch, epochs=epochs)
-
     # Save model architecture and weights to file
     def save_triplets(self):
         print("Saving models...")
