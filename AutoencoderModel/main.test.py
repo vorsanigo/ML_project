@@ -153,13 +153,13 @@ if args.model == 'convAE':
     if args.distance == 'knn':
         final_results_knn = create_final_dict(final_res_knn)
         submit(final_results_knn, url)
-        file_knn = open('/dictionaries_submission_pickle/knn_autoencoder.pickle', 'wb')
+        file_knn = open('dictionaries_submission_pickle/knn_autoencoder.pickle', 'wb')
         pickle.dump(final_results_knn, file_knn)
 
     else:
         final_results_pairwise = create_final_dict(final_res_pairwise)
         submit(final_results_pairwise, url)
-        file_p = open('/dictionaries_submission_pickle/pairwise_autoencoder.pickle', 'wb')
+        file_p = open('dictionaries_submission_pickle/pairwise_autoencoder.pickle', 'wb')
         pickle.dump(final_results_pairwise, file_p)
 
     print("Done saving")
@@ -247,12 +247,12 @@ elif args.model == 'pretrained':
     if args.distance == 'knn':
         final_results_knn = create_final_dict(final_res_knn)
         submit(final_results_knn, url)
-        file_knn = open('/dictionaries_submission_pickle/knn_pretrained.pickle', 'wb')
+        file_knn = open('dictionaries_submission_pickle/knn_pretrained.pickle', 'wb')
         pickle.dump(final_results_knn, file_knn)
     else:
         final_results_pairwise = create_final_dict(final_res_pairwise)
         submit(final_results_pairwise, url)
-        file_p = open('/dictionaries_submission_pickle/pairwise_pretrained.pickle', 'wb')
+        file_p = open('dictionaries_submission_pickle/pairwise_pretrained.pickle', 'wb')
         pickle.dump(final_results_pairwise, file_p)
 
     print("Done saving")
@@ -331,12 +331,12 @@ else:
     if args.distance == 'knn':
         final_results_knn = create_final_dict(final_res_knn)
         submit(final_results_knn, url)
-        file_knn = open('/dictionaries_submission_pickle/knn_triplets.pickle', 'wb')
+        file_knn = open('dictionaries_submission_pickle/knn_triplets.pickle', 'wb')
         pickle.dump(final_results_knn, file_knn)
     else:
         final_results_pairwise = create_final_dict(final_res_pairwise)
         submit(final_results_pairwise, url)
-        file_p = open('/dictionaries_submission_pickle/pairwise_triplets.pickle', 'wb')
+        file_p = open('dictionaries_submission_pickle/pairwise_triplets.pickle', 'wb')
         pickle.dump(final_results_pairwise, file_p)
 
     print("Done saving")
