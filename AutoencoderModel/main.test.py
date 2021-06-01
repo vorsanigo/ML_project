@@ -9,7 +9,8 @@ from image_loading import read_imgs_no_subfolders
 from transform import normalize_img, data_augmentation
 from visualization import plot_query_retrieval
 from final_display import *
-import numpy as np 
+import numpy as np
+import time
 
 
 parser = argparse.ArgumentParser(description='Description challenge test')
@@ -143,7 +144,7 @@ if args.model == 'convAE':
     final_results_pairwise = create_final_dict(final_res_pairwise)
     final_results_knn = create_final_dict(final_res_knn)
     url = "http://ec2-18-191-24-254.us-east-2.compute.amazonaws.com/results/"
-    submit(final_results_pairwise, url)
+    #submit(final_results_pairwise, url)
     submit(final_results_knn, url)
     print("Done saving")
 
