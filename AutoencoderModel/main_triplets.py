@@ -133,6 +133,8 @@ if args.mode == "training model":
 
 
 # Read images
+print(QueryDir)
+print(GalleryDir)
 query_map = loader.get_files(QueryDir)
 query_names, query_paths, imgs_query, query_classes = loader.get_data_paths(query_map)
 gallery_map = loader.get_files(GalleryDir)
