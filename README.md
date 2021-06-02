@@ -107,4 +107,4 @@ structure: one folder _query_ and one _gallery_ containing the query and gallery
 
 Through the file `main.test.py` it is possible to test the models and to submit the results, three parameters can 
 be added to respectvely test the _pretrained_ model, the _autoencoder_ without triplet loss, the _autoencoder with triplet 
-loss_: `-model pretrained`, `- model convAE`, `-model triplets_loss` 
+loss_: `-model pretrained`, `- model convAE`, `-model triplets_loss`
