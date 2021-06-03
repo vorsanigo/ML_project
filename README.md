@@ -92,7 +92,7 @@ To train the autoencoder models (both with and without _triplet loss_):
 1) **Dataset**: folder containing two subfolders called _train_ and _validation_, _validation_ must contain other two subfolders 
 called _query_ end _gallery_ -> _train_, _query_, _gallery_ must contain images
 2) Run the file with `name_file.py`: `main_img_retrival.py`or `main_triplets.py` or`main_pretrained.py` with the command`python name_file.py`,
-some parameters can me added, as shown in the parser at the beginning of each file, the default ones are set
+some parameters can be added, as shown in the parser at the beginning of each file, the default ones are set
 3) If `main_img_retrival.py` or `main_triplets.py` are run, the models are saved in the folder `output`
 
 ### 3) Test
