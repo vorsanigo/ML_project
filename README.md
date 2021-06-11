@@ -5,7 +5,7 @@
 
 The purpose of this project is to present some possible machine learning solutions to a __reverse image search task__. 
 
-Accordingly, we have implemented three main models: a 'simple' _autoencoder_, an _autoencoder_ implemented with a _triplet loss_ 
+Accordingly, we have implemented three main models: a 'simple' _autoencoder_, an _encoder_ implemented with a _triplet loss_ 
 and a pretrained model, a _ResNet 50_.
 
 All the labriries and packages used for the project are reported in the txt file _requiremenst.txt_ 
@@ -34,7 +34,7 @@ To do so we have created the following files:
 
 * `transform.py` which is used for _data augmentation_. As a matter of fact, here different functions are implmented  to 
   normalize, randomly crop, rotate, zoom, shift and flip the images during the _training phase_. These transformations should 
-  helpful to better train the _autoencoder_.
+  helpful to better train the models.
 
 * `create_folders.py` is un additional file that has been used to create a different sub_folder for each subject in the 
   `ukbench`. This data set consists of 1000 images for 250 different objects (so, each objsect has 4 different images). 
@@ -45,12 +45,12 @@ To do so we have created the following files:
 
 Going back to the main task, we now consider the core of the project:
 
-* `autoencoder.py` In this file we have implemented both our autoencoders: the simple one and the one with the 
-  _triplet loss_. In this file we have implemented functions for setting the _neural network architecture_, for creating, 
-  saving, compiling and fitting the models the model. 
+* `autoencoder.py` In this file we have implemented both our autoencoder and encoder: the first one with _MSE_ loss function 
+  and the one with the _triplet loss_. In this file we have implemented functions for setting the _neural network architecture_, 
+  for creating, saving, compiling and fitting the models the model. 
 
 * `main_img_retrival.py`, `main_triplets.py` & `main_pretrained.py`These three files are the __essence__ of the project. 
-  Each of them is associated to a model: respectively, to the autoencoder, the autoencoder with the triplet loss and 
+  Each of them is associated to a model: respectively, to the autoencoder, the encoder with the triplet loss and 
   the ResNet50. By running these files you create the model and  __execute the reverse image task__. Before running the 
   code you can specify some parameters such as the batch size (e.g. -bs 32 -e 60) or the epochs thanks to the parser. By 
   running these pieces of code you can also visualize the output and see how the model performed.
@@ -82,7 +82,7 @@ Lastly, there are few additional files:
 
 ### 2) Training
 
-To train the autoencoder models (both with and without _triplet loss_):
+To train the autoencoder and the encoder models (with MSE and with _triplet loss_):
 
 1) **Dataset**: folder containing two subfolders called _train_ and _validation_, _validation_ must contain other two subfolders 
 called _query_ end _gallery_ -> _train_, _query_, _gallery_ must contain images
@@ -101,5 +101,5 @@ To test the models with also submitting the results to one server, it is necessa
 structure: one folder _query_ and one _gallery_ containing the query and gallery images
 
 Through the file `main.test.py` it is possible to test the models and to submit the results, three parameters can 
-be added to respectvely test the _pretrained_ model, the _autoencoder_ without triplet loss, the _autoencoder with triplet 
+be added to respectvely test the _pretrained_ model, the _autoencoder with MSE_ loss, the _autoencoder with triplet 
 loss_: `-model pretrained`, `- model convAE`, `-model triplets_loss`
