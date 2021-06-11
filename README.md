@@ -54,6 +54,8 @@ Going back to the main task, we now consider the core of the project:
   the ResNet50. By running these files you create the model and  __execute the reverse image task__. Before running the 
   code you can specify some parameters such as the batch size (e.g. -bs 32 -e 60) or the epochs thanks to the parser. By 
   running these pieces of code you can also visualize the output and see how the model performed.
+  
+* The models trained (the autoencoder with MSE and the encoder with triplet loss) are stored in the folder `output`.
 
 
 ### Utils
