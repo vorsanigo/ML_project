@@ -5,7 +5,7 @@
 
 The purpose of this project is to present some possible machine learning solutions to a __reverse image search task__. 
 
-Accordingly, we have implemented three main models: a 'simple' _autoencoder_, an _encoder_ implemented with a _triplet loss_ 
+Accordingly, we have implemented three main models: a 'simple' _autoencoder_ with a _MSE loss_ function, an _encoder_ implemented with a _triplet loss_ 
 and a pretrained model, a _ResNet 50_.
 
 All the labriries and packages used for the project are reported in the txt file _requiremenst.txt_ 
@@ -101,5 +101,5 @@ To test the models with also submitting the results to one server, it is necessa
 structure: one folder _query_ and one _gallery_ containing the query and gallery images
 
 Through the file `main.test.py` it is possible to test the models and to submit the results, three parameters can 
-be added to respectvely test the _pretrained_ model, the _autoencoder with MSE_ loss, the _autoencoder with triplet 
+be added to respectvely test the _pretrained_ model, the _autoencoder with MSE loss_, the _autoencoder with triplet 
 loss_: `-model pretrained`, `- model convAE`, `-model triplets_loss`
