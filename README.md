@@ -101,5 +101,5 @@ To test the models with also submitting the results to one server, it is necessa
 structure: one folder _query_ and one _gallery_ containing the query and gallery images
 
 Through the file `main.test.py` it is possible to test the models and to submit the results, three parameters can 
-be added to respectvely test the _pretrained_ model, the _autoencoder with MSE loss_, the _autoencoder with triplet 
+be added to respectvely test the _pretrained_ model, the _autoencoder with MSE loss_, the _encoder with triplet 
 loss_: `-model pretrained`, `- model convAE`, `-model triplets_loss`
